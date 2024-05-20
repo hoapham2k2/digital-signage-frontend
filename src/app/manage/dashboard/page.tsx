@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import React from "react";
-import { Outlet } from "react-router-dom";
 
 type Props = {};
 
-const DashboardPage = (props: Props) => {
+const DashboardPage = (_props: Props) => {
 	return (
 		<div className='h-[3000px]'>
 			<Button variant={"default"} size={"icon"} onClick={() => {}}>

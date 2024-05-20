@@ -28,7 +28,7 @@ const EditScreenForm = (props: Props) => {
 		}
 	}, [inputNamevalue, props.screen?.name]);
 
-	const handleSaveScreen = (e: React.MouseEvent<HTMLButtonElement>) => {
+	const handleSaveScreen = (_e: React.MouseEvent<HTMLButtonElement>) => {
 		if (props.screen) {
 			updateScreen({
 				...props.screen,

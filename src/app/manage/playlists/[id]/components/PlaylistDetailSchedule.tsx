@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 
 type Props = {};
 
-const PlaylistDetailSchedule = (props: Props) => {
+const PlaylistDetailSchedule = (_props: Props) => {
 	const { id } = useParams();
 	const appSchedule = appStore((state) => {
 		return state.schedules.find((schedule) => schedule.playlistId === id);

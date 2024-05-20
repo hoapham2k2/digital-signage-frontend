@@ -1,12 +1,7 @@
-import React from "react";
 import {
 	Navigate,
-	Outlet,
-	Route,
 	RouterProvider,
-	Routes,
 	createBrowserRouter,
-	createRoutesFromElements,
 } from "react-router-dom";
 import RootLayout from "./layout/RootLayout";
 import DashboardPage from "@/app/manage/dashboard/page";
@@ -90,7 +85,7 @@ const routes = createBrowserRouter([
 	},
 ]);
 
-const AppRouter = (props: Props) => {
+const AppRouter = (_props: Props) => {
 	return <RouterProvider router={routes} />;
 };
 

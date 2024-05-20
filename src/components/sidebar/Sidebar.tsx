@@ -1,4 +1,3 @@
-import React from "react";
 import SidebarItem, { SidebarItemProps } from "./SidebarItem";
 import { MdDashboard, MdOutlineScreenshotMonitor } from "react-icons/md";
 import { VscFileMedia, VscFiles } from "react-icons/vsc";
@@ -6,7 +5,7 @@ import { FiSettings } from "react-icons/fi";
 
 type Props = {};
 
-const Sidebar = (props: Props) => {
+const Sidebar = (_props: Props) => {
 	const SidebarItems: SidebarItemProps[] = [
 		{ name: "Dashboard", icon: MdDashboard, href: "/manage/dashboard" },
 		{

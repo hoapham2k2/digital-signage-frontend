@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 type Props = {};
 
-const RootLayout = (props: Props) => {
+const RootLayout = (_props: Props) => {
 	return (
 		<div className='lg:grid lg:grid-cols-[auto,1fr] h-screen overflow-x-hidden overflow-hidden'>
 			<Sidebar />

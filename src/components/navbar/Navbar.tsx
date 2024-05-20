@@ -1,4 +1,3 @@
-import React from "react";
 import AppSearchbar from "./AppSearchbar";
 import NewDropdownButton from "./NewDropdownButton";
 import NotificationButton from "./NotificationButton";
@@ -6,7 +5,7 @@ import AccountSettingButton from "./AccountSettingButton";
 
 type Props = {};
 
-const Navbar = (props: Props) => {
+const Navbar = (_props: Props) => {
 	return (
 		<div className='h-14 border p-4 flex flex-row justify-between items-center'>
 			<AppSearchbar />

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 type Props = {};
 
-const AppDatePicker = (props: Props) => {
+const AppDatePicker = (_props: Props) => {
 	const [date, setDate] = React.useState<Date>();
 	return (
 		<Popover>

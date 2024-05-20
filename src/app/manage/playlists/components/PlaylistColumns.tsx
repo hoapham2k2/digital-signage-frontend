@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 export const PlaylistColumns: ColumnDef<Playlist>[] = [
 	{
 		id: "thumbnail",
-		cell: ({ row }) => {
+		cell: () => {
 			return <div className='w-8 h-8 bg-gray-300 rounded-md'></div>;
 		},
 	},

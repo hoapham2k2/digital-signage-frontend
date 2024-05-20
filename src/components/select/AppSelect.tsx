@@ -1,4 +1,3 @@
-import React from "react";
 import {
 	Select,
 	SelectContent,
@@ -7,7 +6,6 @@ import {
 	SelectValue,
 } from "../ui/select";
 import {
-	Schedule,
 	ScheduleOperatorForDate,
 	ScheduleOperatorForTime,
 	ScheduleOperatorForWeekdays,

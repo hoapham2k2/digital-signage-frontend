@@ -1,9 +1,8 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 
 type Props = {};
 
-const PreviewLayout = (props: Props) => {
+const PreviewLayout = (_props: Props) => {
 	return (
 		<div>
 			<Outlet />

@@ -1,8 +1,6 @@
-import React from "react";
-
 type Props = {};
 
-const AccountSettingManagementPage = (props: Props) => {
+const AccountSettingManagementPage = (_props: Props) => {
 	return <div>AccountSettingManagementPage</div>;
 };
 

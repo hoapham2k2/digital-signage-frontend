@@ -5,12 +5,12 @@ import { useNavigate, useParams } from "react-router-dom";
 
 type Props = {};
 
-const DeleteScreenButton = (props: Props) => {
+const DeleteScreenButton = (_props: Props) => {
 	const { id } = useParams();
 	const deleteScreen = appStore((state) => state.deleteScreen);
 
 	const navigate = useNavigate();
-	const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+	const handleOnClick = (_e: React.MouseEvent<HTMLButtonElement>) => {
 		// Add delete screen logic here
 		deleteScreen(id as string);
 		navigate("/manage/screens");

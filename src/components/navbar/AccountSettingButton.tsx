@@ -5,7 +5,7 @@ import { DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 type Props = {};
 
-const AccountSettingButton = (props: Props) => {
+const AccountSettingButton = (_props: Props) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className='flex flex-row items-center gap-2'>

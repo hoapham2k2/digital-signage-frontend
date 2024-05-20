@@ -28,7 +28,7 @@ export type AppActions = {
 	updateSchedule: (schedule: Schedule) => void; // Update schedule information
 };
 
-export const appStore = create<AppType & AppActions>((set, get) => ({
+export const appStore = create<AppType & AppActions>((set, _get) => ({
 	screens: [
 		{
 			id: "1",

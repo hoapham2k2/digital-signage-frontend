@@ -1,5 +1,4 @@
 import { DataTable } from "@/components/table/DataTable";
-import React from "react";
 import { PlaylistColumns } from "./PlaylistColumns";
 import { Playlist, Screen } from "@/lib/types";
 import { appStore } from "@/lib/stores/app-store";
@@ -7,7 +6,7 @@ import { useParams } from "react-router-dom";
 
 type Props = {};
 
-const PlaylistForScreenTable = (props: Props) => {
+const PlaylistForScreenTable = (_props: Props) => {
 	const { id } = useParams();
 	const screen = appStore((state) =>
 		state.screens.find((screen: Screen) => screen.id === id)

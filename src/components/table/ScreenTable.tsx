@@ -1,4 +1,3 @@
-import React from "react";
 import { DataTable } from "./DataTable";
 import { ScreenColumns } from "./ScreenColumn";
 import { Screen } from "@/lib/types";

@@ -11,7 +11,7 @@ import { QRCodeSVG } from "qrcode.react";
 
 type Props = {};
 
-const ScreenDetailPage = (props: Props) => {
+const ScreenDetailPage = (_props: Props) => {
 	const { id } = useParams();
 	const screen = appStore((state) =>
 		state.screens.find((screen: Screen) => screen.id === id)
@@ -93,8 +93,7 @@ const ScreenDetailPage = (props: Props) => {
 							/>
 
 							<Button
-								onClick={(e) => {
-									//copy to clipboard the url
+								onClick={(_e) => {
 									navigator.clipboard.writeText(
 										`${window.location.href}/preview`
 									);

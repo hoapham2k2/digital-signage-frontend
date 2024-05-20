@@ -1,12 +1,11 @@
 import { DataTable } from "@/components/table/DataTable";
-import React from "react";
 import { ContentsColumns } from "./ContentColumns";
 import { AppType, appStore } from "@/lib/stores/app-store";
 import { Content } from "@/lib/types";
 
 type Props = {};
 
-const ContentTable = (props: Props) => {
+const ContentTable = (_props: Props) => {
 	const contentData: Content[] = appStore((state: AppType) => state.contents);
 	return (
 		<div>

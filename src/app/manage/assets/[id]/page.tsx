@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 type Props = {};
 
-const AssetDetailPage = (props: Props) => {
+const AssetDetailPage = (_props: Props) => {
 	const { id } = useParams();
 	const [inputValue, setInputValue] = React.useState<string | undefined>("");
 

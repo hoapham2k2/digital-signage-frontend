@@ -1,13 +1,11 @@
 import ScreenTable from "@/components/table/ScreenTable";
 import { Button } from "@/components/ui/button";
 import { appStore } from "@/lib/stores/app-store";
-import { Group, Playlist, Screen } from "@/lib/types";
-import React from "react";
-import { useParams } from "react-router-dom";
+import { Screen } from "@/lib/types";
 
 type Props = {};
 
-const ScreensManagementPage = (props: Props) => {
+const ScreensManagementPage = (_props: Props) => {
 	const screens: Screen[] = appStore((state) => state.screens);
 
 	return (

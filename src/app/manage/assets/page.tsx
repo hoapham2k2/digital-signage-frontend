@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
 import ContentTable from "./components/ContentTable";
 
 type Props = {};
 
-const ContentsManagementPage = (props: Props) => {
+const ContentsManagementPage = (_props: Props) => {
 	return (
 		<div>
 			<div className='flex flex-row justify-between items-center'>

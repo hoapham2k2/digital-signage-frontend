@@ -3,14 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { appStore } from "@/lib/stores/app-store";
-import React from "react";
-import { useParams } from "react-router-dom";
 import EditScreenGroupLabelInput from "../../screens/[id]/edit/components/EditScreenGroupLabelInput";
 import PlaylistDetailSchedule from "./components/PlaylistDetailSchedule";
+import { useParams } from "react-router-dom";
 
 type Props = {};
 
-const PlaylistDetailPage = (props: Props) => {
+const PlaylistDetailPage = (_props: Props) => {
 	const { id } = useParams();
 	const currentPlaylist = appStore((state) =>
 		state.playlists.find((playlist) => playlist.id === id)

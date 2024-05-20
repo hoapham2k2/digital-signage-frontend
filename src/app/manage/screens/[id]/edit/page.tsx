@@ -6,7 +6,7 @@ import { appStore } from "@/lib/stores/app-store";
 
 type Props = {};
 
-const EditScreenDetailPage = (props: Props) => {
+const EditScreenDetailPage = (_props: Props) => {
 	const { id } = useParams();
 	const screen = appStore((state) => state.screens.find((s) => s.id === id));
 	return (

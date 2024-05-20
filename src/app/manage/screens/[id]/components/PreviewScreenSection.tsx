@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 type Props = {};
 
-const PreviewScreenSection = (props: Props) => {
+const PreviewScreenSection = (_props: Props) => {
 	const { pathname } = useLocation();
-	const navigate = useNavigate();
 
 	return (
 		<div className='relative w-full lg:h-80 bg-slate-300'>
