@@ -72,7 +72,7 @@ const PlaylistDetailPage = (_props: Props) => {
 					{/* Schedule Section */}
 					<div>
 						<h2 className='text-base'>Schedule</h2>
-						<PlaylistDetailSchedule />
+						{id && <PlaylistDetailSchedule playlistId={id} />}
 					</div>
 				</div>
 			</div>

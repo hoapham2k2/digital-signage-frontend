@@ -1,3 +1,4 @@
+import { appStore } from "@/lib/stores/app-store";
 import {
 	Select,
 	SelectContent,
@@ -6,43 +7,69 @@ import {
 	SelectValue,
 } from "../ui/select";
 import {
+	Schedule,
 	ScheduleOperatorForDate,
 	ScheduleOperatorForTime,
 	ScheduleOperatorForWeekdays,
 	ScheduleType,
 } from "@/lib/types";
 
+const scheduleOptionsMap: Record<ScheduleType, string[]> = {
+	[ScheduleType.TheDate]: Object.values(ScheduleOperatorForDate),
+	[ScheduleType.TheTime]: Object.values(ScheduleOperatorForTime),
+	[ScheduleType.TheWeekdays]: Object.values(ScheduleOperatorForWeekdays),
+};
+
 type Props = {
-	options: string[];
-	selectedOption: string;
-	onSelect:
-		| ((scheduleType: ScheduleType) => void)
-		| ((
-				scheduleOperator:
-					| ScheduleOperatorForDate
-					| ScheduleOperatorForTime
-					| ScheduleOperatorForWeekdays
-		  ) => void);
+	componentType: "scheduleType" | "scheduleOperator";
+	currentSchedule: Schedule;
 };
 
 const AppSelect = (props: Props) => {
+	const updateScheduleType = appStore((state) => state.updateScheduleType);
+	const updateScheduleOperator = appStore(
+		(state) => state.updateScheduleOperator
+	);
+
+	// const updateSchedule = appStore((state) => state.updateSchedule);
 	return (
 		<Select
-			defaultValue={props.selectedOption}
 			onValueChange={(value: string) => {
-				props.onSelect(value as never);
+				if (props.componentType === "scheduleType") {
+					updateScheduleType(props.currentSchedule, value as ScheduleType);
+				} else if (props.componentType === "scheduleOperator") {
+					updateScheduleOperator(
+						props.currentSchedule,
+						value as
+							| ScheduleOperatorForDate
+							| ScheduleOperatorForTime
+							| ScheduleOperatorForWeekdays
+					);
+				}
 			}}>
 			<SelectTrigger>
-				<SelectValue placeholder={props.selectedOption || "Select an option"} />
+				<SelectValue placeholder={"Select an option"} />
 			</SelectTrigger>
 			<SelectContent>
-				{props.options.map((option: string) => {
-					return (
-						<SelectItem key={option} value={option}>
-							{option}
-						</SelectItem>
-					);
-				})}
+				{props.componentType === "scheduleType" &&
+					Object.values(ScheduleType).map((option: string) => {
+						return (
+							<SelectItem key={option} value={option}>
+								{option}
+							</SelectItem>
+						);
+					})}
+
+				{props.componentType === "scheduleOperator" &&
+					Object.values(
+						scheduleOptionsMap[props.currentSchedule.scheduleType]
+					).map((option: string) => {
+						return (
+							<SelectItem key={option} value={option}>
+								{option}
+							</SelectItem>
+						);
+					})}
 			</SelectContent>
 		</Select>
 	);

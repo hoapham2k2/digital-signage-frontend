@@ -6,6 +6,7 @@ import {
 	Schedule,
 	ScheduleOperatorForDate,
 	ScheduleOperatorForTime,
+	ScheduleOperatorForWeekdays,
 	ScheduleType,
 	Screen,
 } from "../types";
@@ -26,6 +27,19 @@ export type AppActions = {
 	deleteContent: (id: string) => void; // Delete content information
 
 	updateSchedule: (schedule: Schedule) => void; // Update schedule information
+	addSchedule: (schedule: Schedule) => void; // Add new schedule
+	deleteSchedule: (scheduleId: string) => void; // Delete schedule information
+	updateScheduleType: (
+		schedule: Schedule,
+		newScheduleType: ScheduleType
+	) => void; // Update schedule type
+	updateScheduleOperator: (
+		schedule: Schedule,
+		newScheduleOperator:
+			| ScheduleOperatorForDate
+			| ScheduleOperatorForTime
+			| ScheduleOperatorForWeekdays
+	) => void; // Update schedule operator
 };
 
 export const appStore = create<AppType & AppActions>((set, _get) => ({
@@ -102,6 +116,13 @@ export const appStore = create<AppType & AppActions>((set, _get) => ({
 			scheduleOperator: ScheduleOperatorForTime.IsBetween,
 			scheduleValue: new Date(),
 		},
+		{
+			id: "3",
+			playlistId: "1",
+			scheduleType: ScheduleType.TheTime,
+			scheduleOperator: ScheduleOperatorForTime.IsBetween,
+			scheduleValue: new Date(),
+		},
 	],
 	// for screen actions
 	updateScreen: (screen: Screen) => {
@@ -133,6 +154,45 @@ export const appStore = create<AppType & AppActions>((set, _get) => ({
 		set((state) => ({
 			schedules: state.schedules.map((s) =>
 				s.id === schedule.id ? schedule : s
+			),
+		}));
+	},
+	addSchedule: (schedule: Schedule) => {
+		set((state) => ({
+			schedules:
+				state.schedules.length > 0
+					? [
+							...state.schedules,
+							{ ...schedule, id: `${state.schedules.length + 1}` },
+					  ]
+					: [schedule],
+		}));
+	},
+	deleteSchedule: (scheduleId: string) => {
+		set((state) => ({
+			schedules: state.schedules.filter((s) => s.id !== scheduleId),
+		}));
+	},
+	updateScheduleType: (schedule: Schedule, newScheduleType: ScheduleType) => {
+		set((state) => ({
+			schedules: state.schedules.map((s) =>
+				s.id === schedule.id ? { ...s, scheduleType: newScheduleType } : s
+			),
+		}));
+	},
+
+	updateScheduleOperator: (
+		schedule: Schedule,
+		newScheduleOperator:
+			| ScheduleOperatorForDate
+			| ScheduleOperatorForTime
+			| ScheduleOperatorForWeekdays
+	) => {
+		set((state) => ({
+			schedules: state.schedules.map((s) =>
+				s.id === schedule.id
+					? { ...s, scheduleOperator: newScheduleOperator }
+					: s
 			),
 		}));
 	},
