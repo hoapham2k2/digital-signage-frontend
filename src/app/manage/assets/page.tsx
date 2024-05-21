@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import ContentTable from "./components/ContentTable";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const ContentsManagementPage = (_props: Props) => {
 	return (

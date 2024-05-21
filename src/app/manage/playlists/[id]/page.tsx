@@ -7,7 +7,7 @@ import EditScreenGroupLabelInput from "../../screens/[id]/edit/components/EditSc
 import PlaylistDetailSchedule from "./components/PlaylistDetailSchedule";
 import { useParams } from "react-router-dom";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const PlaylistDetailPage = (_props: Props) => {
 	const { id } = useParams();

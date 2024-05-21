@@ -3,7 +3,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { DropdownMenu, DropdownMenuItem } from "../ui/dropdown-menu";
 import { DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const AccountSettingButton = (_props: Props) => {
 	return (

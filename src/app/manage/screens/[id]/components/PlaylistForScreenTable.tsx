@@ -4,7 +4,7 @@ import { Playlist, Screen } from "@/lib/types";
 import { appStore } from "@/lib/stores/app-store";
 import { useParams } from "react-router-dom";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const PlaylistForScreenTable = (_props: Props) => {
 	const { id } = useParams();

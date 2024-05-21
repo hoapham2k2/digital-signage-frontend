@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const HistoryBackButton = (_props: Props) => {
 	const navigate = useNavigate();

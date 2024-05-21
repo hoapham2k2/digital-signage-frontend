@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const PlaylistDetailSchedule = (_props: Props) => {
 	const { id } = useParams();

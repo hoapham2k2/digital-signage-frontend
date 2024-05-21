@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const DashboardPage = (_props: Props) => {
 	return (

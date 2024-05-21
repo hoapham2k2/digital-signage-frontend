@@ -3,7 +3,7 @@ import NewDropdownButton from "./NewDropdownButton";
 import NotificationButton from "./NotificationButton";
 import AccountSettingButton from "./AccountSettingButton";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const Navbar = (_props: Props) => {
 	return (

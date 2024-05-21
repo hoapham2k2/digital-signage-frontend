@@ -7,7 +7,7 @@ import {
 import { Button } from "../ui/button";
 import { IoIosAdd } from "react-icons/io";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const NewDropdownButton = (_props: Props) => {
 	const dropdownOptions = [

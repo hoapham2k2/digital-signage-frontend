@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { appStore } from "@/lib/stores/app-store";
 import { Screen } from "@/lib/types";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const ScreensManagementPage = (_props: Props) => {
 	const screens: Screen[] = appStore((state) => state.screens);

@@ -3,7 +3,7 @@ import { appStore } from "@/lib/stores/app-store";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const DeleteScreenButton = (_props: Props) => {
 	const { id } = useParams();

@@ -14,7 +14,7 @@ import AccountSettingManagementPage from "@/app/manage/account/page";
 import PlaylistDetailPage from "@/app/manage/playlists/[id]/page";
 import EditScreenDetailPage from "@/app/manage/screens/[id]/edit/page";
 import AssetDetailPage from "@/app/manage/assets/[id]/page";
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const routes = createBrowserRouter([
 	{

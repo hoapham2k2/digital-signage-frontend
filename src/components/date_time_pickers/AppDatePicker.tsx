@@ -6,7 +6,7 @@ import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const AppDatePicker = (_props: Props) => {
 	const [date, setDate] = React.useState<Date>();

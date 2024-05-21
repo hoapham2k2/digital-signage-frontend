@@ -3,7 +3,7 @@ import { ContentsColumns } from "./ContentColumns";
 import { AppType, appStore } from "@/lib/stores/app-store";
 import { Content } from "@/lib/types";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const ContentTable = (_props: Props) => {
 	const contentData: Content[] = appStore((state: AppType) => state.contents);

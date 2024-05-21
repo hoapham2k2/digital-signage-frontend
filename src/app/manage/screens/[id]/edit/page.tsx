@@ -4,7 +4,7 @@ import DeleteScreenButton from "./components/DeleteScreenButton";
 import EditScreenForm from "./components/EditScreenForm";
 import { appStore } from "@/lib/stores/app-store";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const EditScreenDetailPage = (_props: Props) => {
 	const { id } = useParams();

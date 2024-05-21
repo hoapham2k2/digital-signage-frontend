@@ -9,7 +9,7 @@ import AppBadge from "@/components/buttons/AppBadge";
 import { cn } from "@/lib/utils";
 import { QRCodeSVG } from "qrcode.react";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const ScreenDetailPage = (_props: Props) => {
 	const { id } = useParams();

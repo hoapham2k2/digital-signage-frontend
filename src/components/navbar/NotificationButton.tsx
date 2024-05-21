@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 import { IoIosNotifications } from "react-icons/io";
 import { Badge } from "../ui/badge";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const NotificationButton = (_props: Props) => {
 	return (

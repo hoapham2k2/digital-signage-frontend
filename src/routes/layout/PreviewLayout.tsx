@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const PreviewLayout = (_props: Props) => {
 	return (

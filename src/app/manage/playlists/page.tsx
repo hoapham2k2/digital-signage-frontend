@@ -1,6 +1,6 @@
 import PlaylistTable from "./components/PlaylistTable";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const PlaylistsManagementPage = (_props: Props) => {
 	return (

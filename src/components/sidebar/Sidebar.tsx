@@ -3,7 +3,7 @@ import { MdDashboard, MdOutlineScreenshotMonitor } from "react-icons/md";
 import { VscFileMedia, VscFiles } from "react-icons/vsc";
 import { FiSettings } from "react-icons/fi";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const Sidebar = (_props: Props) => {
 	const SidebarItems: SidebarItemProps[] = [

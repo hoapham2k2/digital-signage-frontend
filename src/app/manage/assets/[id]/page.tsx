@@ -5,7 +5,7 @@ import { appStore } from "@/lib/stores/app-store";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const AssetDetailPage = (_props: Props) => {
 	const { id } = useParams();

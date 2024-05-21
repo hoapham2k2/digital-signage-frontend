@@ -2,7 +2,7 @@ import Navbar from "@/components/navbar/Navbar";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
 
-type Props = {};
+type Props = NonNullable<unknown>;
 
 const RootLayout = (_props: Props) => {
 	return (
