@@ -1,7 +1,9 @@
 import AppDatePicker from "@/components/date_time_pickers/AppDatePicker";
-import { TimePickerDemo } from "@/components/date_time_pickers/AppTimePicker";
 import { Schedule, ScheduleOperatorForTime, ScheduleType } from "@/lib/types";
 import ScheduleWeekdaysToggleGroup from "./ScheduleWeekdaysToggleGroup";
+import React from "react";
+import { appStore } from "@/lib/stores/app-store";
+import { ScheduleBetweenTimeValue } from "./ScheduleBetweenTimeValue";
 
 type ScheduleValueSectionProps = {
 	currentSchedule: NonNullable<Schedule>;
@@ -10,44 +12,40 @@ type ScheduleValueSectionProps = {
 export const ScheduleValueSection: React.FC<ScheduleValueSectionProps> = (
 	_props: ScheduleValueSectionProps
 ) => {
-	let dates = {
-		start: new Date(),
-		end: new Date(),
-	};
+	const updateScheduleDateValue = appStore(
+		(state) => state.updateScheduleDateValue
+	);
 
-	const handleStartChange = (date: Date | undefined) => {
-		if (date) {
-			dates.start = date;
-		}
-	};
-
-	const handleEndChange = (date: Date | undefined) => {
-		if (date) {
-			dates.end = date;
-		}
+	const AppUpdateSchedule = (_newDateValue: Date) => {
+		updateScheduleDateValue(_props.currentSchedule, _newDateValue);
 	};
 
 	return (
 		<div>
 			{_props.currentSchedule.scheduleType === ScheduleType.TheDate && (
-				<AppDatePicker />
+				<AppDatePicker
+					scheduleValue={_props.currentSchedule.scheduleValue}
+					updateSchedule={AppUpdateSchedule}
+				/>
 			)}
 
 			{_props.currentSchedule.scheduleType === ScheduleType.TheTime &&
 				_props.currentSchedule.scheduleOperator ===
 					ScheduleOperatorForTime.IsBetween && (
-					<div className='flex flex-row gap-2'>
-						<TimePickerDemo date={dates.start} setDate={handleStartChange} />
-						<TimePickerDemo date={dates.end} setDate={handleEndChange} />
-					</div>
+					<ScheduleBetweenTimeValue currentSchedule={_props.currentSchedule} />
 				)}
 
 			{_props.currentSchedule.scheduleType === ScheduleType.TheTime &&
 				_props.currentSchedule.scheduleOperator !==
-					ScheduleOperatorForTime.IsBetween && <AppDatePicker />}
+					ScheduleOperatorForTime.IsBetween && (
+					<AppDatePicker
+						scheduleValue={_props.currentSchedule.scheduleValue}
+						updateSchedule={AppUpdateSchedule}
+					/>
+				)}
 
 			{_props.currentSchedule.scheduleType === ScheduleType.TheWeekdays && (
-				<ScheduleWeekdaysToggleGroup />
+				<ScheduleWeekdaysToggleGroup currentSchedule={_props.currentSchedule} />
 			)}
 		</div>
 	);

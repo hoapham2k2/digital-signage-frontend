@@ -60,5 +60,5 @@ export type Schedule = {
 		| ScheduleOperatorForDate
 		| ScheduleOperatorForTime
 		| ScheduleOperatorForWeekdays;
-	scheduleValue: unknown;
+	scheduleValue: any;
 };

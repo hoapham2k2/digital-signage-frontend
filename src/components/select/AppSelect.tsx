@@ -30,10 +30,17 @@ const AppSelect = (props: Props) => {
 	const updateScheduleOperator = appStore(
 		(state) => state.updateScheduleOperator
 	);
+	const handleRenderDefaultValue = () => {
+		if (props.componentType === "scheduleType") {
+			return props.currentSchedule.scheduleType;
+		} else if (props.componentType === "scheduleOperator") {
+			return props.currentSchedule.scheduleOperator;
+		}
+	};
 
-	// const updateSchedule = appStore((state) => state.updateSchedule);
 	return (
 		<Select
+			defaultValue={handleRenderDefaultValue()}
 			onValueChange={(value: string) => {
 				if (props.componentType === "scheduleType") {
 					updateScheduleType(props.currentSchedule, value as ScheduleType);
@@ -46,7 +53,8 @@ const AppSelect = (props: Props) => {
 							| ScheduleOperatorForWeekdays
 					);
 				}
-			}}>
+			}}
+			value={handleRenderDefaultValue()}>
 			<SelectTrigger>
 				<SelectValue placeholder={"Select an option"} />
 			</SelectTrigger>

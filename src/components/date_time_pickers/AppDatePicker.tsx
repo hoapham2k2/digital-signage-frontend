@@ -6,10 +6,26 @@ import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
-type Props = NonNullable<unknown>;
+type Props = {
+	scheduleValue: Date;
+	updateSchedule: (newDateValue: Date) => void;
+};
 
 const AppDatePicker = (_props: Props) => {
 	const [date, setDate] = React.useState<Date>();
+
+	React.useEffect(() => {
+		if (_props.scheduleValue) {
+			// try parsing the date value before setting it
+			const parsedDate = new Date(_props.scheduleValue);
+			if (!isNaN(parsedDate.getTime())) {
+				setDate(parsedDate);
+			} else {
+				setDate(new Date());
+			}
+		}
+	}, [_props.scheduleValue]);
+
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
@@ -27,8 +43,17 @@ const AppDatePicker = (_props: Props) => {
 				<Calendar
 					mode='single'
 					selected={date}
-					onSelect={setDate}
+					onSelect={(date) => {
+						if (date) {
+							setDate(date);
+							_props.updateSchedule(date);
+						}
+					}}
 					initialFocus
+					disabled={{
+						// disable dates before today
+						before: new Date(),
+					}}
 				/>
 			</PopoverContent>
 		</Popover>

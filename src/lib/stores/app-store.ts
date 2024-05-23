@@ -40,6 +40,7 @@ export type AppActions = {
 			| ScheduleOperatorForTime
 			| ScheduleOperatorForWeekdays
 	) => void; // Update schedule operator
+	updateScheduleDateValue: (schedule: Schedule, newDateValue: Date) => void; // Update schedule date value
 };
 
 export const appStore = create<AppType & AppActions>((set, _get) => ({
@@ -176,7 +177,24 @@ export const appStore = create<AppType & AppActions>((set, _get) => ({
 	updateScheduleType: (schedule: Schedule, newScheduleType: ScheduleType) => {
 		set((state) => ({
 			schedules: state.schedules.map((s) =>
-				s.id === schedule.id ? { ...s, scheduleType: newScheduleType } : s
+				s.id === schedule.id
+					? {
+							...s,
+							scheduleType: newScheduleType,
+							scheduleOperator:
+								newScheduleType === ScheduleType.TheDate
+									? ScheduleOperatorForDate.IsExactly
+									: newScheduleType === ScheduleType.TheTime
+									? ScheduleOperatorForTime.IsBetween
+									: ScheduleOperatorForWeekdays.IsOn,
+							scheduleValue:
+								newScheduleType === ScheduleType.TheDate
+									? new Date()
+									: newScheduleType === ScheduleType.TheTime
+									? [new Date(), new Date()]
+									: [""],
+					  }
+					: s
 			),
 		}));
 	},
@@ -191,8 +209,23 @@ export const appStore = create<AppType & AppActions>((set, _get) => ({
 		set((state) => ({
 			schedules: state.schedules.map((s) =>
 				s.id === schedule.id
-					? { ...s, scheduleOperator: newScheduleOperator }
+					? {
+							...s,
+							scheduleOperator: newScheduleOperator,
+							scheduleValue:
+								newScheduleOperator === ScheduleOperatorForTime.IsBetween
+									? [new Date(), new Date()]
+									: new Date(),
+					  }
 					: s
+			),
+		}));
+	},
+
+	updateScheduleDateValue: (schedule: Schedule, newDateValue: Date) => {
+		set((state) => ({
+			schedules: state.schedules.map((s) =>
+				s.id === schedule.id ? { ...s, scheduleValue: newDateValue } : s
 			),
 		}));
 	},
