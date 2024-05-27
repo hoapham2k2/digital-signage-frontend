@@ -1,21 +1,36 @@
-import { appStore } from "@/lib/stores/app-store";
+import { fetchContentsByPlaylistIds } from "@/apis/contents";
 import { Content, Playlist } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
+import { useQuery } from "react-query";
 
 export const PlaylistColumns: ColumnDef<Playlist>[] = [
 	{
 		id: "content",
 		header: "Content",
 		cell: ({ row }) => {
-			const contents: Content[] = appStore((state) => state.contents);
-			const content = contents.find((content) =>
-				row.original.contents.includes(content.id)
-			);
+			const currentPlaylistRow = row.original;
+			const { data: contentsBelongToPlaylists } = useQuery<Content[]>({
+				queryKey: ["contents", currentPlaylistRow],
+				queryFn: () => {
+					return fetchContentsByPlaylistIds([currentPlaylistRow.id]);
+				},
+				enabled: !!currentPlaylistRow,
+			});
 
 			return (
-				<div className='flex flex-row items-center gap-2'>
-					<div className='w-8 h-8 bg-gray-300 rounded-md'></div>
-					<div>{content?.name}</div>
+				<div>
+					{contentsBelongToPlaylists &&
+						contentsBelongToPlaylists.find(
+							(content) => content.id === currentPlaylistRow.id
+						) && (
+							<div>
+								{contentsBelongToPlaylists
+									.filter((content) => content.id === currentPlaylistRow.id)
+									.map((content) => (
+										<div key={content.id}>{content.name}</div>
+									))}
+							</div>
+						)}
 				</div>
 			);
 		},
@@ -24,12 +39,31 @@ export const PlaylistColumns: ColumnDef<Playlist>[] = [
 		id: "Type",
 		header: "Type",
 		cell: ({ row }) => {
-			const contents: Content[] = appStore((state) => state.contents);
-			const content = contents.find((content) =>
-				row.original.contents.includes(content.id)
-			);
+			const currentPlaylistRow = row.original;
+			const { data: contentsBelongToPlaylists } = useQuery<Content[]>({
+				queryKey: ["contents", currentPlaylistRow],
+				queryFn: () => {
+					return fetchContentsByPlaylistIds([currentPlaylistRow.id]);
+				},
+				enabled: !!currentPlaylistRow,
+			});
 
-			return <div>{content?.type}</div>;
+			return (
+				<div>
+					{contentsBelongToPlaylists &&
+						contentsBelongToPlaylists.find(
+							(content) => content.id === currentPlaylistRow.id
+						) && (
+							<div>
+								{contentsBelongToPlaylists
+									.filter((content) => content.id === currentPlaylistRow.id)
+									.map((content) => (
+										<div key={content.id}>{content.type}</div>
+									))}
+							</div>
+						)}
+				</div>
+			);
 		},
 	},
 	{

@@ -1,12 +1,13 @@
 import { DataTable } from "@/components/table/DataTable";
 import { ContentsColumns } from "./ContentColumns";
-import { AppType, appStore } from "@/lib/stores/app-store";
-import { Content } from "@/lib/types";
+import { useContentStore } from "@/lib/stores/content-store";
 
 type Props = NonNullable<unknown>;
 
 const ContentTable = (_props: Props) => {
-	const contentData: Content[] = appStore((state: AppType) => state.contents);
+	const { contentData } = useContentStore((state) => ({
+		contentData: state.contents,
+	}));
 	return (
 		<div>
 			<DataTable isContent columns={ContentsColumns} data={contentData} />

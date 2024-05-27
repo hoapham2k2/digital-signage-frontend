@@ -1,4 +1,4 @@
-import { Screen } from "@/lib/types";
+import { Group, Screen } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { SlScreenDesktop } from "react-icons/sl";
 import { MoreHorizontal } from "lucide-react";
@@ -10,8 +10,11 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
-import { appStore } from "@/lib/stores/app-store";
+
 import AppBadge from "../buttons/AppBadge";
+import { useQuery } from "react-query";
+import { fetchGroupByIds } from "@/apis/groups";
+
 export const ScreenColumns: ColumnDef<Screen>[] = [
 	{
 		id: "thumbnail",
@@ -30,16 +33,21 @@ export const ScreenColumns: ColumnDef<Screen>[] = [
 	},
 	{
 		header: "Group labels",
-		accessorKey: "groups",
 		cell: ({ row }) => {
-			const screen = row.original;
+			const currentScreen = row.original;
+			const { data: groups } = useQuery<Group[]>({
+				queryKey: ["groups", currentScreen.groups],
+				queryFn: () => {
+					return fetchGroupByIds(currentScreen.groups);
+				},
+				enabled: !!currentScreen.groups,
+			});
 			return (
 				<div className='flex flex-row gap-1'>
-					{screen.groups.map((groupId: string) => {
-						const groups = appStore((state) => state.groups);
-						const group = groups.find((g) => g.id === groupId);
-						return <AppBadge key={groupId} name={group?.name || ""} />;
-					})}
+					{groups &&
+						groups.map((group) => (
+							<AppBadge key={group.id} name={group.name} />
+						))}
 				</div>
 			);
 		},

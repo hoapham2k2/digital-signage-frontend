@@ -2,8 +2,8 @@ import AppDatePicker from "@/components/date_time_pickers/AppDatePicker";
 import { Schedule, ScheduleOperatorForTime, ScheduleType } from "@/lib/types";
 import ScheduleWeekdaysToggleGroup from "./ScheduleWeekdaysToggleGroup";
 import React from "react";
-import { appStore } from "@/lib/stores/app-store";
 import { ScheduleBetweenTimeValue } from "./ScheduleBetweenTimeValue";
+import { useScheduleStore } from "@/lib/stores/schedule-store";
 
 type ScheduleValueSectionProps = {
 	currentSchedule: NonNullable<Schedule>;
@@ -12,7 +12,7 @@ type ScheduleValueSectionProps = {
 export const ScheduleValueSection: React.FC<ScheduleValueSectionProps> = (
 	_props: ScheduleValueSectionProps
 ) => {
-	const updateScheduleDateValue = appStore(
+	const updateScheduleDateValue = useScheduleStore(
 		(state) => state.updateScheduleDateValue
 	);
 

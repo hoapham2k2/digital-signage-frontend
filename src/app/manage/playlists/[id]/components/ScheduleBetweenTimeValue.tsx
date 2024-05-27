@@ -1,5 +1,5 @@
 import { TimePickerDemo } from "@/components/date_time_pickers/AppTimePicker";
-import { appStore } from "@/lib/stores/app-store";
+import { useScheduleStore } from "@/lib/stores/schedule-store";
 import { Schedule } from "@/lib/types";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,7 @@ export const ScheduleBetweenTimeValue: React.FC<
 	const [startDate, setStartDate] = useState<Date | undefined>();
 	const [endDate, setEndDate] = useState<Date | undefined>();
 
-	const updateSchedule = appStore((state) => state.updateSchedule);
+	const updateSchedule = useScheduleStore((state) => state.updateSchedule);
 
 	useEffect(() => {
 		// convert props.currentSchedule.scheduleValue = [new Date(), new Date()] to start and end date

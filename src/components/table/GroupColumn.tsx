@@ -1,25 +1,26 @@
-import { Group } from "@/lib/types";
+import { Group, Playlist, Screen } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "../ui/checkbox";
 import { MdScreenshotMonitor } from "react-icons/md";
-import { appStore } from "@/lib/stores/app-store";
+
 import { CgMediaLive } from "react-icons/cg";
-export const GroupColumns: ColumnDef<Group>[] = [
+import { useQuery } from "react-query";
+import { fetchScreensbyGroupIds } from "@/apis/screens";
+import { fetchPlaylistByGroupIds } from "@/apis/playlists";
+
+const handleRenderChecked = (row: any) => {
+	return row.getIsSelected() || row.original.inCurrent;
+};
+
+export const GroupColumns: ColumnDef<
+	Group & { inCurrent: any; screenCount: number; playlistCount: number }
+>[] = [
 	{
 		id: "select",
-		header: ({ table }) => (
-			<Checkbox
-				checked={
-					table.getIsAllPageRowsSelected() ||
-					(table.getIsSomePageRowsSelected() && "indeterminate")
-				}
-				onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-				aria-label='Select all'
-			/>
-		),
 		cell: ({ row }) => (
 			<Checkbox
-				checked={row.getIsSelected()}
+				// checked={row.getIsSelected() || true}
+				checked={handleRenderChecked(row)}
 				onCheckedChange={(value) => row.toggleSelected(!!value)}
 				aria-label='Select row'
 			/>
@@ -35,31 +36,35 @@ export const GroupColumns: ColumnDef<Group>[] = [
 	{
 		id: "screenCount",
 		header: () => <MdScreenshotMonitor />,
+
 		cell: ({ row }) => {
-			const groups = appStore((state) => state.groups);
-			const screens = appStore((state) => state.screens);
+			const currentGroupRow = row.original;
 
-			const group = groups.find((g) => g.id === row.original.id);
-			const screenCount = screens.filter((s) =>
-				s.groups.includes(group?.id || "")
-			).length;
+			const { data: screensBelongToGroup } = useQuery<Screen[]>({
+				queryKey: ["screens", currentGroupRow.id],
+				queryFn: () => {
+					return fetchScreensbyGroupIds([currentGroupRow.id]);
+				},
+			});
 
-			return screenCount;
+			return screensBelongToGroup?.length;
 		},
 	},
 	{
 		id: "playlistCount",
 		header: () => <CgMediaLive />,
+
 		cell: ({ row }) => {
-			const groups = appStore((state) => state.groups);
-			const playlists = appStore((state) => state.playlists);
+			const currentGroupRow = row.original;
 
-			const group = groups.find((g) => g.id === row.original.id);
-			const playlistCount = playlists.filter((p) =>
-				p.groups.includes(group?.id || "")
-			).length;
+			const { data: playlistBelongToGroup } = useQuery<Playlist[]>({
+				queryKey: ["screens", currentGroupRow.id],
+				queryFn: () => {
+					return fetchPlaylistByGroupIds([currentGroupRow.id]);
+				},
+			});
 
-			return playlistCount;
+			return playlistBelongToGroup?.length;
 		},
 	},
 ];

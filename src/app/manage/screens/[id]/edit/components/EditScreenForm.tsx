@@ -1,76 +1,90 @@
 import { Group, Screen } from "@/lib/types";
 import EditScreenGroupLabelInput from "./EditScreenGroupLabelInput";
-import { appStore } from "@/lib/stores/app-store";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { updateScreen } from "@/apis/screens";
+import { fetchGroupByIds } from "@/apis/groups";
 
 type Props = {
-	screen?: Screen;
+	screen: Screen;
 };
 
 const EditScreenForm = (props: Props) => {
-	const groups: Group[] = appStore((state) => state.groups);
-	const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-	const [inputNamevalue, setInputNameValue] = useState(
-		props.screen?.name || ""
-	);
-	const updateScreen = appStore((state) => state.updateScreen);
-
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInputNameValue(e.target.value);
-	};
+	const [currentScreen, setCurrentScreen] = useState<Screen | null>(null);
 
 	useEffect(() => {
-		if (inputNamevalue.trim() && inputNamevalue !== props.screen?.name) {
-			setIsButtonDisabled(false);
-		} else {
-			setIsButtonDisabled(true);
-		}
-	}, [inputNamevalue, props.screen?.name]);
+		setCurrentScreen(props.screen);
+	}, [props.screen]);
 
-	const handleSaveScreen = (_e: React.MouseEvent<HTMLButtonElement>) => {
-		if (props.screen) {
-			updateScreen({
-				...props.screen,
-				name: inputNamevalue,
-			});
+	const [isDataChanged, setIsDataChanged] = useState(false);
+	const queryClient = useQueryClient();
+	const { mutate } = useMutation(
+		() =>
+			updateScreen(
+				currentScreen?.id as string,
+				currentScreen as Omit<Screen, "id">
+			),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries({
+					queryKey: ["screen", currentScreen?.id],
+				});
+				setIsDataChanged(false);
+			},
 		}
-
-		setIsButtonDisabled(true);
+	);
+	const handleSaveScreen = async (_e: React.MouseEvent<HTMLButtonElement>) => {
+		await mutate();
+		await setIsDataChanged(false);
 	};
+
+	const { data: currentGroupsBelongToScreen } = useQuery<Group[]>({
+		queryKey: ["groups", currentScreen?.groups],
+		queryFn: () => {
+			return fetchGroupByIds(currentScreen?.groups as string[]);
+		},
+		enabled: !!currentScreen?.groups,
+	});
 
 	return (
 		<div>
-			<div className='flex flex-row justify-center items-center w-full h-fit bg-gray-200'>
-				<div className='w-1/2 p-4 flex flex-col gap-4'>
-					<EditScreenGroupLabelInput
-						groupLabelNames={
-							props.screen?.groups.map((groupId) => {
-								const group = groups.find((g) => g.id === groupId);
-								return group?.name || "";
-							}) || []
-						}
-					/>
-					<input
-						className='w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300'
-						type='text'
-						value={inputNamevalue}
-						onChange={handleInputChange}
-						placeholder='Screen Name'
-					/>
-				</div>
-			</div>
-			<div className='flex flex-row justify-end p-4 '>
-				{isButtonDisabled ? (
-					<Button disabled className='bg-gray-300 text-gray-500'>
-						Save
-					</Button>
-				) : (
-					<Button className='bg-blue-500 text-white' onClick={handleSaveScreen}>
-						Save
-					</Button>
-				)}
-			</div>
+			{currentScreen && (
+				<>
+					<div className='flex flex-row justify-center items-center w-full h-fit bg-gray-200'>
+						<div className='w-1/2 p-4 flex flex-col gap-4'>
+							{currentGroupsBelongToScreen && (
+								<EditScreenGroupLabelInput
+									currentScreen={currentScreen}
+									currentGroups={currentGroupsBelongToScreen}
+								/>
+							)}
+							<input
+								className='w-full h-10 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300'
+								type='text'
+								value={currentScreen?.name}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+									setCurrentScreen({
+										...currentScreen,
+										name: e.target.value,
+									});
+									setIsDataChanged(true);
+								}}
+								placeholder='Screen Name'
+							/>
+						</div>
+					</div>
+					<div className='flex flex-row justify-end p-4 '>
+						{isDataChanged && (
+							<Button
+								className='bg-blue-500 text-white'
+								onClick={handleSaveScreen}>
+								Save
+							</Button>
+						)}
+					</div>
+				</>
+			)}
 		</div>
 	);
 };

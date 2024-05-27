@@ -1,5 +1,5 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { appStore } from "@/lib/stores/app-store";
+import { useScheduleStore } from "@/lib/stores/schedule-store";
 import { Schedule } from "@/lib/types";
 
 type ComponentProps = {
@@ -18,7 +18,7 @@ const toggleGroupRecords: Record<string, string> = {
 export const ScheduleWeekdaysToggleGroup: React.FC<ComponentProps> = (
 	_props: ComponentProps
 ) => {
-	const updateSchedule = appStore((state) => state.updateSchedule);
+	const updateSchedule = useScheduleStore((state) => state.updateSchedule);
 	return (
 		<ToggleGroup
 			type='multiple'

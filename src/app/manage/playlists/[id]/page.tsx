@@ -2,18 +2,19 @@ import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { appStore } from "@/lib/stores/app-store";
 import EditScreenGroupLabelInput from "../../screens/[id]/edit/components/EditScreenGroupLabelInput";
 import PlaylistDetailSchedule from "./components/PlaylistDetailSchedule";
 import { useParams } from "react-router-dom";
+import { usePlaylistStore } from "@/lib/stores/playlist-store";
+import { useGroupStore } from "@/lib/stores/group-store";
 
 type Props = NonNullable<unknown>;
 
 const PlaylistDetailPage = (_props: Props) => {
 	const { id } = useParams();
-	const currentPlaylist = appStore((state) =>
-		state.playlists.find((playlist) => playlist.id === id)
-	);
+	const { currentPlaylist } = usePlaylistStore((state) => ({
+		currentPlaylist: state.playlists.find((p) => p.id === id),
+	}));
 	return (
 		<div>
 			{/* For Header */}
@@ -43,16 +44,16 @@ const PlaylistDetailPage = (_props: Props) => {
 						{/* Play ons section */}
 						<div>
 							<h2 className='text-base'>Play Ons</h2>
-							<EditScreenGroupLabelInput
+							{/* <EditScreenGroupLabelInput
 								groupLabelNames={
 									currentPlaylist?.groups.map((groupId) => {
-										const group = appStore((state) =>
+										const group = useGroupStore((state) =>
 											state.groups.find((g) => g.id === groupId)
 										);
 										return group?.name || "";
 									}) || []
 								}
-							/>
+							/> */}
 						</div>
 						{/* Schedule Section */}
 						{/* <div>

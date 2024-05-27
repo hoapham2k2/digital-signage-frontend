@@ -1,23 +1,29 @@
+import { deleteScreen } from "@/apis/screens";
 import { Button } from "@/components/ui/button";
-import { appStore } from "@/lib/stores/app-store";
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
-type Props = NonNullable<unknown>;
+import React from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
+
+type Props = {
+	screenId: string;
+};
 
 const DeleteScreenButton = (_props: Props) => {
-	const { id } = useParams();
-	const deleteScreen = appStore((state) => state.deleteScreen);
-
 	const navigate = useNavigate();
-	const handleOnClick = (_e: React.MouseEvent<HTMLButtonElement>) => {
-		// Add delete screen logic here
-		deleteScreen(id as string);
-		navigate("/manage/screens");
-	};
+	const queryClient = useQueryClient();
+
+	const { mutate } = useMutation(() => deleteScreen(_props.screenId), {
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ["screens"],
+			});
+			navigate("/manage/screens");
+		},
+	});
 
 	return (
-		<Button variant='destructive' onClick={handleOnClick}>
+		<Button variant='destructive' onClick={() => mutate()}>
 			Delete Screen
 		</Button>
 	);

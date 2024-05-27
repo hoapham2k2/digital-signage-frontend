@@ -1,6 +1,6 @@
 import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
-import { appStore } from "@/lib/stores/app-store";
+
 import { Content, Group, Playlist, Screen } from "@/lib/types";
 import { useNavigate, useParams } from "react-router-dom";
 import PreviewScreenSection from "./components/PreviewScreenSection";
@@ -8,34 +8,51 @@ import PlaylistForScreenTable from "./components/PlaylistForScreenTable";
 import AppBadge from "@/components/buttons/AppBadge";
 import { cn } from "@/lib/utils";
 import { QRCodeSVG } from "qrcode.react";
+import { useQuery } from "react-query";
+import { fetchGroupByIds } from "@/apis/groups";
+import { fetchPlaylistByGroupIds } from "@/apis/playlists";
+import { fetchScreenById } from "@/apis/screens";
+import { fetchContentsByPlaylistIds } from "@/apis/contents";
 
 type Props = NonNullable<unknown>;
 
 const ScreenDetailPage = (_props: Props) => {
 	const { id } = useParams();
-	const screen = appStore((state) =>
-		state.screens.find((screen: Screen) => screen.id === id)
-	);
-	const groupsBelongToScreen: Group[] = appStore(
-		(state) => state.groups
-	).filter((group) => screen?.groups.includes(group.id));
 
-	const playlists: Playlist[] = appStore((state) => state.playlists);
+	const { data: screen } = useQuery<Screen>({
+		queryKey: ["screens", id],
+		queryFn: () => {
+			return fetchScreenById(id || "");
+		},
+		enabled: !!id,
+	});
+	const { data: groupsBelongToScreen } = useQuery<Group[]>({
+		queryKey: ["groups", screen?.groups],
+		queryFn: () => {
+			return fetchGroupByIds(screen?.groups || []);
+		},
+		enabled: !!screen,
+	});
 
-	const playlistsForScreen: Playlist[] = playlists.filter((playlist) =>
-		playlist.groups.some((group) => screen?.groups.includes(group))
-	);
-	const contentsBelongToPlaylists: Content[] = appStore((state) =>
-		state.contents.filter((content) =>
-			playlistsForScreen.some((playlist) =>
-				playlist.contents.includes(content.id)
-			)
-		)
-	);
-	const sumOfPlaylistDuration = contentsBelongToPlaylists.reduce(
-		(acc, content) => acc + content.duration,
-		0
-	);
+	const { data: playlistsForScreen } = useQuery<Playlist[]>({
+		queryKey: ["playlists", groupsBelongToScreen],
+		queryFn: () => {
+			return fetchPlaylistByGroupIds(
+				groupsBelongToScreen?.map((group) => group.id || "") || []
+			);
+		},
+		enabled: !!groupsBelongToScreen,
+	});
+
+	const { data: contentsBelongToPlaylists } = useQuery<Content[]>({
+		queryKey: ["contents", playlistsForScreen],
+		queryFn: () => {
+			return fetchContentsByPlaylistIds(
+				playlistsForScreen?.map((playlist) => playlist.id || "") || []
+			);
+		},
+		enabled: !!playlistsForScreen,
+	});
 
 	const navigate = useNavigate();
 	return (
@@ -56,32 +73,45 @@ const ScreenDetailPage = (_props: Props) => {
 					<div className='w-1/2'>
 						<PreviewScreenSection />
 						<h2 className='text-lg mt-4'>
-							Current playlist ({sumOfPlaylistDuration} sec)
+							Current playlist{" "}
+							{contentsBelongToPlaylists?.reduce(
+								(acc, content) => acc + content.duration,
+								0
+							) || 0}{" "}
+							sec
 						</h2>
-						<PlaylistForScreenTable />
+						{screen && (
+							<PlaylistForScreenTable
+								playlists={playlistsForScreen || []}
+								screen={screen}
+							/>
+						)}
 					</div>
 					<div className='w-1/2'>
 						<div className='flex flex-row gap-4'>
 							<h3>Status</h3>
-							<AppBadge
-								name={`${groupsBelongToScreen.map((group) =>
-									group.name.includes("Virtual") ? "Virtual Screen" : null
-								)}`.replace(/,/g, "")}
-							/>
+							{groupsBelongToScreen && (
+								<AppBadge
+									name={`${groupsBelongToScreen.map((group) =>
+										group.name.includes("Virtual") ? "Virtual Screen" : null
+									)}`.replace(/,/g, "")}
+								/>
+							)}
 						</div>
 						<div>
 							<h3>Group Labels</h3>
 							<div className='flex flex-row gap-2'>
-								{groupsBelongToScreen.map((group) => (
-									<AppBadge
-										key={group.id}
-										name={group.name}
-										variant={"outline"}
-										className={cn({
-											"bg-gray-300": group.name.includes("Virtual"),
-										})}
-									/>
-								))}
+								{groupsBelongToScreen &&
+									groupsBelongToScreen.map((group) => (
+										<AppBadge
+											key={group.id}
+											name={group.name}
+											variant={"outline"}
+											className={cn({
+												"bg-gray-300": group.name.includes("Virtual"),
+											})}
+										/>
+									))}
 							</div>
 						</div>
 

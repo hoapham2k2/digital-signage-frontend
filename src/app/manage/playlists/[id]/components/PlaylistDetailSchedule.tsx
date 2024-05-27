@@ -1,22 +1,24 @@
-import { appStore } from "@/lib/stores/app-store";
 import { Schedule, ScheduleOperatorForDate, ScheduleType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import React from "react";
 import AppSelect from "@/components/select/AppSelect";
 import { Button } from "@/components/ui/button";
 import ScheduleValueSection from "./ScheduleValueSection";
+import { useScheduleStore } from "@/lib/stores/schedule-store";
 
 type Props = {
 	playlistId: NonNullable<string>;
 };
 const PlaylistDetailSchedule = (_props: Props) => {
-	const { addSchedule, deleteSchedule, appSchedules } = appStore((state) => ({
-		appSchedules: state.schedules.filter(
-			(schedule) => schedule.playlistId === _props.playlistId
-		),
-		addSchedule: state.addSchedule,
-		deleteSchedule: state.deleteSchedule,
-	}));
+	const { addSchedule, deleteSchedule, appSchedules } = useScheduleStore(
+		(state) => ({
+			appSchedules: state.schedules.filter(
+				(schedule) => schedule.playlistId === _props.playlistId
+			),
+			addSchedule: state.addSchedule,
+			deleteSchedule: state.deleteSchedule,
+		})
+	);
 
 	const handleAddSchedule = async (_e: React.MouseEvent<HTMLButtonElement>) => {
 		const defaultSchedule: Schedule = {

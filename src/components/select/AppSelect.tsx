@@ -1,4 +1,3 @@
-import { appStore } from "@/lib/stores/app-store";
 import {
 	Select,
 	SelectContent,

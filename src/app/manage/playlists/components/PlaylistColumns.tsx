@@ -6,7 +6,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { appStore } from "@/lib/stores/app-store";
+
 import { Playlist } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
@@ -30,38 +30,38 @@ export const PlaylistColumns: ColumnDef<Playlist>[] = [
 	{
 		id: "playOn",
 		header: "Play On",
-		cell: ({ row }) => {
-			const playlistCurrent = row.original;
-			const groupsWhichPlaylistBelongsTo = appStore
-				.getState()
-				.groups.filter((group) => playlistCurrent.groups.includes(group.id));
+		// cell: ({ row }) => {
+		// 	const playlistCurrent = row.original;
+		// 	const groupsWhichPlaylistBelongsTo = appStore
+		// 		.getState()
+		// 		.groups.filter((group) => playlistCurrent.groups.includes(group.id));
 
-			return (
-				<div>
-					{groupsWhichPlaylistBelongsTo.map((group) => (
-						<AppBadge key={group.id} name={group.name} />
-					))}
-				</div>
-			);
-		},
+		// 	return (
+		// 		<div>
+		// 			{groupsWhichPlaylistBelongsTo.map((group) => (
+		// 				<AppBadge key={group.id} name={group.name} />
+		// 			))}
+		// 		</div>
+		// 	);
+		// },
 	},
 	{
 		id: "duration",
 		header: "Duration",
-		cell: ({ row }) => {
-			const playlistCurrent = row.original;
-			const contentsInPlaylist = appStore
-				.getState()
-				.contents.filter((content) =>
-					playlistCurrent.contents.includes(content.id)
-				);
+		// cell: ({ row }) => {
+		// 	const playlistCurrent = row.original;
+		// 	const contentsInPlaylist = appStore
+		// 		.getState()
+		// 		.contents.filter((content) =>
+		// 			playlistCurrent.contents.includes(content.id)
+		// 		);
 
-			const totalDuration = contentsInPlaylist.reduce(
-				(acc, content) => acc + content.duration,
-				0
-			);
-			return <div>{totalDuration} sec</div>;
-		},
+		// 	const totalDuration = contentsInPlaylist.reduce(
+		// 		(acc, content) => acc + content.duration,
+		// 		0
+		// 	);
+		// 	return <div>{totalDuration} sec</div>;
+		// },
 	},
 	{
 		id: "status",
