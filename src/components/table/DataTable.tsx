@@ -25,11 +25,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 interface Props extends DataTableProps<any, any> {
-	isScreen?: boolean;
-	isPlaylist?: boolean;
-	isContent?: boolean;
-
-	setIsShowSaveGroupButton?: React.Dispatch<React.SetStateAction<boolean>>;
+	type: "screen" | "playlist" | "content";
 }
 
 export function DataTable(props: Props) {
@@ -40,19 +36,14 @@ export function DataTable(props: Props) {
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
-		onRowSelectionChange: setRowSelection,
 		state: {
 			rowSelection,
 		},
+		onRowSelectionChange: setRowSelection,
+		enableRowSelection: true,
 	});
 
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		if (props.setIsShowSaveGroupButton) {
-			props.setIsShowSaveGroupButton(Object.keys(rowSelection).length > 0);
-		}
-	}, [rowSelection]);
 
 	return (
 		<div className='rounded-md border'>
@@ -85,10 +76,14 @@ export function DataTable(props: Props) {
 									<TableCell
 										key={cell.id}
 										onClick={() => {
-											if (props.isScreen) {
-												//@ts-ignore
-												navigate("/manage/screens/" + cell.row.original.id);
-											}
+											//@ts-ignore
+											navigate(
+												`/manage/${
+													props.type === "content" ? "asset" : props.type
+												}s/${cell.row.original.id}${
+													props.type === "content" ? "/edit" : ""
+												}`
+											);
 										}}>
 										{flexRender(cell.column.columnDef.cell, cell.getContext())}
 									</TableCell>

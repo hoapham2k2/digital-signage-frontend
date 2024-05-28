@@ -2,8 +2,6 @@ import { DataTable } from "@/components/table/DataTable";
 import { PlaylistColumns } from "./PlaylistColumns";
 import { Playlist, Screen } from "@/lib/types";
 
-import { useParams } from "react-router-dom";
-
 type Props = {
 	screen: Screen;
 	playlists: Playlist[];

@@ -21,3 +21,14 @@ export const fetchPlaylistByGroupIds = async (
 	);
 	return filteredPlaylists;
 };
+
+export const updatePlaylist = async (
+	id: string,
+	playlist: Omit<Playlist, "id">
+) => {
+	await api.put(`/playlists/${id}`, playlist);
+};
+
+export const deletePlaylist = async (id: string): Promise<void> => {
+	await api.delete(`/playlists/${id}`);
+};

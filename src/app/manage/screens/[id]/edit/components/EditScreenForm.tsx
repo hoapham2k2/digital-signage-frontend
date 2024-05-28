@@ -55,8 +55,8 @@ const EditScreenForm = (props: Props) => {
 						<div className='w-1/2 p-4 flex flex-col gap-4'>
 							{currentGroupsBelongToScreen && (
 								<EditScreenGroupLabelInput
-									currentScreen={currentScreen}
-									currentGroups={currentGroupsBelongToScreen}
+									type='screen'
+									groupIds={currentScreen.groups}
 								/>
 							)}
 							<input

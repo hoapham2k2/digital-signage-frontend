@@ -2,29 +2,97 @@ import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { useNavigate, useParams } from "react-router-dom";
+import { Group, Playlist } from "@/lib/types";
+import {
+	deletePlaylist,
+	fetchPlaylistById,
+	updatePlaylist,
+} from "@/apis/playlists";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useEffect, useState } from "react";
+import GroupLabelTable from "../../screens/[id]/edit/components/table/GroupLabelTable";
+import { fetchGroupByIds } from "@/apis/groups";
+import AppBadge from "@/components/buttons/AppBadge";
 import EditScreenGroupLabelInput from "../../screens/[id]/edit/components/EditScreenGroupLabelInput";
 import PlaylistDetailSchedule from "./components/PlaylistDetailSchedule";
-import { useParams } from "react-router-dom";
-import { usePlaylistStore } from "@/lib/stores/playlist-store";
-import { useGroupStore } from "@/lib/stores/group-store";
 
 type Props = NonNullable<unknown>;
 
 const PlaylistDetailPage = (_props: Props) => {
 	const { id } = useParams();
-	const { currentPlaylist } = usePlaylistStore((state) => ({
-		currentPlaylist: state.playlists.find((p) => p.id === id),
-	}));
+	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+	const [currentPlaylist, setCurrentPlaylist] = useState<Playlist | null>(null);
+	const [isDataChanged, setIsDataChanged] = useState(false);
+
+	const { data: fetchedPlaylist } = useQuery<Playlist>({
+		queryKey: ["playlist", id],
+		queryFn: () => fetchPlaylistById(id as string),
+		enabled: !!id,
+	});
+
+	const { mutate: deleteCurrentPlaylist } = useMutation(
+		(playlistId: string) => deletePlaylist(playlistId),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("playlists");
+				navigate("/manage/playlists");
+			},
+		}
+	);
+
+	const { mutate: updateCurrentPlaylist } = useMutation(
+		(playlist: Omit<Playlist, "id">) => updatePlaylist(id as string, playlist),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries({
+					queryKey: ["playlist", id],
+				});
+			},
+		}
+	);
+
+	useEffect(() => {
+		if (fetchedPlaylist) {
+			setCurrentPlaylist(fetchedPlaylist);
+		}
+	}, [fetchedPlaylist]);
+
+	//use effect to handle isDataChanged when currentPlaylist changes (i.e. when user changes the name or any other field)
+	useEffect(() => {
+		if (currentPlaylist) {
+			if (fetchedPlaylist) {
+				const isChanged = Object.keys(currentPlaylist).some(
+					(key) =>
+						currentPlaylist[key as keyof Playlist] !==
+						fetchedPlaylist[key as keyof Playlist]
+				);
+				setIsDataChanged(isChanged);
+			}
+		}
+	}, [currentPlaylist, fetchedPlaylist]);
+
+	const { data: groupsBelongToPlaylist } = useQuery<Group[]>({
+		queryKey: ["groups", currentPlaylist?.groups],
+		queryFn: () => {
+			return fetchGroupByIds(currentPlaylist?.groups as string[]);
+		},
+		enabled: !!currentPlaylist?.groups,
+	});
+
 	return (
 		<div>
 			{/* For Header */}
 			<div className='flex flex-row justify-between items-center'>
 				<div className='flex flex-row gap-4 items-center'>
 					<HistoryBackButton />
-					<h1 className='text-2xl'>{currentPlaylist?.name}</h1>
+					<h1 className='text-2xl'>{fetchedPlaylist?.name}</h1>
 				</div>
 				<div className='flex flex-row gap-2 justify-self-end'>
-					<Button>Delete</Button>
+					<Button onClick={() => deleteCurrentPlaylist(id as string)}>
+						Delete
+					</Button>
 				</div>
 			</div>
 			{/* For Body */}
@@ -34,32 +102,48 @@ const PlaylistDetailPage = (_props: Props) => {
 						{/* Name section */}
 						<div className=''>
 							<h2 className='text-base'>Name</h2>
-							<Input value={currentPlaylist?.name} />
+							{currentPlaylist && (
+								<Input
+									value={currentPlaylist?.name}
+									onChange={(e) => {
+										setCurrentPlaylist({
+											...currentPlaylist,
+											name: e.target.value,
+										});
+									}}
+								/>
+							)}
 						</div>
 						{/* Enable Section */}
 						<div className='flex flex-row items-center justify-between'>
 							<h2 className='text-base'>Enabled</h2>
-							<Switch defaultChecked={currentPlaylist?.status === "Enabled"} />
+							{currentPlaylist && (
+								<Switch
+									defaultChecked={currentPlaylist?.status === "Enabled"}
+									onCheckedChange={(checked) => {
+										setCurrentPlaylist({
+											...currentPlaylist,
+											status: checked ? "Enabled" : "Disabled",
+										});
+									}}
+								/>
+							)}
 						</div>
 						{/* Play ons section */}
 						<div>
 							<h2 className='text-base'>Play Ons</h2>
-							{/* <EditScreenGroupLabelInput
-								groupLabelNames={
-									currentPlaylist?.groups.map((groupId) => {
-										const group = useGroupStore((state) =>
-											state.groups.find((g) => g.id === groupId)
-										);
-										return group?.name || "";
-									}) || []
-								}
-							/> */}
+							{groupsBelongToPlaylist && (
+								<EditScreenGroupLabelInput
+									type='playlist'
+									groupIds={currentPlaylist?.groups as string[]}
+								/>
+							)}
 						</div>
 						{/* Schedule Section */}
-						{/* <div>
+						<div>
 							<h2 className='text-base'>Schedule</h2>
 							<PlaylistDetailSchedule />
-						</div> */}
+						</div>
 					</div>
 					<div className='w-1/2'>
 						{/* Contents Section */}
@@ -73,10 +157,11 @@ const PlaylistDetailPage = (_props: Props) => {
 					{/* Schedule Section */}
 					<div>
 						<h2 className='text-base'>Schedule</h2>
-						{id && <PlaylistDetailSchedule playlistId={id} />}
+						{/* {id && <PlayliswtDetailSchedule playlistId={id} />} */}
 					</div>
 				</div>
 			</div>
+			{isDataChanged && <Button onClick={() => {}}>Save</Button>}
 		</div>
 	);
 };

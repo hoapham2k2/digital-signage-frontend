@@ -1,8 +1,7 @@
 import { deleteScreen } from "@/apis/screens";
 import { Button } from "@/components/ui/button";
 
-import React from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 type Props = {

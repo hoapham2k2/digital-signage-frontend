@@ -32,7 +32,9 @@ const PlaylistTable = (_props: Props) => {
 
 	return (
 		<div>
-			{playlists && <DataTable columns={PlaylistColumns} data={playlists} />}
+			{playlists && (
+				<DataTable columns={PlaylistColumns} data={playlists} type='playlist' />
+			)}
 		</div>
 	);
 };

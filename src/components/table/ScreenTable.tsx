@@ -9,7 +9,7 @@ type Props = {
 const ScreenTable = (props: Props) => {
 	return (
 		<div className='py-10'>
-			<DataTable columns={ScreenColumns} data={props.screens} isScreen />
+			<DataTable columns={ScreenColumns} data={props.screens} type='screen' />
 		</div>
 	);
 };

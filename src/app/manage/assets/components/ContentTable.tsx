@@ -10,7 +10,7 @@ const ContentTable = (_props: Props) => {
 	}));
 	return (
 		<div>
-			<DataTable isContent columns={ContentsColumns} data={contentData} />
+			<DataTable columns={ContentsColumns} data={contentData} type='content' />
 		</div>
 	);
 };

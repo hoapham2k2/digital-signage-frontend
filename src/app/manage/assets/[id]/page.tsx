@@ -17,7 +17,7 @@ const AssetDetailPage = (_props: Props) => {
 		})
 	);
 
-	const _navigate = useNavigate();
+	// const _navigate = useNavigate();
 
 	// const handleUpdateContent = () => {
 	// 	if (content) {

@@ -1,4 +1,3 @@
-import AppBadge from "@/components/buttons/AppBadge";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,

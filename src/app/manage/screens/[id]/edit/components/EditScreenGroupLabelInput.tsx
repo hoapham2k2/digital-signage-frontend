@@ -1,6 +1,3 @@
-import { fetchGroupByIds } from "@/apis/groups";
-import { fetchScreenById } from "@/apis/screens";
-import GroupTable from "@/components/table/GroupTable";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -12,16 +9,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Group, Screen } from "@/lib/types";
 import { useState } from "react";
+import GroupLabelTable from "./table/GroupLabelTable";
+import { useParams } from "react-router-dom";
+import { fetchGroupByIds } from "@/apis/groups";
 import { useQuery } from "react-query";
 
 type Props = {
-	currentScreen: Screen;
-	currentGroups: Group[];
-	setCurrentGroups?: (groups: Group[]) => void;
+	type: "screen" | "playlist";
+	groupIds: string[];
 };
 
 const EditScreenGroupLabelInput = (props: Props) => {
-	const [isShowButton, setIsShowButton] = useState(false);
+	const [isShowButton, _setIsShowButton] = useState(false);
+	const { id } = useParams<{ id: string }>();
+
+	const { data: currentGroups } = useQuery<Group[]>({
+		queryKey: ["groups", props.groupIds],
+		queryFn: () => {
+			return fetchGroupByIds(props.groupIds);
+		},
+		enabled: !!props.groupIds,
+	});
 
 	return (
 		<div
@@ -30,8 +38,8 @@ const EditScreenGroupLabelInput = (props: Props) => {
 			<DropdownMenu>
 				<DropdownMenuTrigger className='w-full '>
 					<div className='w-full flex flex-row justify-start items-center '>
-						{props.currentGroups &&
-							props.currentGroups.map((group) => (
+						{currentGroups &&
+							currentGroups.map((group) => (
 								<span
 									key={group.id}
 									className='inline-block px-2 py-1 mr-1 bg-gray-200 rounded-md'>
@@ -48,12 +56,10 @@ const EditScreenGroupLabelInput = (props: Props) => {
 				<DropdownMenuContent side='bottom' align='start' sideOffset={15}>
 					<DropdownMenuLabel>Group Labels</DropdownMenuLabel>
 					<DropdownMenuSeparator />
-					{props.currentGroups && (
-						<GroupTable
-							groups={props.currentGroups}
-							type='screen'
-							setIsShowButton={setIsShowButton}
-						/>
+					{currentGroups ? (
+						<GroupLabelTable type={props.type} id={id as string} />
+					) : (
+						<p>No group labels</p>
 					)}
 					{isShowButton && (
 						<DropdownMenuItem asChild>

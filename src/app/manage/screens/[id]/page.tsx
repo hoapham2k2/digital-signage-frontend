@@ -90,13 +90,24 @@ const ScreenDetailPage = (_props: Props) => {
 					<div className='w-1/2'>
 						<div className='flex flex-row gap-4'>
 							<h3>Status</h3>
-							{groupsBelongToScreen && (
-								<AppBadge
-									name={`${groupsBelongToScreen.map((group) =>
-										group.name.includes("Virtual") ? "Virtual Screen" : null
-									)}`.replace(/,/g, "")}
-								/>
-							)}
+							{groupsBelongToScreen &&
+								// (
+								// 	<AppBadge
+								// 		name={`${groupsBelongToScreen.map((group) =>
+								// 			group.name.includes("Virtual") ? "Virtual Screen" : null
+								// 		)}`.replace(/,/g, "")}
+								// 	/>
+								// )
+								groupsBelongToScreen.map((group) => (
+									<AppBadge
+										key={group.id}
+										name={group.name}
+										variant={"outline"}
+										className={cn({
+											"bg-gray-300": group.name.includes("Virtual"),
+										})}
+									/>
+								))}
 						</div>
 						<div>
 							<h3>Group Labels</h3>
