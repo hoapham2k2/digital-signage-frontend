@@ -1,4 +1,4 @@
-import { Schedule, ScheduleOperatorForDate, ScheduleType } from "@/lib/types";
+import { Schedule } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import React from "react";
 import AppSelect from "@/components/select/AppSelect";
@@ -20,15 +20,8 @@ const PlaylistDetailSchedule = (_props: Props) => {
 		})
 	);
 
-	const handleAddSchedule = async (_e: React.MouseEvent<HTMLButtonElement>) => {
-		const defaultSchedule: Schedule = {
-			id: "",
-			playlistId: _props.playlistId,
-			scheduleType: ScheduleType.TheDate,
-			scheduleOperator: ScheduleOperatorForDate.IsOnOrBefore,
-			scheduleValue: "",
-		};
-		await addSchedule(defaultSchedule);
+	const handleAddSchedule = (_e: React.MouseEvent<HTMLButtonElement>) => {
+		addSchedule(_props.playlistId);
 	};
 
 	return (

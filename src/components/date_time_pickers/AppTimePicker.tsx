@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Label } from "@/components/ui/label";
 import { TimePickerInput } from "./time-picker-input";
+import { useScheduleStore } from "@/lib/stores/schedule-store";
 
 interface TimePickerDemoProps {
 	date: Date | undefined;

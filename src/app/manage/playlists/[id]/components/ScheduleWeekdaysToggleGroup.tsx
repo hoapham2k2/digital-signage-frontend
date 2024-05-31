@@ -29,7 +29,7 @@ export const ScheduleWeekdaysToggleGroup: React.FC<ComponentProps> = (
 				updateSchedule({
 					..._props.currentSchedule,
 					scheduleValue: values,
-				});
+				} as Schedule);
 			}}>
 			{Object.entries(toggleGroupRecords).map(([value, label]) => (
 				<ToggleGroupItem key={value} value={value}>

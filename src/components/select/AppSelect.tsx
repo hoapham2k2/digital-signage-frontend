@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
 	Select,
 	SelectContent,
@@ -12,8 +13,9 @@ import {
 	ScheduleOperatorForWeekdays,
 	ScheduleType,
 } from "@/lib/types";
+import { useScheduleStore } from "@/lib/stores/schedule-store";
 
-const scheduleOptionsMap: Record<ScheduleType, string[]> = {
+const scheduleOptisonsMap: Record<ScheduleType, string[]> = {
 	[ScheduleType.TheDate]: Object.values(ScheduleOperatorForDate),
 	[ScheduleType.TheTime]: Object.values(ScheduleOperatorForTime),
 	[ScheduleType.TheWeekdays]: Object.values(ScheduleOperatorForWeekdays),
@@ -25,58 +27,59 @@ type Props = {
 };
 
 const AppSelect = (props: Props) => {
-	const updateScheduleType = appStore((state) => state.updateScheduleType);
-	const updateScheduleOperator = appStore(
-		(state) => state.updateScheduleOperator
-	);
-	const handleRenderDefaultValue = () => {
-		if (props.componentType === "scheduleType") {
-			return props.currentSchedule.scheduleType;
-		} else if (props.componentType === "scheduleOperator") {
-			return props.currentSchedule.scheduleOperator;
-		}
-	};
-
+	const { currentSchedule, updateSchedule } = useScheduleStore((state) => ({
+		currentSchedule: state.schedules.find(
+			(schedule) => schedule.id === props.currentSchedule.id
+		) as Schedule,
+		updateSchedule: state.updateSchedule,
+	}));
 	return (
 		<Select
-			defaultValue={handleRenderDefaultValue()}
+			// defaultValue={handleRenderDefaultValue()}
+			value={
+				props.componentType === "scheduleType"
+					? currentSchedule.scheduleType
+					: currentSchedule.scheduleOperator
+			}
 			onValueChange={(value: string) => {
 				if (props.componentType === "scheduleType") {
-					updateScheduleType(props.currentSchedule, value as ScheduleType);
-				} else if (props.componentType === "scheduleOperator") {
-					updateScheduleOperator(
-						props.currentSchedule,
-						value as
-							| ScheduleOperatorForDate
-							| ScheduleOperatorForTime
-							| ScheduleOperatorForWeekdays
-					);
+					updateSchedule({
+						...currentSchedule,
+						scheduleType: value as ScheduleType,
+						// @ts-ignore
+						scheduleOperator: scheduleOptisonsMap[value as ScheduleType][0],
+					});
 				}
-			}}
-			value={handleRenderDefaultValue()}>
+				if (props.componentType === "scheduleOperator") {
+					updateSchedule({
+						...currentSchedule,
+						// @ts-ignore
+						scheduleOperator: value,
+					});
+				}
+			}}>
 			<SelectTrigger>
 				<SelectValue placeholder={"Select an option"} />
 			</SelectTrigger>
 			<SelectContent>
-				{props.componentType === "scheduleType" &&
-					Object.values(ScheduleType).map((option: string) => {
-						return (
-							<SelectItem key={option} value={option}>
-								{option}
+				{props.componentType === "scheduleType"
+					? Object.values(ScheduleType).map((scheduleType) => (
+							<SelectItem key={scheduleType} value={scheduleType}>
+								{/* "the date" to "The Date" */}
+								{scheduleType.charAt(0).toUpperCase() +
+									scheduleType
+										.slice(1)
+										.split(/(?=[A-Z])/)
+										.join(" ")}
 							</SelectItem>
-						);
-					})}
-
-				{props.componentType === "scheduleOperator" &&
-					Object.values(
-						scheduleOptionsMap[props.currentSchedule.scheduleType]
-					).map((option: string) => {
-						return (
-							<SelectItem key={option} value={option}>
-								{option}
-							</SelectItem>
-						);
-					})}
+					  ))
+					: scheduleOptisonsMap[currentSchedule.scheduleType].map(
+							(scheduleOperator) => (
+								<SelectItem key={scheduleOperator} value={scheduleOperator}>
+									{scheduleOperator}
+								</SelectItem>
+							)
+					  )}
 			</SelectContent>
 		</Select>
 	);

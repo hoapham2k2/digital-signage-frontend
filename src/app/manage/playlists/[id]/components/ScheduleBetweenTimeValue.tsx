@@ -47,8 +47,8 @@ export const ScheduleBetweenTimeValue: React.FC<
 		if (startDate && endDate) {
 			updateSchedule({
 				..._props.currentSchedule,
-				scheduleValue: [startDate, endDate],
-			});
+				scheduleValue: [startDate.toISOString(), endDate.toISOString()],
+			} as Schedule);
 		}
 	}, [startDate, endDate]);
 

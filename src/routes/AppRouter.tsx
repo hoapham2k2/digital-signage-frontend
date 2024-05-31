@@ -14,6 +14,7 @@ import AccountSettingManagementPage from "@/app/manage/account/page";
 import PlaylistDetailPage from "@/app/manage/playlists/[id]/page";
 import EditScreenDetailPage from "@/app/manage/screens/[id]/edit/page";
 import AssetDetailPage from "@/app/manage/assets/[id]/page";
+import PlaylistDetailPreview from "@/app/manage/playlists/[id]/preview/page";
 type Props = NonNullable<unknown>;
 
 const routes = createBrowserRouter([
@@ -52,6 +53,7 @@ const routes = createBrowserRouter([
 				path: "manage/playlists/:id",
 				element: <PlaylistDetailPage />,
 			},
+
 			{
 				path: "manage/assets",
 				element: <ContentsManagementPage />,
@@ -80,6 +82,10 @@ const routes = createBrowserRouter([
 						<h1>Preview</h1>
 					</div>
 				),
+			},
+			{
+				path: "manage/playlists/:id/preview",
+				element: <PlaylistDetailPreview />,
 			},
 		],
 	},

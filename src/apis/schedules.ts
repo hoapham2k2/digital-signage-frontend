@@ -18,3 +18,12 @@ export const addSchedule = async (
 export const deleteSchedule = async (id: string): Promise<void> => {
 	await api.delete(`/schedules/${id}`);
 };
+
+export const updateSchedulesBelongToPlaylist = async (
+	playlistId: string,
+	schedules: Schedule[]
+): Promise<void> => {
+	schedules.forEach(async (schedule) => {
+		await api.put(`/schedules/${schedule.id}`, schedule);
+	});
+};

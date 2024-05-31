@@ -10,24 +10,28 @@ import {
 
 export type ScheduleStoreType = {
 	schedules: Schedule[];
+	isSchedulesChanged: boolean;
 };
 
 export type ScheduleStoreActions = {
+	setSchedules: (schedules: Schedule[]) => void; // Set schedules
 	updateSchedule: (schedule: Schedule) => void; // Update schedule information
-	addSchedule: (schedule: Schedule) => void; // Add new schedule
+	addSchedule: (playlistId: string) => void; // Add new schedule
 	deleteSchedule: (scheduleId: string) => void; // Delete schedule information
-	updateScheduleType: (
-		schedule: Schedule,
-		newScheduleType: ScheduleType
-	) => void; // Update schedule type
-	updateScheduleOperator: (
-		schedule: Schedule,
-		newScheduleOperator:
-			| ScheduleOperatorForDate
-			| ScheduleOperatorForTime
-			| ScheduleOperatorForWeekdays
-	) => void; // Update schedule operator
-	updateScheduleDateValue: (schedule: Schedule, newDateValue: Date) => void; // Update schedule date value
+	// updateScheduleType: (
+	// 	schedule: Schedule,
+	// 	newScheduleType: ScheduleType
+	// ) => void; // Update schedule type
+	// updateScheduleOperator: (
+	// 	schedule: Schedule,
+	// 	newScheduleOperator:
+	// 		| ScheduleOperatorForDate
+	// 		| ScheduleOperatorForTime
+	// 		| ScheduleOperatorForWeekdays
+	// ) => void; // Update schedule operator
+	// updateScheduleDateValue: (schedule: Schedule, newDateValue: Date) => void; // Update schedule date value
+
+	setIsSchedulesChanged: (isSchedulesChanged: boolean) => void; // Set schedules changed
 };
 
 export type ScheduleStoreState = ScheduleStoreType & ScheduleStoreActions;
@@ -35,8 +39,12 @@ export type ScheduleStoreState = ScheduleStoreType & ScheduleStoreActions;
 export const useScheduleStore = create<ScheduleStoreState>()(
 	devtools((set, _get) => ({
 		schedules: [],
+		isSchedulesChanged: false,
 
 		// for schedule actions
+		setSchedules: (schedules: Schedule[]) => {
+			set({ schedules });
+		},
 		updateSchedule: (schedule: Schedule) => {
 			set((state) => ({
 				schedules: state.schedules.map((s) =>
@@ -44,15 +52,18 @@ export const useScheduleStore = create<ScheduleStoreState>()(
 				),
 			}));
 		},
-		addSchedule: (schedule: Schedule) => {
+		addSchedule: (playlistId: string) => {
 			set((state) => ({
-				schedules:
-					state.schedules.length > 0
-						? [
-								...state.schedules,
-								{ ...schedule, id: `${state.schedules.length + 1}` },
-						  ]
-						: [schedule],
+				schedules: [
+					...state.schedules,
+					{
+						id: Math.random().toString(36).substr(2, 9),
+						playlistId: playlistId,
+						scheduleType: ScheduleType.TheDate,
+						scheduleOperator: ScheduleOperatorForDate.IsOnOrBefore,
+						scheduleValue: new Date().toISOString(),
+					} as Schedule,
+				],
 			}));
 		},
 		deleteSchedule: (scheduleId: string) => {
@@ -60,60 +71,9 @@ export const useScheduleStore = create<ScheduleStoreState>()(
 				schedules: state.schedules.filter((s) => s.id !== scheduleId),
 			}));
 		},
-		updateScheduleType: (schedule: Schedule, newScheduleType: ScheduleType) => {
-			set((state) => ({
-				schedules: state.schedules.map((s) =>
-					s.id === schedule.id
-						? {
-								...s,
-								scheduleType: newScheduleType,
-								scheduleOperator:
-									newScheduleType === ScheduleType.TheDate
-										? ScheduleOperatorForDate.IsExactly
-										: newScheduleType === ScheduleType.TheTime
-										? ScheduleOperatorForTime.IsBetween
-										: ScheduleOperatorForWeekdays.IsOn,
-								scheduleValue:
-									newScheduleType === ScheduleType.TheDate
-										? new Date()
-										: newScheduleType === ScheduleType.TheTime
-										? [new Date(), new Date()]
-										: [""],
-						  }
-						: s
-				),
-			}));
-		},
 
-		updateScheduleOperator: (
-			schedule: Schedule,
-			newScheduleOperator:
-				| ScheduleOperatorForDate
-				| ScheduleOperatorForTime
-				| ScheduleOperatorForWeekdays
-		) => {
-			set((state) => ({
-				schedules: state.schedules.map((s) =>
-					s.id === schedule.id
-						? {
-								...s,
-								scheduleOperator: newScheduleOperator,
-								scheduleValue:
-									newScheduleOperator === ScheduleOperatorForTime.IsBetween
-										? [new Date(), new Date()]
-										: new Date(),
-						  }
-						: s
-				),
-			}));
-		},
-
-		updateScheduleDateValue: (schedule: Schedule, newDateValue: Date) => {
-			set((state) => ({
-				schedules: state.schedules.map((s) =>
-					s.id === schedule.id ? { ...s, scheduleValue: newDateValue } : s
-				),
-			}));
+		setIsSchedulesChanged: (isSchedulesChanged: boolean) => {
+			set({ isSchedulesChanged });
 		},
 	}))
 );

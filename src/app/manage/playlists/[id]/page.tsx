@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useNavigate, useParams } from "react-router-dom";
-import { Group, Playlist } from "@/lib/types";
+import { Group, Playlist, Schedule } from "@/lib/types";
 import {
 	deletePlaylist,
 	fetchPlaylistById,
@@ -11,11 +11,18 @@ import {
 } from "@/apis/playlists";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useEffect, useState } from "react";
-import GroupLabelTable from "../../screens/[id]/edit/components/table/GroupLabelTable";
 import { fetchGroupByIds } from "@/apis/groups";
-import AppBadge from "@/components/buttons/AppBadge";
 import EditScreenGroupLabelInput from "../../screens/[id]/edit/components/EditScreenGroupLabelInput";
 import PlaylistDetailSchedule from "./components/PlaylistDetailSchedule";
+import {
+	ScheduleStoreState,
+	useScheduleStore,
+} from "@/lib/stores/schedule-store";
+import {
+	fetchSchedulesByPlaylistId,
+	updateSchedulesBelongToPlaylist,
+} from "@/apis/schedules";
+import PlaylistDetailContent from "./components/PlaylistDetailContent";
 
 type Props = NonNullable<unknown>;
 
@@ -23,7 +30,15 @@ const PlaylistDetailPage = (_props: Props) => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+
 	const [currentPlaylist, setCurrentPlaylist] = useState<Playlist | null>(null);
+	const {
+		currentSchedulesBelongToPlaylist,
+		setCurrentSchedulesBelongToPlaylist,
+	} = useScheduleStore((state: ScheduleStoreState) => ({
+		currentSchedulesBelongToPlaylist: state.schedules,
+		setCurrentSchedulesBelongToPlaylist: state.setSchedules,
+	}));
 	const [isDataChanged, setIsDataChanged] = useState(false);
 
 	const { data: fetchedPlaylist } = useQuery<Playlist>({
@@ -42,7 +57,10 @@ const PlaylistDetailPage = (_props: Props) => {
 		}
 	);
 
-	const { mutate: updateCurrentPlaylist } = useMutation(
+	const {
+		mutate: updateCurrentPlaylist,
+		isSuccess: updateCurrentPlaylistSuccess,
+	} = useMutation(
 		(playlist: Omit<Playlist, "id">) => updatePlaylist(id as string, playlist),
 		{
 			onSuccess: () => {
@@ -52,6 +70,33 @@ const PlaylistDetailPage = (_props: Props) => {
 			},
 		}
 	);
+	const { data: groupsBelongToPlaylist } = useQuery<Group[]>({
+		queryKey: ["groups", currentPlaylist?.groups],
+		queryFn: () => {
+			return fetchGroupByIds(currentPlaylist?.groups as string[]);
+		},
+		enabled: !!currentPlaylist?.groups,
+	});
+
+	// handle for schedules
+	const { data: fetchedSchedulesBelongToPlaylist } = useQuery<Schedule[]>({
+		queryKey: ["schedules", id],
+		queryFn: () => fetchSchedulesByPlaylistId(id as string),
+		enabled: !!id,
+	});
+
+	const { mutate: updateSchedules, isSuccess: updateSchedulesSuccess } =
+		useMutation(
+			(playlist: Schedule[]) =>
+				updateSchedulesBelongToPlaylist(id as string, playlist),
+			{
+				onSuccess: () => {
+					queryClient.invalidateQueries({
+						queryKey: ["playlist", id],
+					});
+				},
+			}
+		);
 
 	useEffect(() => {
 		if (fetchedPlaylist) {
@@ -59,7 +104,26 @@ const PlaylistDetailPage = (_props: Props) => {
 		}
 	}, [fetchedPlaylist]);
 
-	//use effect to handle isDataChanged when currentPlaylist changes (i.e. when user changes the name or any other field)
+	useEffect(() => {
+		if (fetchedSchedulesBelongToPlaylist) {
+			setCurrentSchedulesBelongToPlaylist(fetchedSchedulesBelongToPlaylist);
+		}
+	}, [fetchedSchedulesBelongToPlaylist]);
+
+	const handleSaveButton = () => {
+		if (currentPlaylist) {
+			updateCurrentPlaylist(currentPlaylist);
+		}
+		if (currentSchedulesBelongToPlaylist) {
+			updateSchedules(currentSchedulesBelongToPlaylist as Schedule[]);
+		}
+
+		if (updateCurrentPlaylistSuccess || updateSchedulesSuccess) {
+			setIsDataChanged(false);
+		}
+	};
+
+	//use effect to handle isDataChanged when currentPlaylist changes (i.e. when user changes the name or any other field) o
 	useEffect(() => {
 		if (currentPlaylist) {
 			if (fetchedPlaylist) {
@@ -71,15 +135,23 @@ const PlaylistDetailPage = (_props: Props) => {
 				setIsDataChanged(isChanged);
 			}
 		}
-	}, [currentPlaylist, fetchedPlaylist]);
 
-	const { data: groupsBelongToPlaylist } = useQuery<Group[]>({
-		queryKey: ["groups", currentPlaylist?.groups],
-		queryFn: () => {
-			return fetchGroupByIds(currentPlaylist?.groups as string[]);
-		},
-		enabled: !!currentPlaylist?.groups,
-	});
+		if (currentSchedulesBelongToPlaylist && fetchedSchedulesBelongToPlaylist) {
+			// check if the current schedules are changed or not by comparing with fetched schedules from the server (fetchedSchedulesBelongToPlaylist)
+			let isChanged = false;
+			currentSchedulesBelongToPlaylist.forEach((currentSchedule, index) => {
+				if (currentSchedule !== fetchedSchedulesBelongToPlaylist[index]) {
+					isChanged = true;
+				}
+			});
+			setIsDataChanged(isChanged);
+		}
+	}, [
+		currentPlaylist,
+		currentSchedulesBelongToPlaylist,
+		fetchedPlaylist,
+		fetchedSchedulesBelongToPlaylist,
+	]);
 
 	return (
 		<div>
@@ -139,29 +211,22 @@ const PlaylistDetailPage = (_props: Props) => {
 								/>
 							)}
 						</div>
-						{/* Schedule Section */}
-						<div>
-							<h2 className='text-base'>Schedule</h2>
-							<PlaylistDetailSchedule />
-						</div>
 					</div>
 					<div className='w-1/2'>
 						{/* Contents Section */}
-						<div>
-							<h2 className='text-base'>Contents</h2>
-							{/* <PlaylistDetailContents /> */}
-						</div>
+						<PlaylistDetailContent />
 					</div>
 				</div>
 				<div>
 					{/* Schedule Section */}
 					<div>
 						<h2 className='text-base'>Schedule</h2>
-						{/* {id && <PlayliswtDetailSchedule playlistId={id} />} */}
+						<PlaylistDetailSchedule playlistId={id as string} />
 					</div>
 				</div>
 			</div>
-			{isDataChanged && <Button onClick={() => {}}>Save</Button>}
+
+			{isDataChanged && <Button onClick={handleSaveButton}>Save</Button>}
 		</div>
 	);
 };

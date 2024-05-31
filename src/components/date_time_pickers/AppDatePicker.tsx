@@ -1,30 +1,24 @@
-import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { DateSchedule, Schedule, TimeSchedule } from "@/lib/types";
+import { useScheduleStore } from "@/lib/stores/schedule-store";
+import { useEffect } from "react";
 
 type Props = {
-	scheduleValue: Date;
-	updateSchedule: (newDateValue: Date) => void;
+	currentSchedule: DateSchedule | TimeSchedule;
 };
 
 const AppDatePicker = (_props: Props) => {
-	const [date, setDate] = React.useState<Date>();
-
-	React.useEffect(() => {
-		if (_props.scheduleValue) {
-			// try parsing the date value before setting it
-			const parsedDate = new Date(_props.scheduleValue);
-			if (!isNaN(parsedDate.getTime())) {
-				setDate(parsedDate);
-			} else {
-				setDate(new Date());
-			}
-		}
-	}, [_props.scheduleValue]);
+	const { currentSchedule, updateSchedule } = useScheduleStore((state) => ({
+		currentSchedule: state.schedules.find(
+			(schedule) => schedule.id === _props.currentSchedule.id
+		) as Schedule,
+		updateSchedule: state.updateSchedule,
+	}));
 
 	return (
 		<Popover>
@@ -33,20 +27,36 @@ const AppDatePicker = (_props: Props) => {
 					variant={"outline"}
 					className={cn(
 						"w-[280px] justify-start text-left font-normal",
-						!date && "text-muted-foreground"
+						!currentSchedule.scheduleValue && "text-muted-foreground"
 					)}>
 					<CalendarIcon className='mr-2 h-4 w-4' />
-					{date ? format(date, "PPP") : <span>Pick a date</span>}
+					{
+						// try to convert string to date, if it fails, return the string
+						// convert ISO string to Date
+						Array.isArray(currentSchedule.scheduleValue)
+							? (currentSchedule.scheduleValue[0] as string)
+							: format(
+									new Date(currentSchedule.scheduleValue as string),
+									"MMM dd, yyyy"
+							  )
+					}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className='w-auto p-0'>
 				<Calendar
 					mode='single'
-					selected={date}
+					selected={
+						Array.isArray(currentSchedule.scheduleValue)
+							? new Date(currentSchedule.scheduleValue[0] as string)
+							: new Date(currentSchedule.scheduleValue as string)
+					}
 					onSelect={(date) => {
 						if (date) {
-							setDate(date);
-							_props.updateSchedule(date);
+							updateSchedule({
+								...currentSchedule,
+								// convert to ISO string
+								scheduleValue: date.toISOString(),
+							} as Schedule);
 						}
 					}}
 					initialFocus

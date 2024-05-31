@@ -53,7 +53,11 @@ const EditScreenGroupLabelInput = (props: Props) => {
 						</span>
 					</div>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent side='bottom' align='start' sideOffset={15}>
+				<DropdownMenuContent
+					side='bottom'
+					align='start'
+					sideOffset={15}
+					className='max-h-80 overflow-y-auto'>
 					<DropdownMenuLabel>Group Labels</DropdownMenuLabel>
 					<DropdownMenuSeparator />
 					{currentGroups ? (
