@@ -27,9 +27,11 @@ const ScreenDetailPage = (_props: Props) => {
 		enabled: !!id,
 	});
 	const { data: groupsBelongToScreen } = useQuery<Group[]>({
-		queryKey: ["groups", screen?.groups],
+		queryKey: ["groups", screen?.playerLabels],
 		queryFn: () => {
-			return fetchGroupByIds(screen?.groups || []);
+			return fetchGroupByIds(
+				screen?.playerLabels.map((label) => label.labelId.toString()) || []
+			);
 		},
 		enabled: !!screen,
 	});
@@ -38,7 +40,7 @@ const ScreenDetailPage = (_props: Props) => {
 		queryKey: ["playlists", groupsBelongToScreen],
 		queryFn: () => {
 			return fetchPlaylistByGroupIds(
-				groupsBelongToScreen?.map((group) => group.id || "") || []
+				groupsBelongToScreen?.map((group) => group.id.toString() || "") || []
 			);
 		},
 		enabled: !!groupsBelongToScreen,

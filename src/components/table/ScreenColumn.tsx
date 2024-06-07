@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import AppBadge from "../buttons/AppBadge";
 import { useQuery } from "react-query";
 import { fetchGroupByIds } from "@/apis/groups";
+import { api } from "@/configs/axiosConfig";
 
 export const ScreenColumns: ColumnDef<Screen>[] = [
 	{
@@ -35,21 +36,36 @@ export const ScreenColumns: ColumnDef<Screen>[] = [
 		header: "Group labels",
 		cell: ({ row }) => {
 			const currentScreen = row.original;
-			const { data: groups } = useQuery<Group[]>({
-				queryKey: ["groups", currentScreen.groups],
-				queryFn: () => {
-					return fetchGroupByIds(currentScreen.groups);
+			const {
+				data: groups,
+				isLoading,
+				isError,
+			} = useQuery<Group[]>({
+				queryKey: [
+					"groups",
+					currentScreen.playerLabels.map((pl) => pl.labelId),
+				],
+				queryFn: async () => {
+					const labelIds = currentScreen.playerLabels.map((pl) =>
+						pl.labelId.toString()
+					);
+					return await fetchGroupByIds(labelIds);
 				},
-				enabled: !!currentScreen.groups,
+				enabled: !!currentScreen.playerLabels.length,
 			});
-			return (
-				<div className='flex flex-row gap-1'>
-					{groups &&
-						groups.map((group) => (
-							<AppBadge key={group.id} name={group.name} />
-						))}
-				</div>
-			);
+
+			if (isLoading) return <div>Loading...</div>;
+			if (isError) return <div>Error</div>;
+			if (groups)
+				return (
+					<div className='flex flex-row gap-1'>
+						{groups &&
+							groups.map((group) => (
+								<AppBadge key={group.id} name={group.name} />
+							))}
+					</div>
+				);
+			return null;
 		},
 	},
 	{

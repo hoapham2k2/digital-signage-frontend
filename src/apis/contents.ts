@@ -1,7 +1,7 @@
 import { api } from "@/configs/axiosConfig";
 
 export const fetchContents = async () => {
-	const { data } = await api.get("/contents");
+	const { data } = await api.get("/ContentItems");
 	return data;
 };
 

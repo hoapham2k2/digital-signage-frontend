@@ -25,7 +25,6 @@ export const ScheduleWeekdaysToggleGroup: React.FC<ComponentProps> = (
 			size='sm'
 			value={_props.currentSchedule.scheduleValue as string[]}
 			onValueChange={(values: string[]) => {
-				console.log("You just selected: ", values);
 				updateSchedule({
 					..._props.currentSchedule,
 					scheduleValue: values,

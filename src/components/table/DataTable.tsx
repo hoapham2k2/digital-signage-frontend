@@ -17,7 +17,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -80,9 +80,7 @@ export function DataTable(props: Props) {
 											navigate(
 												`/manage/${
 													props.type === "content" ? "asset" : props.type
-												}s/${cell.row.original.id}${
-													props.type === "content" ? "/edit" : ""
-												}`
+												}s/${cell.row.original.id}`
 											);
 										}}>
 										{flexRender(cell.column.columnDef.cell, cell.getContext())}

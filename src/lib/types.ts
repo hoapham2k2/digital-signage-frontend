@@ -1,14 +1,17 @@
 export type Group = {
-	id: string;
+	id: number;
 	name: string;
 };
 export type Screen = {
 	id: string;
 	thumbnail?: string;
 	name: string;
-	groups: string[];
+	// groups: string[];
 	lastHeartbeat?: string;
 	status?: string;
+	playerLabels: {
+		labelId: number;
+	}[];
 };
 
 export type Content = {

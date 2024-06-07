@@ -74,7 +74,6 @@ export function DataTable<TData, TValue>({
 	//using useEffect to handle isDataChanged when selected rows change
 
 	useEffect(() => {
-		console.log(rowSelection);
 		const selectedGroupIds = Object.keys(rowSelection);
 		const selectedGroupIdsFromEntity = entity?.groups;
 		if (
@@ -117,7 +116,7 @@ export function DataTable<TData, TValue>({
 				groups: Object.keys(rowSelection),
 			} as Omit<Screen, "id">;
 		}
-		console.log(updatedEntity);
+
 		updateEntity(updatedEntity);
 	};
 
