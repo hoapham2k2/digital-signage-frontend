@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import ContentTable from "./components/ContentTable";
+import NewContentButton from "./components/NewContentButton";
 
 type Props = NonNullable<unknown>;
 
@@ -11,7 +12,7 @@ const ContentsManagementPage = (_props: Props) => {
 				<div className='flex flex-row gap-4'>
 					<Button>Edit</Button>
 					<Button>New Folder</Button>
-					<Button>New Content</Button>
+					<NewContentButton />
 				</div>
 			</div>
 			<ContentTable />

@@ -15,12 +15,11 @@ export type Screen = {
 };
 
 export type Content = {
-	thumbnail?: string;
-	id: string;
-	name: string;
-	type: "Image" | "Video" | "Webpage";
+	id?: number;
+	title: string;
+	filePath: string;
 	duration: number;
-	playlists?: string[]; // Playlist IDs
+	resourceType: "Image" | "Video" | "Webpage";
 };
 
 export type Playlist = {

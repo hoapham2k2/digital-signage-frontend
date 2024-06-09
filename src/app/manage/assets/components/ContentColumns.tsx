@@ -5,40 +5,47 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import supabase from "@/configs/supabaseConfig";
 import { Content } from "@/lib/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { SlScreenDesktop } from "react-icons/sl";
+import { useEffect, useState } from "react";
+import { MdOndemandVideo } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 export const ContentsColumns: ColumnDef<Content>[] = [
 	{
-		id: "thumbnail",
+		accessorKey: "filePath",
 		cell: ({ row }) => {
 			const content = row.original;
-			if (content.thumbnail) {
-				return (
-					<img
-						className='h-10 w-10'
-						src={content.thumbnail}
-						alt={content.name}
-					/>
-				);
-			} else return <SlScreenDesktop className='h-10 w-10' />;
+
+			return content.resourceType === "Image" ? (
+				<img
+					src={
+						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${content.filePath}` ??
+						""
+					}
+					alt={content.title}
+					className='w-10 h-10'
+				/>
+			) : (
+				// handle preview for video
+				<MdOndemandVideo className='w-10 h-10' />
+			);
 		},
 	},
 	{
-		id: "title",
+		accessorKey: "title",
 		header: "Title",
 		cell: ({ row }) => {
-			return row.original.name;
+			return row.original.title;
 		},
 	},
 	{
 		id: "type",
 		header: "Type",
 		cell: ({ row }) => {
-			return row.original.type;
+			return row.original.resourceType;
 		},
 	},
 	{

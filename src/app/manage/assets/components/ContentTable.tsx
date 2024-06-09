@@ -2,6 +2,7 @@ import { DataTable } from "@/components/table/DataTable";
 import { ContentsColumns } from "./ContentColumns";
 import { useQuery } from "react-query";
 import { fetchContents } from "@/apis/contents";
+import { Content } from "@/lib/types";
 
 type Props = NonNullable<unknown>;
 
@@ -10,10 +11,14 @@ const ContentTable = (_props: Props) => {
 		data: contentDatas,
 		isLoading,
 		isError,
-	} = useQuery({
+		isSuccess,
+	} = useQuery<Content[]>({
 		queryKey: "contents",
 		queryFn: () => {
 			return fetchContents();
+		},
+		onSuccess: () => {
+			console.log("Contents fetched successfully");
 		},
 	});
 	if (isLoading) {
@@ -22,12 +27,16 @@ const ContentTable = (_props: Props) => {
 	if (isError) {
 		return <div>Error...</div>;
 	}
-
-	return (
-		<div>
-			<DataTable columns={ContentsColumns} data={contentDatas} type='content' />
-		</div>
-	);
+	if (isSuccess)
+		return (
+			<div>
+				<DataTable
+					columns={ContentsColumns}
+					data={contentDatas}
+					type='content'
+				/>
+			</div>
+		);
 };
 
 export default ContentTable;
