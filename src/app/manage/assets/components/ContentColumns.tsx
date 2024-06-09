@@ -22,7 +22,7 @@ export const ContentsColumns: ColumnDef<Content>[] = [
 			return content.resourceType === "Image" ? (
 				<img
 					src={
-						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${content.filePath}` ??
+						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/content/${content.filePath}` ??
 						""
 					}
 					alt={content.title}

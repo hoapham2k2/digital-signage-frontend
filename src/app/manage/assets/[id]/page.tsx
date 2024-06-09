@@ -1,17 +1,18 @@
-import { fetchContentById } from "@/apis/contents";
+import { fetchContentById, updateContent } from "@/apis/contents";
 import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Content } from "@/lib/types";
 import { useField, useForm } from "@tanstack/react-form";
-import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
 
 type Props = NonNullable<unknown>;
 
 const AssetDetailPage = (_props: Props) => {
 	const { id } = useParams();
-
+	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 	const {
 		data: content,
 		isLoading,
@@ -24,6 +25,14 @@ const AssetDetailPage = (_props: Props) => {
 		},
 		enabled: !!id,
 	});
+
+	const { mutate } = useMutation((content: Content) => updateContent(content), {
+		onSuccess: () => {
+			queryClient.invalidateQueries("contents");
+			navigate("/manage/assets");
+		},
+	});
+
 	const form = useForm<Content>({
 		defaultValues: {
 			id: content?.id ?? 0,
@@ -34,6 +43,7 @@ const AssetDetailPage = (_props: Props) => {
 		},
 		onSubmit: async (values) => {
 			console.log(values);
+			await mutate(values.value);
 		},
 	});
 
@@ -56,8 +66,13 @@ const AssetDetailPage = (_props: Props) => {
 
 	if (isSuccess) {
 		return (
-			<form onSubmit={form.handleSubmit}>
-				<div>
+			<div>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						form.handleSubmit();
+					}}>
 					<div className='flex flex-row justify-between items-center'>
 						<div className='flex flex-row gap-4 items-center'>
 							<HistoryBackButton />
@@ -84,7 +99,7 @@ const AssetDetailPage = (_props: Props) => {
 								{content.filePath ? (
 									<img
 										src={
-											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${content.filePath}` ??
+											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/content/${content.filePath}` ??
 											""
 										}
 										alt={content.title}
@@ -108,17 +123,24 @@ const AssetDetailPage = (_props: Props) => {
 									<h3>Resource type</h3>
 									<h3>{content?.resourceType}</h3>
 								</div>
-								{nameField.state.meta.isDirty ||
-								filePathField.state.meta.isDirty ? (
-									<div className='flex flex-row justify-end items-center mt-4 gap-2'>
-										<Button type='submit'>Save</Button>
-									</div>
-								) : null}
 							</div>
 						</div>
 					</div>
-				</div>
-			</form>
+					{nameField.state.meta.isDirty || filePathField.state.meta.isDirty ? (
+						<div className='flex flex-row justify-end items-center mt-4 gap-2'>
+							<Button type='submit'>Save</Button>
+						</div>
+					) : null}
+					{/* <form.Subscribe
+						selector={(state) => [state.canSubmit, state.isSubmitting]}
+						children={([canSubmit, isSubmitting]) => (
+							<button type='submit' disabled={!canSubmit}>
+								{isSubmitting ? "..." : "Submit"}
+							</button>
+						)}
+					/> */}
+				</form>
+			</div>
 		);
 	}
 };
