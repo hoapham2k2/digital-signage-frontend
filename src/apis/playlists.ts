@@ -21,3 +21,7 @@ export const updatePlaylist = async (
 export const deletePlaylist = async (id: string): Promise<void> => {
 	await api.delete(`/Playlists/${id}`);
 };
+
+export const updatePlaylistLabels = async (id: number, labelIds: number[]) => {
+	await api.put(`/Playlists/${id}/labels`, labelIds);
+};

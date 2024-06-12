@@ -1,39 +1,32 @@
 import { fetchGroups } from "@/apis/groups";
-import { fetchPlaylistById } from "@/apis/playlists";
+import { fetchPlaylistById, updatePlaylistLabels } from "@/apis/playlists";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import { Group, Playlist } from "@/types";
-import {
-	Controller,
-	SubmitHandler,
-	useFieldArray,
-	useForm,
-} from "react-hook-form";
-import { useQuery } from "react-query";
+import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 
 type PlaylistPlayOnProps = unknown;
-type FormValues = {
-	groups: Group[];
-};
 
 const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 	_props: PlaylistPlayOnProps
 ) => {
 	const { id } = useParams<{ id: string }>();
-
-	const { control, handleSubmit, reset, watch } = useForm<FormValues>();
-
-	const { fields, append, remove } = useFieldArray({
+	const [isOpened, setIsOpened] = useState(false);
+	const queryClient = useQueryClient();
+	const {
 		control,
-		name: "groups",
-	});
+		handleSubmit,
+		reset,
+		formState: { isDirty },
+	} = useForm<Record<string, boolean>>({});
 
 	const {
 		data: fetchedPlaylist,
@@ -54,17 +47,52 @@ const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 	} = useQuery<Group[]>({
 		queryKey: ["groups"],
 		queryFn: () => fetchGroups(),
-		onSuccess: (data) => {
-			reset({ groups: data });
+		enabled: !!fetchedPlaylist,
+		onSuccess: (groups: Group[]) => {
+			const initialValues: Record<string, boolean> = {};
+
+			fetchedPlaylist &&
+				groups.forEach((group) => {
+					initialValues[`group-${group.id}`] =
+						fetchedPlaylist.playlistLabels.some(
+							(label) => label.label.id === group.id
+						) || false;
+				});
+
+			reset(initialValues);
 		},
 	});
 
-	const watchedValues = watch();
-	const isChanged =
-		JSON.stringify(fetchedGroups) !== JSON.stringify(watchedValues);
+	const { mutate: updatePlaylistLabelsAsync } = useMutation(
+		(data: Record<string, boolean>) => {
+			const labelIds = Object.entries(data)
+				.filter(([_key, value]) => value)
+				.map(([key]) => key.replace("group-", ""));
 
-	const onSubmit: SubmitHandler<FormValues> = (data: FormValues) => {
+			return updatePlaylistLabels(
+				// parse to number
+				parseInt(id as string),
+				labelIds.map((id) => parseInt(id))
+			);
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("playlist");
+				setIsOpened(false);
+			},
+		}
+	);
+
+	const onSubmit: SubmitHandler<Record<string, boolean>> = (
+		data: Record<string, boolean>
+	) => {
 		console.log("new data", data);
+		updatePlaylistLabelsAsync(data);
+	};
+	const handleFormSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		handleSubmit(onSubmit)();
 	};
 
 	if (isFetchingPlaylist || isFetchingGroups) return <div>Loading...</div>;
@@ -78,8 +106,8 @@ const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 		return <div>Not found</div>;
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger>
+		<Popover open={isOpened} onOpenChange={setIsOpened}>
+			<PopoverTrigger>
 				<div className='w-full flex flex-row justify-start items-center'>
 					{fetchedPlaylist.playlistLabels.map((label) => (
 						<span
@@ -92,24 +120,33 @@ const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 						Add a group label
 					</span>
 				</div>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent side='bottom' align='start' sideOffset={15}>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<DropdownMenuLabel>Group labels</DropdownMenuLabel>
+			</PopoverTrigger>
+			<PopoverContent side='bottom' align='start' sideOffset={15}>
+				<h1>Group labels</h1>
+				<form onSubmit={handleFormSubmit}>
 					<div className='max-h-44 overflow-y-auto'>
-						{fields.map((field, index) => (
-							<div key={field.id}>
-								<Controller
-									name={`groups.${index}.name`}
-									control={control}
-									render={({ field }) => <input {...field} />}
-								/>
-							</div>
+						{fetchedGroups.map((group) => (
+							<Controller
+								key={group.id}
+								name={`group-${group.id}`}
+								control={control}
+								render={({ field }) => (
+									<div className='flex flex-row items-center space-x-2'>
+										<Checkbox
+											checked={field.value}
+											onCheckedChange={(value) => field.onChange(value)}
+										/>
+										<span>{group.name}</span>
+									</div>
+								)}
+							/>
 						))}
+
+						{isDirty && <Button type='submit'>Save</Button>}
 					</div>
 				</form>
-			</DropdownMenuContent>
-		</DropdownMenu>
+			</PopoverContent>
+		</Popover>
 	);
 };
 
