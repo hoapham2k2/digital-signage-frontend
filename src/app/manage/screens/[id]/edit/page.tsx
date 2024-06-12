@@ -4,7 +4,7 @@ import DeleteScreenButton from "./components/DeleteScreenButton";
 import EditScreenForm from "./components/EditScreenForm";
 import { useQuery } from "react-query";
 import { fetchScreenById } from "@/apis/screens";
-import { Screen } from "@/lib/types";
+import { Screen } from "@/types/index";
 
 type Props = NonNullable<unknown>;
 

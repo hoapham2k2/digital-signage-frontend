@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Group } from "@/lib/types";
+import { Group } from "@/types/index";
 import { ColumnDef } from "@tanstack/react-table";
 
 export const GroupLabelTableColumns: ColumnDef<Group>[] = [

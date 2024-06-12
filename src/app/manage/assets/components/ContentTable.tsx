@@ -2,7 +2,7 @@ import { DataTable } from "@/components/table/DataTable";
 import { ContentsColumns } from "./ContentColumns";
 import { useQuery } from "react-query";
 import { fetchContents } from "@/apis/contents";
-import { Content } from "@/lib/types";
+import { Content } from "@/types/index";
 
 type Props = NonNullable<unknown>;
 

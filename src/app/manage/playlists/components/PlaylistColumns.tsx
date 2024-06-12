@@ -6,24 +6,26 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Playlist } from "@/lib/types";
+import { Playlist } from "@/types/index";
 import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { BiSolidPlaylist } from "react-icons/bi";
+import AppBadge from "@/components/buttons/AppBadge";
 
 export const PlaylistColumns: ColumnDef<Playlist>[] = [
 	{
 		id: "thumbnail",
 		cell: () => {
-			return <div className='w-8 h-8 bg-gray-300 rounded-md'></div>;
+			return <BiSolidPlaylist className='h-6 w-6' />;
 		},
 	},
 	{
 		id: "title",
 		header: "Title",
 		cell: ({ row }) => {
-			return <div>{row.original.name}</div>;
+			return <div>{row.original.title}</div>;
 		},
 	},
 	{
@@ -43,38 +45,38 @@ export const PlaylistColumns: ColumnDef<Playlist>[] = [
 		// 		</div>
 		// 	);
 		// },
+		cell: ({ row }) => {
+			const groups = row.original.playlistLabels.map(
+				(label) => label.label.name
+			);
+
+			return (
+				<div>
+					{groups.map((group) => (
+						<AppBadge key={group} name={group} />
+					))}
+				</div>
+			);
+		},
 	},
 	{
 		id: "duration",
 		header: "Duration",
-		// cell: ({ row }) => {
-		// 	const playlistCurrent = row.original;
-		// 	const contentsInPlaylist = appStore
-		// 		.getState()
-		// 		.contents.filter((content) =>
-		// 			playlistCurrent.contents.includes(content.id)
-		// 		);
 
-		// 	const totalDuration = contentsInPlaylist.reduce(
-		// 		(acc, content) => acc + content.duration,
-		// 		0
-		// 	);
-		// 	return <div>{totalDuration} sec</div>;
-		// },
+		cell: ({ row }) => {
+			return <div>{row.original.duration} sec</div>;
+		},
 	},
 	{
 		id: "status",
 		header: "Status",
 		cell: ({ row }) => {
-			const playlistCurrent = row.original;
 			return (
 				<div
 					className={`${cn("text-sm", "font-medium")} ${
-						playlistCurrent.status === "Enabled"
-							? "text-green-500"
-							: "text-red-500"
+						row.original.isEnabled === true ? "text-green-500" : "text-red-500"
 					}`}>
-					{playlistCurrent.status}
+					{row.original.isEnabled === true ? "Enabled" : "Disabled"}
 				</div>
 			);
 		},

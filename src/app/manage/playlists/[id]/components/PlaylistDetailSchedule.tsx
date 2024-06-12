@@ -1,4 +1,4 @@
-import { Schedule } from "@/lib/types";
+import { Schedule } from "@/types/index";
 import { cn } from "@/lib/utils";
 import React from "react";
 import AppSelect from "@/components/select/AppSelect";

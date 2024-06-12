@@ -1,4 +1,4 @@
-import { Group } from "../types";
+import { Group } from "@/types/index";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 

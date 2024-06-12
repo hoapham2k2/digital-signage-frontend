@@ -1,4 +1,4 @@
-import { Group, Screen } from "@/lib/types";
+import { Group, Screen, ScreenType } from "@/types/index";
 import { ColumnDef } from "@tanstack/react-table";
 import { SlScreenDesktop } from "react-icons/sl";
 import { MoreHorizontal } from "lucide-react";
@@ -10,22 +10,21 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
-
 import AppBadge from "../buttons/AppBadge";
 import { useQuery } from "react-query";
-import { fetchGroupByIds } from "@/apis/groups";
-import { api } from "@/configs/axiosConfig";
+import { fetchGroupsByScreenId } from "@/apis/groups";
+import { FaCloud } from "react-icons/fa";
 
 export const ScreenColumns: ColumnDef<Screen>[] = [
 	{
 		id: "thumbnail",
 		cell: ({ row }) => {
 			const screen = row.original;
-			if (screen.thumbnail) {
-				return (
-					<img className='h-10 w-10' src={screen.thumbnail} alt={screen.name} />
-				);
-			} else return <SlScreenDesktop className='h-10 w-10' />;
+			if (screen)
+				if (screen.type === ScreenType.VIRTUAL) {
+					return <FaCloud className='h-6 w-6' />;
+				}
+			return <SlScreenDesktop className='h-6 w-6' />;
 		},
 	},
 	{
@@ -41,17 +40,13 @@ export const ScreenColumns: ColumnDef<Screen>[] = [
 				isLoading,
 				isError,
 			} = useQuery<Group[]>({
-				queryKey: [
-					"groups",
-					currentScreen.playerLabels.map((pl) => pl.labelId),
-				],
+				queryKey: ["groups", { screenId: currentScreen.id }],
 				queryFn: async () => {
-					const labelIds = currentScreen.playerLabels.map((pl) =>
-						pl.labelId.toString()
-					);
-					return await fetchGroupByIds(labelIds);
+					return fetchGroupsByScreenId({
+						screenId: currentScreen.id as unknown as string,
+					});
 				},
-				enabled: !!currentScreen.playerLabels.length,
+				enabled: !!currentScreen.id,
 			});
 
 			if (isLoading) return <div>Loading...</div>;

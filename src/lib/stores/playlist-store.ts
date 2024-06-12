@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Playlist } from "../types";
+import { Playlist } from "@/types/index";
 import { devtools } from "zustand/middleware";
 
 export type PlaylistStoreType = {

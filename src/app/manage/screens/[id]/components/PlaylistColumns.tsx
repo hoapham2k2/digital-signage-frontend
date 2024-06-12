@@ -1,5 +1,5 @@
 import { fetchContentsByPlaylistIds } from "@/apis/contents";
-import { Content, Playlist } from "@/lib/types";
+import { Content, Playlist } from "@/types/index";
 import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "react-query";
 

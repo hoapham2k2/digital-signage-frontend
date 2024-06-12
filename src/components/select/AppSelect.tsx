@@ -12,7 +12,7 @@ import {
 	ScheduleOperatorForTime,
 	ScheduleOperatorForWeekdays,
 	ScheduleType,
-} from "@/lib/types";
+} from "@/types/index";
 import { useScheduleStore } from "@/lib/stores/schedule-store";
 
 const scheduleOptisonsMap: Record<ScheduleType, string[]> = {

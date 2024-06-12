@@ -1,5 +1,5 @@
 import AppDatePicker from "@/components/date_time_pickers/AppDatePicker";
-import { Schedule, ScheduleOperatorForTime, ScheduleType } from "@/lib/types";
+import { Schedule, ScheduleOperatorForTime, ScheduleType } from "@/types/index";
 import ScheduleWeekdaysToggleGroup from "./ScheduleWeekdaysToggleGroup";
 import React from "react";
 import { ScheduleBetweenTimeValue } from "./ScheduleBetweenTimeValue";

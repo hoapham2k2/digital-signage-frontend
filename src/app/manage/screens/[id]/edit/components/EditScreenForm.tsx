@@ -1,4 +1,4 @@
-import { Group, Screen } from "@/lib/types";
+import { Group, Screen } from "@/types/index";
 import EditScreenGroupLabelInput from "./EditScreenGroupLabelInput";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";

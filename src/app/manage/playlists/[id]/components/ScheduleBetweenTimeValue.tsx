@@ -1,6 +1,6 @@
 import { TimePickerDemo } from "@/components/date_time_pickers/AppTimePicker";
 import { useScheduleStore } from "@/lib/stores/schedule-store";
-import { Schedule } from "@/lib/types";
+import { Schedule } from "@/types/index";
 import { useEffect, useState } from "react";
 
 type ScheduleBetweenTimeValueProps = {

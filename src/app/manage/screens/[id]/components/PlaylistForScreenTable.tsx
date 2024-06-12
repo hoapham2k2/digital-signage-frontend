@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/table/DataTable";
 import { PlaylistColumns } from "./PlaylistColumns";
-import { Playlist, Screen } from "@/lib/types";
+import { Playlist, Screen } from "@/types/index";
 
 type Props = {
 	screen: Screen;

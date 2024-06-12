@@ -1,5 +1,5 @@
 import { api } from "@/configs/axiosConfig";
-import { Content } from "@/lib/types";
+import { Content } from "@/types/index";
 export const fetchContents = async () => {
 	const { data } = await api.get("/ContentItems");
 	return data;
@@ -21,10 +21,14 @@ export const fetchContentsByPlaylistIds = async (ids: string[]) => {
 	return data;
 };
 
-export const uploadContent = async (file: File) => {
+export const UploadContentAsync = async (file: File) => {
 	const formData = new FormData();
 	formData.append("file", file);
-	await api.post("/ContentItems", formData);
+	await api.post("/ContentItems", formData, {
+		headers: {
+			"Content-Type": "multipart/form-data",
+		},
+	});
 };
 
 export const updateContent = async (content: Content) => {

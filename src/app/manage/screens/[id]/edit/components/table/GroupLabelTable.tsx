@@ -9,7 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Group, Playlist, Screen } from "@/lib/types";
+import { Group, Playlist, Screen } from "@/types/index";
 import {
 	flexRender,
 	getCoreRowModel,

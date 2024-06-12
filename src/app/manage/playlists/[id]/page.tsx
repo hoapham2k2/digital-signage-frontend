@@ -1,50 +1,39 @@
 import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { useNavigate, useParams } from "react-router-dom";
-import { Group, Playlist, Schedule } from "@/lib/types";
+import { Playlist } from "@/types/index";
 import {
 	deletePlaylist,
 	fetchPlaylistById,
 	updatePlaylist,
 } from "@/apis/playlists";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useEffect, useState } from "react";
-import { fetchGroupByIds } from "@/apis/groups";
-import EditScreenGroupLabelInput from "../../screens/[id]/edit/components/EditScreenGroupLabelInput";
 import PlaylistDetailSchedule from "./components/PlaylistDetailSchedule";
-import {
-	ScheduleStoreState,
-	useScheduleStore,
-} from "@/lib/stores/schedule-store";
-import {
-	fetchSchedulesByPlaylistId,
-	updateSchedulesBelongToPlaylist,
-} from "@/apis/schedules";
-import PlaylistDetailContent from "./components/PlaylistDetailContent";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Switch } from "@/components/ui/switch";
+import PlaylistPlayOn from "./components/PlaylistPlayOn";
 
-type Props = NonNullable<unknown>;
+type Props = unknown;
 
 const PlaylistDetailPage = (_props: Props) => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+	const { control, handleSubmit, reset, watch } = useForm<Playlist>();
 
-	const [currentPlaylist, setCurrentPlaylist] = useState<Playlist | null>(null);
 	const {
-		currentSchedulesBelongToPlaylist,
-		setCurrentSchedulesBelongToPlaylist,
-	} = useScheduleStore((state: ScheduleStoreState) => ({
-		currentSchedulesBelongToPlaylist: state.schedules,
-		setCurrentSchedulesBelongToPlaylist: state.setSchedules,
-	}));
-	const [isDataChanged, setIsDataChanged] = useState(false);
-
-	const { data: fetchedPlaylist } = useQuery<Playlist>({
+		data: fetchedPlaylist,
+		isLoading: isFetchingPlaylist,
+		isError: fetchPlaylistError,
+		isSuccess: fetchPlaylistSuccess,
+	} = useQuery<Playlist>({
 		queryKey: ["playlist", id],
 		queryFn: () => fetchPlaylistById(id as string),
 		enabled: !!id,
+		onSuccess: (data) => {
+			reset(data);
+		},
 	});
 
 	const { mutate: deleteCurrentPlaylist } = useMutation(
@@ -56,110 +45,27 @@ const PlaylistDetailPage = (_props: Props) => {
 			},
 		}
 	);
+	const watchedValues = watch();
 
-	const {
-		mutate: updateCurrentPlaylist,
-		isSuccess: updateCurrentPlaylistSuccess,
-	} = useMutation(
-		(playlist: Omit<Playlist, "id">) => updatePlaylist(id as string, playlist),
-		{
-			onSuccess: () => {
-				queryClient.invalidateQueries({
-					queryKey: ["playlist", id],
-				});
-			},
-		}
-	);
-	const { data: groupsBelongToPlaylist } = useQuery<Group[]>({
-		queryKey: ["groups", currentPlaylist?.groups],
-		queryFn: () => {
-			return fetchGroupByIds(currentPlaylist?.groups as string[]);
-		},
-		enabled: !!currentPlaylist?.groups,
-	});
+	const isChanged =
+		JSON.stringify(fetchedPlaylist) !== JSON.stringify(watchedValues);
 
-	// handle for schedules
-	const { data: fetchedSchedulesBelongToPlaylist } = useQuery<Schedule[]>({
-		queryKey: ["schedules", id],
-		queryFn: () => fetchSchedulesByPlaylistId(id as string),
-		enabled: !!id,
-	});
-
-	const { mutate: updateSchedules, isSuccess: updateSchedulesSuccess } =
-		useMutation(
-			(playlist: Schedule[]) =>
-				updateSchedulesBelongToPlaylist(id as string, playlist),
-			{
-				onSuccess: () => {
-					queryClient.invalidateQueries({
-						queryKey: ["playlist", id],
-					});
-				},
-			}
-		);
-
-	useEffect(() => {
-		if (fetchedPlaylist) {
-			setCurrentPlaylist(fetchedPlaylist);
-		}
-	}, [fetchedPlaylist]);
-
-	useEffect(() => {
-		if (fetchedSchedulesBelongToPlaylist) {
-			setCurrentSchedulesBelongToPlaylist(fetchedSchedulesBelongToPlaylist);
-		}
-	}, [fetchedSchedulesBelongToPlaylist]);
-
-	const handleSaveButton = () => {
-		if (currentPlaylist) {
-			updateCurrentPlaylist(currentPlaylist);
-		}
-		if (currentSchedulesBelongToPlaylist) {
-			updateSchedules(currentSchedulesBelongToPlaylist as Schedule[]);
-		}
-
-		if (updateCurrentPlaylistSuccess || updateSchedulesSuccess) {
-			setIsDataChanged(false);
-		}
+	const onSubmit: SubmitHandler<Playlist> = (data: Playlist) => {
+		console.log("new data", data);
+		updatePlaylist(id as string, data);
 	};
 
-	//use effect to handle isDataChanged when currentPlaylist changes (i.e. when user changes the name or any other field) o
-	useEffect(() => {
-		if (currentPlaylist) {
-			if (fetchedPlaylist) {
-				const isChanged = Object.keys(currentPlaylist).some(
-					(key) =>
-						currentPlaylist[key as keyof Playlist] !==
-						fetchedPlaylist[key as keyof Playlist]
-				);
-				setIsDataChanged(isChanged);
-			}
-		}
-
-		if (currentSchedulesBelongToPlaylist && fetchedSchedulesBelongToPlaylist) {
-			// check if the current schedules are changed or not by comparing with fetched schedules from the server (fetchedSchedulesBelongToPlaylist)
-			let isChanged = false;
-			currentSchedulesBelongToPlaylist.forEach((currentSchedule, index) => {
-				if (currentSchedule !== fetchedSchedulesBelongToPlaylist[index]) {
-					isChanged = true;
-				}
-			});
-			setIsDataChanged(isChanged);
-		}
-	}, [
-		currentPlaylist,
-		currentSchedulesBelongToPlaylist,
-		fetchedPlaylist,
-		fetchedSchedulesBelongToPlaylist,
-	]);
+	if (isFetchingPlaylist) return <div>Loading...</div>;
+	if (fetchPlaylistError) return <div>Error...</div>;
+	if (!fetchPlaylistSuccess) return <div>Not found</div>;
 
 	return (
-		<div>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			{/* For Header */}
 			<div className='flex flex-row justify-between items-center'>
 				<div className='flex flex-row gap-4 items-center'>
 					<HistoryBackButton />
-					<h1 className='text-2xl'>{fetchedPlaylist?.name}</h1>
+					<h1 className='text-2xl'>{fetchedPlaylist.title}</h1>
 				</div>
 				<div className='flex flex-row gap-2 justify-self-end'>
 					<Button onClick={() => deleteCurrentPlaylist(id as string)}>
@@ -174,47 +80,36 @@ const PlaylistDetailPage = (_props: Props) => {
 						{/* Name section */}
 						<div className=''>
 							<h2 className='text-base'>Name</h2>
-							{currentPlaylist && (
-								<Input
-									value={currentPlaylist?.name}
-									onChange={(e) => {
-										setCurrentPlaylist({
-											...currentPlaylist,
-											name: e.target.value,
-										});
-									}}
-								/>
-							)}
+							<Controller
+								control={control}
+								name={"title"}
+								render={({ field }) => <Input {...field} />}
+							/>
 						</div>
 						{/* Enable Section */}
 						<div className='flex flex-row items-center justify-between'>
 							<h2 className='text-base'>Enabled</h2>
-							{currentPlaylist && (
-								<Switch
-									defaultChecked={currentPlaylist?.status === "Enabled"}
-									onCheckedChange={(checked) => {
-										setCurrentPlaylist({
-											...currentPlaylist,
-											status: checked ? "Enabled" : "Disabled",
-										});
-									}}
-								/>
-							)}
+
+							<Controller
+								control={control}
+								name='isEnabled'
+								render={({ field }) => (
+									<Switch
+										checked={field.value}
+										onCheckedChange={(newvalue) => field.onChange(newvalue)}
+									/>
+								)}
+							/>
 						</div>
 						{/* Play ons section */}
 						<div>
 							<h2 className='text-base'>Play Ons</h2>
-							{groupsBelongToPlaylist && (
-								<EditScreenGroupLabelInput
-									type='playlist'
-									groupIds={currentPlaylist?.groups as string[]}
-								/>
-							)}
+							<PlaylistPlayOn />
 						</div>
 					</div>
 					<div className='w-1/2'>
 						{/* Contents Section */}
-						<PlaylistDetailContent />
+						{/* <PlaylistPlayOn /> */}
 					</div>
 				</div>
 				<div>
@@ -226,8 +121,8 @@ const PlaylistDetailPage = (_props: Props) => {
 				</div>
 			</div>
 
-			{isDataChanged && <Button onClick={handleSaveButton}>Save</Button>}
-		</div>
+			{isChanged && <Button type='submit'>Save</Button>}
+		</form>
 	);
 };
 

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Content } from "../types";
+import { Content } from "@/types/index";
 import { devtools } from "zustand/middleware";
 
 export type ContentStoreType = {

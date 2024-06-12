@@ -7,7 +7,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Group, Screen } from "@/lib/types";
+import { Group, Screen } from "@/types/index";
 import { useState } from "react";
 import GroupLabelTable from "./table/GroupLabelTable";
 import { useParams } from "react-router-dom";

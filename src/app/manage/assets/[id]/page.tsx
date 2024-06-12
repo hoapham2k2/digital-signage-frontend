@@ -2,7 +2,7 @@ import { fetchContentById, updateContent } from "@/apis/contents";
 import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Content } from "@/lib/types";
+import { Content } from "@/types/index";
 import { useField, useForm } from "@tanstack/react-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -99,11 +99,12 @@ const AssetDetailPage = (_props: Props) => {
 								{content.filePath ? (
 									<img
 										src={
-											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/content/${content.filePath}` ??
-											""
+											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
+												content.filePath.includes("default") ? "" : "content"
+											}/${content.filePath}` ?? ""
 										}
 										alt={content.title}
-										className='w-1/2 h-1/2 self-center'
+										className='w-1/2 h-1/2 self-center object-cover'
 									/>
 								) : (
 									<p>No thumbnail</p>

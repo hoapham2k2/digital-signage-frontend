@@ -5,11 +5,9 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import supabase from "@/configs/supabaseConfig";
-import { Content } from "@/lib/types";
+import { Content } from "@/types/index";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { useEffect, useState } from "react";
 import { MdOndemandVideo } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
@@ -22,8 +20,9 @@ export const ContentsColumns: ColumnDef<Content>[] = [
 			return content.resourceType === "Image" ? (
 				<img
 					src={
-						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/content/${content.filePath}` ??
-						""
+						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
+							content.filePath.includes("default") ? "" : "content"
+						}/${content.filePath}` ?? ""
 					}
 					alt={content.title}
 					className='w-10 h-10'

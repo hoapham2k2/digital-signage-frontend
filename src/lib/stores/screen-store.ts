@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Screen } from "../types";
+import { Screen } from "@/types/index";
 import { devtools } from "zustand/middleware";
 
 export type ScreenStoreType = {
@@ -33,7 +33,9 @@ export const useScreenStore = create<ScreenStoreState>()(
 		},
 		deleteScreen: (id: string) => {
 			set((state) => ({
-				screens: state.screens.filter((s) => s.id !== id),
+				screens: state.screens.filter(
+					(s) => s.id !== (id as unknown as number)
+				),
 			}));
 		},
 	}))

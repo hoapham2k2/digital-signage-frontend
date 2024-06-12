@@ -6,7 +6,7 @@ import {
 	ScheduleOperatorForTime,
 	ScheduleOperatorForWeekdays,
 	ScheduleType,
-} from "../types";
+} from "@/types/index";
 
 export type ScheduleStoreType = {
 	schedules: Schedule[];

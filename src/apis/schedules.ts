@@ -1,5 +1,5 @@
 import { api } from "@/configs/axiosConfig";
-import { Schedule } from "@/lib/types";
+import { Schedule } from "@/types/index";
 
 export const fetchSchedulesByPlaylistId = async (
 	playlistId: string

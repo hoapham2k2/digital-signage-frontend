@@ -1,35 +1,3 @@
-export type Group = {
-	id: number;
-	name: string;
-};
-export type Screen = {
-	id: string;
-	thumbnail?: string;
-	name: string;
-	// groups: string[];
-	lastHeartbeat?: string;
-	status?: string;
-	playerLabels: {
-		labelId: number;
-	}[];
-};
-
-export type Content = {
-	id?: number;
-	title: string;
-	filePath: string;
-	duration: number;
-	resourceType: "Image" | "Video" | "Webpage";
-};
-
-export type Playlist = {
-	id: string;
-	name: string;
-	groups: string[];
-	status: "Enabled" | "Disabled";
-	contents: string[];
-};
-
 // Schedule
 export enum ScheduleType {
 	TheDate = "the date",

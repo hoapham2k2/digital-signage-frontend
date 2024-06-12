@@ -4,7 +4,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { DateSchedule, Schedule, TimeSchedule } from "@/lib/types";
+import { DateSchedule, Schedule, TimeSchedule } from "@/types/index";
 import { useScheduleStore } from "@/lib/stores/schedule-store";
 import { useEffect } from "react";
 

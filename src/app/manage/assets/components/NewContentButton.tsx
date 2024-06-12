@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
@@ -11,39 +12,36 @@ import {
 import React from "react";
 import { useForm } from "@tanstack/react-form";
 import { Input } from "@/components/ui/input";
-import { uploadContent } from "@/apis/contents";
+import { UploadContentAsync } from "@/apis/contents";
 import { useMutation, useQueryClient } from "react-query";
-import axios from "axios";
 
 type NewContentButtonProps = unknown;
 
 export const NewContentButton: React.FC<NewContentButtonProps> = (
 	_props: NewContentButtonProps
 ) => {
+	const [isOpen, setIsOpen] = React.useState(false);
+	const queryClient = useQueryClient();
+	const { mutate: uploadContent } = useMutation(UploadContentAsync, {
+		onSuccess: () => {
+			console.log("Content uploaded");
+			setIsOpen(false);
+			queryClient.invalidateQueries("contents");
+		},
+		onError: (error) => {
+			console.error("Error uploading content", error);
+		},
+	});
 	const form = useForm({
 		defaultValues: {
 			file: undefined,
 		},
 		onSubmit: async ({ value }) => {
-			const response = await axios.post(
-				"http://localhost:5036/api/v1/ContentItems",
-				value,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				}
-			);
-
-			if (response.status === 200) {
-				alert("Content uploaded successfully");
-			}
-
-			console.log(response);
+			uploadContent(value.file as unknown as File);
 		},
 	});
 	return (
-		<Dialog>
+		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
 				<Button>New Content</Button>
 			</DialogTrigger>
@@ -73,7 +71,9 @@ export const NewContentButton: React.FC<NewContentButtonProps> = (
 						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter>
-						<Button>Close</Button>
+						<DialogClose asChild>
+							<Button>Close</Button>
+						</DialogClose>
 						<Button type='submit'>Finish</Button>
 					</DialogFooter>
 				</form>

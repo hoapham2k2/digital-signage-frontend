@@ -1,5 +1,5 @@
 import { api } from "@/configs/axiosConfig";
-import { Group } from "@/lib/types";
+import { Group } from "@/types/index";
 
 export const fetchGroups = async () => {
 	const { data } = await api.get("/Labels");
@@ -8,6 +8,15 @@ export const fetchGroups = async () => {
 
 export const fetchGroupById = async (id: string) => {
 	const { data } = await api.get(`/Labels/${id}`);
+	return data;
+};
+
+export const fetchGroupsByScreenId = async ({
+	screenId,
+}: {
+	screenId: string;
+}): Promise<Group[]> => {
+	const { data } = await api.get(`/Labels/player/${screenId}`);
 	return data;
 };
 

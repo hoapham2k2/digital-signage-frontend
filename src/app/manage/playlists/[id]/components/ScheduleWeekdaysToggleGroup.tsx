@@ -1,6 +1,6 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useScheduleStore } from "@/lib/stores/schedule-store";
-import { Schedule } from "@/lib/types";
+import { Schedule } from "@/types/index";
 
 type ComponentProps = {
 	currentSchedule: Schedule;
