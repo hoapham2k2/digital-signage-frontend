@@ -1,51 +1,51 @@
 // Schedule
 export enum ScheduleType {
-	TheDate = "the date",
-	TheTime = "the time",
-	TheWeekdays = "the weekdays",
+	TheDate = "TheDate",
+	TheTime = "TheTime",
+	TheWeekdays = "TheWeekdays",
 }
 
 export enum ScheduleOperatorForDate {
-	IsOnOrBefore = "is on or before",
-	IsExactly = "is exactly",
-	IsOnOrAfter = "Is on or after",
+	IsOnOrBefore = "IsOnOrBefore",
+	IsExactly = "IsExactly",
+	IsOnOrAfter = "IsOnOrAfter",
 }
 
 export enum ScheduleOperatorForTime {
-	IsBefore = "is before",
-	IsBetween = "is between",
-	IsAfter = "is after",
+	IsBefore = "IsBefore",
+	IsBetween = "IsBetween",
+	IsAfter = "IsAfter",
 }
 
 export enum ScheduleOperatorForWeekdays {
-	IsOn = "is on",
-	IsNotOn = "is not on",
+	IsOn = "IsOn",
+	IsNotOn = "IsNotOn",
 }
 
 export interface DateSchedule {
 	id: string;
 	playlistId: string;
-	scheduleType: ScheduleType.TheDate;
-	scheduleOperator: ScheduleOperatorForDate;
-	// scheduleValue: Date;
-	scheduleValue: string;
+	type: ScheduleType.TheDate;
+	operator: ScheduleOperatorForDate;
+	// value: Date;
+	value: string;
 }
 
 export interface TimeSchedule {
 	id: string;
 	playlistId: string;
-	scheduleType: ScheduleType.TheTime;
-	scheduleOperator: ScheduleOperatorForTime;
-	// scheduleValue: Date | [Date, Date];
-	scheduleValue: string | [string, string];
+	type: ScheduleType.TheTime;
+	operator: ScheduleOperatorForTime;
+	// value: Date | [Date, Date];
+	value: string;
 }
 
 export interface WeekdaysSchedule {
 	id: string;
 	playlistId: string;
-	scheduleType: ScheduleType.TheWeekdays;
-	scheduleOperator: ScheduleOperatorForWeekdays;
-	scheduleValue: string[];
+	type: ScheduleType.TheWeekdays;
+	operator: ScheduleOperatorForWeekdays;
+	value: string;
 }
 
 export type Schedule = DateSchedule | TimeSchedule | WeekdaysSchedule;

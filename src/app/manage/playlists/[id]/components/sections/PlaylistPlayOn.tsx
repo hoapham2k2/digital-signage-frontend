@@ -106,47 +106,50 @@ const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 		return <div>Not found</div>;
 
 	return (
-		<Popover open={isOpened} onOpenChange={setIsOpened}>
-			<PopoverTrigger>
-				<div className='w-full flex flex-row justify-start items-center'>
-					{fetchedPlaylist.playlistLabels.map((label) => (
-						<span
-							key={label.label.id}
-							className='inline-block px-2 py-1 mr-1 bg-gray-200 rounded-md'>
-							{label.label.name}
-						</span>
-					))}
-					<span className='text-slate-500 hover:text-slate-700 cursor-pointer'>
-						Add a group label
-					</span>
-				</div>
-			</PopoverTrigger>
-			<PopoverContent side='bottom' align='start' sideOffset={15}>
-				<h1>Group labels</h1>
-				<form onSubmit={handleFormSubmit}>
-					<div className='max-h-44 overflow-y-auto'>
-						{fetchedGroups.map((group) => (
-							<Controller
-								key={group.id}
-								name={`group-${group.id}`}
-								control={control}
-								render={({ field }) => (
-									<div className='flex flex-row items-center space-x-2'>
-										<Checkbox
-											checked={field.value}
-											onCheckedChange={(value) => field.onChange(value)}
-										/>
-										<span>{group.name}</span>
-									</div>
-								)}
-							/>
+		<div>
+			<h2 className='text-base'>Play Ons</h2>
+			<Popover open={isOpened} onOpenChange={setIsOpened}>
+				<PopoverTrigger>
+					<div className='w-full flex flex-row justify-start items-center'>
+						{fetchedPlaylist.playlistLabels.map((label) => (
+							<span
+								key={label.label.id}
+								className='inline-block px-2 py-1 mr-1 bg-gray-200 rounded-md'>
+								{label.label.name}
+							</span>
 						))}
-
-						{isDirty && <Button type='submit'>Save</Button>}
+						<span className='text-slate-500 hover:text-slate-700 cursor-pointer'>
+							Add a group label
+						</span>
 					</div>
-				</form>
-			</PopoverContent>
-		</Popover>
+				</PopoverTrigger>
+				<PopoverContent side='bottom' align='start' sideOffset={15}>
+					<h1>Group labels</h1>
+					<form onSubmit={handleFormSubmit}>
+						<div className='max-h-44 overflow-y-auto'>
+							{fetchedGroups.map((group) => (
+								<Controller
+									key={group.id}
+									name={`group-${group.id}`}
+									control={control}
+									render={({ field }) => (
+										<div className='flex flex-row items-center space-x-2'>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={(value) => field.onChange(value)}
+											/>
+											<span>{group.name}</span>
+										</div>
+									)}
+								/>
+							))}
+
+							{isDirty && <Button type='submit'>Save</Button>}
+						</div>
+					</form>
+				</PopoverContent>
+			</Popover>
+		</div>
 	);
 };
 

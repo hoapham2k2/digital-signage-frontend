@@ -92,14 +92,14 @@
 			"playlistId": "2",
 			"scheduleType": "TheTime",
 			"scheduleOperator": "IsBetween",
-			"scheduleValue": "2022-01-01T00:00:00Z"
+			"scheduleValue": "2022-01-01T00:00:00Z,2022-01-01T00:00:00Z"
 		},
 		{
 			"id": "3",
 			"playlistId": "1",
-			"scheduleType": "TheTime",
-			"scheduleOperator": "IsBetween",
-			"scheduleValue": "2022-01-01T00:00:00Z"
+			"scheduleType": "TheWeekday",
+			"scheduleOperator": "IsOn",
+			"scheduleValue": "Monday, Tuesday, Wednesday, Thursday, Friday"
 		}
 	]
 }
