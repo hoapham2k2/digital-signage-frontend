@@ -78,6 +78,7 @@ const PlaylistDetailSchedule = (_props: Props) => {
 									<ScheduleValueSection
 										control={control}
 										name={`playlist.schedules[${index}]`}
+										field={_item}
 									/>
 									<div className='flex flex-row gap-1'>
 										<Button
