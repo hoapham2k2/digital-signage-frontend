@@ -86,7 +86,6 @@ const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 	const onSubmit: SubmitHandler<Record<string, boolean>> = (
 		data: Record<string, boolean>
 	) => {
-		console.log("new data", data);
 		updatePlaylistLabelsAsync(data);
 	};
 	const handleFormSubmit = (e: React.FormEvent) => {

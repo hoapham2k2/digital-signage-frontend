@@ -42,7 +42,6 @@ const AssetDetailPage = (_props: Props) => {
 			resourceType: content?.resourceType ?? "Image",
 		},
 		onSubmit: async (values) => {
-			console.log(values);
 			await mutate(values.value);
 		},
 	});

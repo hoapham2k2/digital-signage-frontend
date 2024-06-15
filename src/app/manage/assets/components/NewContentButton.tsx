@@ -24,7 +24,6 @@ export const NewContentButton: React.FC<NewContentButtonProps> = (
 	const queryClient = useQueryClient();
 	const { mutate: uploadContent } = useMutation(UploadContentAsync, {
 		onSuccess: () => {
-			console.log("Content uploaded");
 			setIsOpen(false);
 			queryClient.invalidateQueries("contents");
 		},

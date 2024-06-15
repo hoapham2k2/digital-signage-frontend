@@ -8,9 +8,8 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(
-	//console log every request
+	//
 	(request) => {
-		console.log(`${new Date().toISOString()} - Request sent to ${request.url}`);
 		return request;
 	},
 	(error) => {

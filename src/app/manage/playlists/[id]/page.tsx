@@ -1,39 +1,34 @@
-import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useNavigate, useParams } from "react-router-dom";
-import { Playlist, ScheduleType } from "@/types/index";
+import { Content, Playlist, Schedule } from "@/types/index";
 import {
-	deletePlaylist,
 	fetchPlaylistById,
 	updatePlaylist,
+	updatePlaylistSchedules,
 } from "@/apis/playlists";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import PlaylistDetailSchedule from "./components/schedules/PlaylistDetailSchedule";
-import {
-	Controller,
-	FormProvider,
-	SubmitHandler,
-	useForm,
-} from "react-hook-form";
-import { Switch } from "@/components/ui/switch";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PlaylistPlayOn from "./components/sections/PlaylistPlayOn";
 import { DevTool } from "@hookform/devtools";
 import PlaylistDetailHeader from "./components/sections/PlaylistDetailHeader";
 import ScheduleDetailEditName from "./components/sections/ScheduleDetailEditName";
 import PlaylistDetailEditEnabled from "./components/sections/PlaylistDetailEditEnabled";
 import PlaylistDetailContent from "./components/sections/PlaylistDetailContent";
+import PlaylistDetailContentComponent from "./components/sections/PlaylistDetailContentManage";
 
 type Props = unknown;
 
-type PlaylistFormValueTypes = {
+export type PlaylistFormValueTypes = {
 	playlist: Playlist;
+	contentItems: Content[];
 };
 
 const PlaylistDetailPage = (_props: Props) => {
 	const { id } = useParams();
-	const methods = useForm<PlaylistFormValueTypes>({});
-
+	const methods = useForm<PlaylistFormValueTypes>();
+	const queryClient = useQueryClient();
+	const navigate = useNavigate();
 	const {
 		data: fetchedPlaylist,
 		isLoading: isFetchingPlaylist,
@@ -44,20 +39,62 @@ const PlaylistDetailPage = (_props: Props) => {
 		queryFn: () => fetchPlaylistById(id as string),
 		enabled: !!id,
 		onSuccess: (data: Playlist) => {
-			console.log("data", data);
 			methods.reset({ playlist: data });
 		},
 	});
 
-	const watchedValues = methods.watch();
-	const isChanged =
-		JSON.stringify(fetchedPlaylist) !== JSON.stringify(watchedValues);
+	const { mutate: updatePlaylistSchedulesMutation } = useMutation(
+		({
+			playlistId,
+			schedules,
+		}: {
+			playlistId: number;
+			schedules: Schedule[];
+		}) => {
+			return updatePlaylistSchedules(playlistId, schedules);
+		}
+	);
 
-	const onSubmit: SubmitHandler<PlaylistFormValueTypes> = (
+	const { mutate: updatePlaylistMutation } = useMutation(
+		(data: {
+			playlistId: string;
+			playlist: Omit<
+				Playlist,
+				"id" | "playlistContentItems" | "playlistLabels" | "schedules"
+			>;
+		}) => {
+			return updatePlaylist(data.playlistId, data.playlist);
+		}
+	);
+
+	const onSubmit: SubmitHandler<PlaylistFormValueTypes> = async (
 		data: PlaylistFormValueTypes
 	) => {
-		console.log("new data", data);
-		updatePlaylist(id as string, data.playlist);
+		alert(JSON.stringify(data.playlist));
+		try {
+			await Promise.all([
+				updatePlaylistSchedulesMutation({
+					playlistId: Number(data.playlist.id),
+					schedules: data.playlist.schedules,
+				}),
+			]);
+
+			await Promise.all([
+				updatePlaylistMutation({
+					playlistId: data.playlist.id,
+					playlist: {
+						title: data.playlist.title,
+						isEnabled: data.playlist.isEnabled,
+						duration: data.playlist.duration,
+					},
+				}),
+			]);
+
+			await queryClient.invalidateQueries("playlists");
+			navigate("/manage/playlists");
+		} catch (error) {
+			console.error("Error while updating playlist: ", error);
+		}
 	};
 	if (isFetchingPlaylist) return <div>Loading...</div>;
 	if (fetchPlaylistError) return <div>Error...</div>;
@@ -81,14 +118,14 @@ const PlaylistDetailPage = (_props: Props) => {
 						</div>
 					</div>
 
-					<PlaylistDetailSchedule playlistId={id as string} />
+					<PlaylistDetailSchedule />
+
+					<PlaylistDetailContentComponent control={methods.control} />
 				</div>
 
-				{isChanged && <Button type='submit'>Save</Button>}
+				{methods.formState.isDirty && <Button type='submit'>Save</Button>}
 				<DevTool control={methods.control} />
 			</form>
-
-			<pre>{JSON.stringify(watchedValues, null, 2)}</pre>
 		</FormProvider>
 	);
 };

@@ -11,51 +11,57 @@ import {
 	ScheduleOperatorForWeekdays,
 	ScheduleType,
 } from "@/types";
-import { Controller } from "react-hook-form";
+import { Control, Controller, useFormContext, useWatch } from "react-hook-form";
+import { PlaylistFormValueTypes } from "../../page";
 const scheduleOptisonsMap: Record<ScheduleType, string[]> = {
 	[ScheduleType.TheDate]: Object.values(ScheduleOperatorForDate),
 	[ScheduleType.TheTime]: Object.values(ScheduleOperatorForTime),
 	[ScheduleType.TheWeekdays]: Object.values(ScheduleOperatorForWeekdays),
 };
-const ScheduleTypeSelect = ({
-	control,
-	name,
-}: {
-	control: any;
-	name: string;
-}) => {
+
+type ScheduleOperatorSelectProps = {
+	index: number;
+};
+const ScheduleTypeSelect = (_props: ScheduleOperatorSelectProps) => {
+	const { control, register } = useFormContext<PlaylistFormValueTypes>();
 	return (
 		<Controller
-			name={name}
+			name={`playlist.schedules.${_props.index}.type`}
 			control={control}
-			render={({ field }) => (
-				<>
-					<Select
-						value={field.value?.type}
-						onValueChange={(value) =>
-							field.onChange({
-								...field.value,
-								type: value,
-							})
-						}>
-						<SelectTrigger>
-							<SelectValue placeholder={"Select an option"} />
-						</SelectTrigger>
-						<SelectContent>
-							{Object.values(ScheduleType).map((scheduleType) => (
-								<SelectItem key={scheduleType} value={scheduleType}>
-									{/* {scheduleType.charAt(0).toUpperCase() +
-										scheduleType
-											.slice(1)
-											.split(/(?=[A-Z])/)
-											.join(" ")} */}
-									{scheduleType}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</>
-			)}
+			render={({ field }) => {
+				return (
+					<select
+						value={field.value}
+						onChange={(e) => {
+							const newType = e.target.value as ScheduleType;
+							const newSchedule = { ...field.value, type: newType };
+
+							switch (newSchedule.type) {
+								case ScheduleType.TheDate:
+									newSchedule.value = new Date().toISOString();
+									break;
+								case ScheduleType.TheTime:
+									if (
+										newSchedule.operator === ScheduleOperatorForTime.IsBetween
+									) {
+										newSchedule.value = `${new Date().toISOString()},${new Date().toISOString()}`;
+									} else newSchedule.value = new Date().toISOString();
+									break;
+								case ScheduleType.TheWeekdays:
+									newSchedule.value = "";
+									break;
+							}
+
+							field.onChange(newSchedule);
+						}}>
+						{Object.values(ScheduleType).map((scheduleType) => (
+							<option key={scheduleType} value={scheduleType}>
+								{scheduleType}
+							</option>
+						))}
+					</select>
+				);
+			}}
 		/>
 	);
 };

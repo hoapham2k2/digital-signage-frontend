@@ -1,52 +1,23 @@
-import { Schedule } from "@/types/index";
+import { Schedule, ScheduleType } from "@/types/index";
 import { cn } from "@/lib/utils";
-import React from "react";
-import AppSelect from "@/app/manage/playlists/[id]/components/schedules/AppSelect";
 import { Button } from "@/components/ui/button";
 import ScheduleValueSection from "./ScheduleValueSection";
-import { useScheduleStore } from "@/lib/stores/schedule-store";
-import {
-	Controller,
-	useFieldArray,
-	useForm,
-	useFormContext,
-} from "react-hook-form";
+import { Control, useFieldArray, useFormContext } from "react-hook-form";
 import ScheduleTypeSelect from "./ScheduleTypeSelect";
 import ScheduleOperatorSelect from "./ScheduleOperatorSelect";
+import { useParams } from "react-router-dom";
+import { PlaylistFormValueTypes } from "../../page";
 
-type Props = {
-	playlistId: string;
-};
+type Props = {};
 
-const scheduleOptionsMap = {
-	"The Date": ["Is On Or Before", "Is Exactly", "Is On Or After"],
-	"The Time": ["Is Between", "Is Between"],
-	"The Weekdays": ["Is On", "Is Not On"],
-};
 const PlaylistDetailSchedule = (_props: Props) => {
-	// const { addSchedule, deleteSchedule, appSchedules } = useScheduleStore(
-	// 	(state) => ({
-	// 		appSchedules: state.schedules.filter(
-	// 			(schedule) => schedule.playlistId === _props.playlistId
-	// 		),
-	// 		addSchedule: state.addSchedule,
-	// 		deleteSchedule: state.deleteSchedule,
-	// 	})
-	// );
+	const { id: playlistId } = useParams<{ id: string }>();
+	const { control } = useFormContext<PlaylistFormValueTypes>();
 
-	// const handleAddSchedule = (_e: React.MouseEvent<HTMLButtonElement>) => {
-	// 	addSchedule(_props.playlistId);
-	// };
-
-	const methods = useFormContext();
-
-	const { control, handleSubmit, reset, watch } = methods;
-	const { fields, append, remove } = useFieldArray({
-		control,
+	const { fields, append, remove } = useFieldArray<PlaylistFormValueTypes>({
+		control: control,
 		name: "playlist.schedules",
 	});
-
-	console.log("fields", fields);
 
 	return (
 		<div>
@@ -58,7 +29,7 @@ const PlaylistDetailSchedule = (_props: Props) => {
 						fields.map((_item, index: number) => {
 							return (
 								<div
-									key={index}
+									key={_item.id}
 									className={cn(
 										"grid grid-cols-[1fr_1fr_1fr_auto]",
 										"gap-2",
@@ -66,28 +37,22 @@ const PlaylistDetailSchedule = (_props: Props) => {
 										"justify-center",
 										"w-full"
 									)}>
-									<ScheduleTypeSelect
-										control={control}
-										name={`playlist.schedules[${index + 1}]`}
-									/>
+									<ScheduleTypeSelect index={index} />
 
-									<ScheduleOperatorSelect
-										control={control}
-										name={`playlist.schedules[${index}]`}
-									/>
-									<ScheduleValueSection
-										control={control}
-										name={`playlist.schedules[${index}]`}
-										field={_item}
-									/>
+									<ScheduleOperatorSelect index={index} />
+									<ScheduleValueSection index={index} />
 									<div className='flex flex-row gap-1'>
 										<Button
-											onClick={() =>
+											onClick={(e) => {
+												e.preventDefault();
+												e.stopPropagation();
 												append({
-													scheduleType: "The Date",
-													scheduleOperator: "Is On Or Before",
-												})
-											}>
+													playListId: playlistId,
+													type: ScheduleType.TheDate,
+													operator: "IsOn",
+													value: new Date().toISOString(),
+												});
+											}}>
 											Add
 										</Button>
 

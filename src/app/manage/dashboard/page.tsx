@@ -13,9 +13,7 @@ const DashboardPage = (_props: Props) => {
 				"Content-Type": "application/json",
 				"Access-Control-Allow-Origin": "*",
 			},
-		})
-			.then((response) => response.json())
-			.then((data) => console.log(data));
+		}).then((response) => response.json());
 	}, []);
 	return (
 		<div className='h-[3000px]'>

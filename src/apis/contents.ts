@@ -14,10 +14,8 @@ export const fetchContentById = async ({
 	return data;
 };
 
-export const fetchContentsByPlaylistIds = async (ids: string[]) => {
-	const { data } = await api.get(
-		`/ContentItems?${ids.map((id) => `playlists=${id}`).join("&")}`
-	);
+export const fetchContentsByPlaylistIds = async (playlistId: number) => {
+	const { data } = await api.get(`/ContentItems/playlist/${playlistId}`);
 	return data;
 };
 

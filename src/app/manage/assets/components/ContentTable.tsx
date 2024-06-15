@@ -17,9 +17,7 @@ const ContentTable = (_props: Props) => {
 		queryFn: () => {
 			return fetchContents();
 		},
-		onSuccess: () => {
-			console.log("Contents fetched successfully");
-		},
+		onSuccess: () => {},
 	});
 	if (isLoading) {
 		return <div>Loading...</div>;

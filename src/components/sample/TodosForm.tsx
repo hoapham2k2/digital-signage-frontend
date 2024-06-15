@@ -34,7 +34,6 @@ const TodosForm: React.FC = () => {
 
 	const onSubmit = (data: Record<string, unknown>) => {
 		alert(JSON.stringify(data, null, 2));
-		console.log(data);
 	};
 
 	return (

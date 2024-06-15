@@ -1,8 +1,5 @@
 import { TimePickerDemo } from "@/components/date_time_pickers/AppTimePicker";
-import { useScheduleStore } from "@/lib/stores/schedule-store";
-import { Schedule } from "@/types/index";
-import { useEffect, useState } from "react";
-import { Control, FieldValues } from "react-hook-form";
+import { Control, Controller, FieldValues } from "react-hook-form";
 
 type ScheduleBetweenTimeValueProps = {
 	name: string;
@@ -12,14 +9,44 @@ type ScheduleBetweenTimeValueProps = {
 export const ScheduleBetweenTimeValue: React.FC<
 	ScheduleBetweenTimeValueProps
 > = (_props: ScheduleBetweenTimeValueProps) => {
-	const [startDate, setStartDate] = useState<Date | undefined>();
-	const [endDate, setEndDate] = useState<Date | undefined>();
-
 	return (
 		<div className='flex flex-row gap-8 items-center'>
-			<TimePickerDemo date={startDate} setDate={setStartDate} />
-			<p className='mt-2'>to</p>
-			<TimePickerDemo date={endDate} setDate={setEndDate} />
+			<Controller
+				name={_props.name}
+				control={_props.control}
+				render={({ field }) => {
+					return (
+						<>
+							<TimePickerDemo
+								date={new Date(field.value.value.split(",")[0])}
+								setDate={(date) => {
+									//
+									if (!date) return;
+									field.onChange({
+										...field.value,
+										value: `${date.toISOString()},${
+											field.value.value.split(",")[1]
+										}`,
+									});
+								}}
+							/>
+							<TimePickerDemo
+								date={new Date(field.value.value.split(",")[1])}
+								setDate={(date) => {
+									//
+									if (!date) return;
+									field.onChange({
+										...field.value,
+										value: `${
+											field.value.value.split(",")[0]
+										},${date.toISOString()}`,
+									});
+								}}
+							/>
+						</>
+					);
+				}}
+			/>
 		</div>
 	);
 };

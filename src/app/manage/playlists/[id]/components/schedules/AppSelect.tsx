@@ -35,8 +35,6 @@ const AppSelect = (props: Props) => {
 	// 	updateSchedule: state.updateSchedule,
 	// }));
 
-	console.log("appselect props: ", props.currentSchedule);
-
 	return (
 		<>
 			<Select
@@ -62,7 +60,6 @@ const AppSelect = (props: Props) => {
 					// 		scheduleOperator: value,
 					// 	});
 					// }
-					console.log(value);
 				}}>
 				<SelectTrigger>
 					<SelectValue placeholder={"Select an option"} />
