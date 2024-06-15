@@ -8,18 +8,23 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../../../../../../components/ui/calendar";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import {
+	Control,
+	Controller,
+	FieldValues,
+	useFormContext,
+} from "react-hook-form";
 
 type Props = {
-	name: string;
-	control: Control<FieldValues, any>;
+	index: number;
 };
 
 const AppDatePicker = (_props: Props) => {
+	const { control } = useFormContext();
 	return (
 		<Controller
-			name={_props.name}
-			control={_props.control}
+			control={control}
+			name={`playlist.schedules.${_props.index}.value`}
 			render={({ field }) => (
 				<>
 					<Popover>
@@ -28,13 +33,13 @@ const AppDatePicker = (_props: Props) => {
 								variant={"outline"}
 								className={cn("w-[280px] justify-start text-left font-normal")}>
 								<CalendarIcon className='mr-2 h-4 w-4' />
-								{format(parseISO(field.value.value), "dd-MM-yyyy")}
+								{format(parseISO(field.value), "dd-MM-yyyy")}
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className='w-auto p-0'>
 							<Calendar
 								mode='single'
-								selected={new Date(field.value.value)}
+								selected={new Date(field.value)}
 								onSelect={(date) => {
 									if (date) {
 										field.onChange({

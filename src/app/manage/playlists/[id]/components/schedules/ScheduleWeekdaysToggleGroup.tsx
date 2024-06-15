@@ -1,11 +1,15 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useScheduleStore } from "@/lib/stores/schedule-store";
 import { Schedule } from "@/types/index";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import {
+	Control,
+	Controller,
+	FieldValues,
+	useFormContext,
+} from "react-hook-form";
 
 type ComponentProps = {
-	name: string;
-	control: Control<FieldValues, any>;
+	index: number;
 };
 
 const toggleGroupRecords: Record<string, string> = {
@@ -20,16 +24,17 @@ const toggleGroupRecords: Record<string, string> = {
 export const ScheduleWeekdaysToggleGroup: React.FC<ComponentProps> = (
 	_props: ComponentProps
 ) => {
+	const { control } = useFormContext();
 	return (
 		<Controller
-			name={_props.name}
-			control={_props.control}
+			control={control}
+			name={`playlist.schedules.${_props.index}.value`}
 			render={({ field }) => {
 				return (
 					<ToggleGroup
 						type='multiple'
 						size='sm'
-						value={field.value.value.split(",") as string[]}
+						value={field.value.split(",") as string[]}
 						onValueChange={(newvalue) => {
 							field.onChange({
 								...field.value,

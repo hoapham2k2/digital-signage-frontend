@@ -4,7 +4,7 @@ import {
 	ScheduleOperatorForWeekdays,
 	ScheduleType,
 } from "@/types";
-import { Control, useFormContext, useWatch } from "react-hook-form";
+import { Control, Controller, useFormContext, useWatch } from "react-hook-form";
 
 const scheduleOptisonsMap: Record<ScheduleType, string[]> = {
 	[ScheduleType.TheDate]: Object.values(ScheduleOperatorForDate),
@@ -17,30 +17,34 @@ type ScheduleOperatorSelectProps = {
 };
 
 const ScheduleOperatorSelect = (_props: ScheduleOperatorSelectProps) => {
-	const schedule = useWatch({
-		control: _props.control,
-		name: _props.name,
-	});
-
-	const { setValue } = useFormContext();
+	const { control } = useFormContext();
 
 	return (
-		<select
-			value={schedule?.operator}
-			onChange={(e) => {
-				const newOperator = e.target.value as string;
-				const newSchedule = { ...schedule, operator: newOperator };
-				setValue(_props.name, newSchedule);
-			}}>
-			{
-				//@ts-ignore
-				scheduleOptisonsMap[schedule?.type]?.map((scheduleOperator: string) => (
-					<option key={scheduleOperator} value={scheduleOperator}>
-						{scheduleOperator}
-					</option>
-				))
-			}
-		</select>
+		<Controller
+			control={control}
+			name={`playlist.schedules.${_props.index}.operator`}
+			render={({ field }) => {
+				return (
+					<select
+						value={field.value}
+						onChange={(e) => {
+							const newOperator = e.target.value as string;
+							field.onChange(newOperator);
+						}}>
+						{
+							//@ts-ignore
+							scheduleOptisonsMap[field.value]?.map(
+								(scheduleOperator: string) => (
+									<option key={scheduleOperator} value={scheduleOperator}>
+										{scheduleOperator}
+									</option>
+								)
+							)
+						}
+					</select>
+				);
+			}}
+		/>
 	);
 };
 
