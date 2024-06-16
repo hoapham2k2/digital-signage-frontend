@@ -1,7 +1,13 @@
 import { fetchContentsByPlaylistIds } from "@/apis/contents";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Control, useFormContext, useWatch } from "react-hook-form";
+import {
+	Control,
+	Controller,
+	useFieldArray,
+	useFormContext,
+	useWatch,
+} from "react-hook-form";
 import { PlaylistFormValueTypes } from "../../page";
 import { useParams } from "react-router-dom";
 import { Content } from "@/types";
@@ -16,6 +22,7 @@ export const PlaylistDetailContentComponent: React.FC<
 > = (_props: PlaylistDetailContentProps) => {
 	const { id } = useParams<{ id: string }>();
 	const methods = useFormContext<PlaylistFormValueTypes>();
+
 	const {
 		data: fetchedContentsByPlaylist,
 		isLoading: isFetchingContentsByPlaylist,
@@ -29,8 +36,7 @@ export const PlaylistDetailContentComponent: React.FC<
 			methods.reset({ contentItems: data });
 		},
 	});
-
-	const watchContent = useWatch({
+	const { fields, append, remove } = useFieldArray<PlaylistFormValueTypes>({
 		control: _props.control,
 		name: "contentItems",
 	});
@@ -59,7 +65,7 @@ export const PlaylistDetailContentComponent: React.FC<
 					Add Content
 				</Button>
 			</div>
-			<pre>{JSON.stringify(watchContent, null, 2)}</pre>
+			<pre>{JSON.stringify(fields, null, 2)}</pre>
 		</div>
 	);
 };

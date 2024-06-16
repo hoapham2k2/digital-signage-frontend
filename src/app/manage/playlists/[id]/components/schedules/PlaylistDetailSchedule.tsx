@@ -12,7 +12,7 @@ type Props = {};
 
 const PlaylistDetailSchedule = (_props: Props) => {
 	const { id: playlistId } = useParams<{ id: string }>();
-	const { control } = useFormContext<PlaylistFormValueTypes>();
+	const { control, watch } = useFormContext<PlaylistFormValueTypes>();
 
 	const { fields, append, remove } = useFieldArray<PlaylistFormValueTypes>({
 		control: control,
@@ -62,6 +62,9 @@ const PlaylistDetailSchedule = (_props: Props) => {
 							);
 						})}
 				</div>
+				<pre>
+					{JSON.stringify(watch("playlist.schedules", fields), null, 2)}
+				</pre>
 			</div>
 		</div>
 	);

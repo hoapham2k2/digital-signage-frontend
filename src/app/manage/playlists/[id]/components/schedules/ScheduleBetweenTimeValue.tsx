@@ -18,29 +18,31 @@ export const ScheduleBetweenTimeValue: React.FC<
 		<div className='flex flex-row gap-8 items-center'>
 			<Controller
 				control={control}
-				name={`playlist.schedules.${_props.index}.value`}
+				name={`playlist.schedules.${_props.index}`}
 				render={({ field }) => {
 					return (
 						<>
 							<TimePickerDemo
-								date={new Date(field.value.split(",")[0])}
+								date={new Date(field.value.value?.split(",")[0])}
 								setDate={(date) => {
-									//
 									if (!date) return;
 									field.onChange({
 										...field.value,
-										value: `${date.toISOString()},${field.value.split(",")[1]}`,
+										value: `${date.toISOString()},${
+											field.value.value?.split(",")[1]
+										}`,
 									});
 								}}
 							/>
 							<TimePickerDemo
-								date={new Date(field.value.split(",")[1])}
+								date={new Date(field.value.value?.split(",")[1])}
 								setDate={(date) => {
-									//
 									if (!date) return;
 									field.onChange({
 										...field.value,
-										value: `${field.value.split(",")[0]},${date.toISOString()}`,
+										value: `${
+											field.value.value?.split(",")[0]
+										},${date.toISOString()}`,
 									});
 								}}
 							/>
