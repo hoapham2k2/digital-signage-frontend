@@ -28,13 +28,13 @@ export const ScheduleWeekdaysToggleGroup: React.FC<ComponentProps> = (
 	return (
 		<Controller
 			control={control}
-			name={`playlist.schedules.${_props.index}.value`}
+			name={`playlist.schedules.${_props.index}`}
 			render={({ field }) => {
 				return (
 					<ToggleGroup
 						type='multiple'
 						size='sm'
-						value={field.value.split(",") as string[]}
+						value={(field.value.value.split(",") as string[]) ?? []}
 						onValueChange={(newvalue) => {
 							field.onChange({
 								...field.value,

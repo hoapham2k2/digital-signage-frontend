@@ -25,7 +25,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 interface Props extends DataTableProps<any, any> {
-	type: "screen" | "playlist" | "content";
+	type?: "screen" | "playlist" | "content";
 }
 
 export function DataTable(props: Props) {
@@ -77,11 +77,12 @@ export function DataTable(props: Props) {
 										key={cell.id}
 										onClick={() => {
 											//@ts-ignore
-											navigate(
-												`/manage/${
-													props.type === "content" ? "asset" : props.type
-												}s/${cell.row.original.id}`
-											);
+											props.type &&
+												navigate(
+													`/manage/${
+														props.type === "content" ? "asset" : props.type
+													}s/${cell.row.original.id}`
+												);
 										}}>
 										{flexRender(cell.column.columnDef.cell, cell.getContext())}
 									</TableCell>

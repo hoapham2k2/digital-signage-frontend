@@ -1,6 +1,6 @@
 import { api } from "@/configs/axiosConfig";
 import { Content } from "@/types/index";
-export const fetchContents = async () => {
+export const fetchContents = async (): Promise<Content[]> => {
 	const { data } = await api.get("/ContentItems");
 	return data;
 };

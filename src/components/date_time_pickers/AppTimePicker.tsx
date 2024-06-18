@@ -1,9 +1,6 @@
-"use client";
-
 import * as React from "react";
 import { Label } from "@/components/ui/label";
 import { TimePickerInput } from "./time-picker-input";
-import { useScheduleStore } from "@/lib/stores/schedule-store";
 
 interface TimePickerDemoProps {
 	date: Date | undefined;
@@ -42,18 +39,6 @@ export function TimePickerDemo({ date, setDate }: TimePickerDemoProps) {
 					onRightFocus={() => secondRef.current?.focus()}
 				/>
 			</div>
-			{/* <div className='grid gap-1 text-center'>
-				<Label htmlFor='seconds' className='text-xs'>
-					Seconds
-				</Label>
-				<TimePickerInput
-					picker='seconds'
-					date={date}
-					setDate={setDate}
-					ref={secondRef}
-					onLeftFocus={() => minuteRef.current?.focus()}
-				/>
-			</div> */}
 		</div>
 	);
 }

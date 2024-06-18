@@ -15,7 +15,7 @@ import PlaylistDetailHeader from "./components/sections/PlaylistDetailHeader";
 import ScheduleDetailEditName from "./components/sections/ScheduleDetailEditName";
 import PlaylistDetailEditEnabled from "./components/sections/PlaylistDetailEditEnabled";
 import PlaylistDetailContent from "./components/sections/PlaylistDetailContent";
-import PlaylistDetailContentComponent from "./components/sections/PlaylistDetailContentManage";
+import PlaylistDetailContentComponent from "./components/contents/PlaylistDetailContentManage";
 
 type Props = unknown;
 
@@ -44,7 +44,7 @@ const PlaylistDetailPage = (_props: Props) => {
 	});
 
 	const { mutate: updatePlaylistSchedulesMutation } = useMutation(
-		({
+		async ({
 			playlistId,
 			schedules,
 		}: {
@@ -56,7 +56,7 @@ const PlaylistDetailPage = (_props: Props) => {
 	);
 
 	const { mutate: updatePlaylistMutation } = useMutation(
-		(data: {
+		async (data: {
 			playlistId: string;
 			playlist: Omit<
 				Playlist,
@@ -70,16 +70,13 @@ const PlaylistDetailPage = (_props: Props) => {
 	const onSubmit: SubmitHandler<PlaylistFormValueTypes> = async (
 		data: PlaylistFormValueTypes
 	) => {
-		alert(JSON.stringify(data.playlist));
 		try {
+			await new Promise((resolve) => setTimeout(resolve, 1000));
 			await Promise.all([
 				updatePlaylistSchedulesMutation({
 					playlistId: Number(data.playlist.id),
 					schedules: data.playlist.schedules,
 				}),
-			]);
-
-			await Promise.all([
 				updatePlaylistMutation({
 					playlistId: data.playlist.id,
 					playlist: {
@@ -90,15 +87,17 @@ const PlaylistDetailPage = (_props: Props) => {
 				}),
 			]);
 
+			alert("Form updated playlist successfully");
 			await queryClient.invalidateQueries("playlists");
 			navigate("/manage/playlists");
 		} catch (error) {
-			console.error("Error while updating playlist: ", error);
+			alert(`Error while updating playlist: ${JSON.stringify(error, null, 2)}`);
 		}
 	};
 	if (isFetchingPlaylist) return <div>Loading...</div>;
 	if (fetchPlaylistError) return <div>Error...</div>;
 	if (!fetchPlaylistSuccess) return <div>Not found</div>;
+	if (methods.formState.isSubmitting) return <div>Is submitting...</div>;
 
 	return (
 		<FormProvider {...methods}>
@@ -120,7 +119,7 @@ const PlaylistDetailPage = (_props: Props) => {
 
 					<PlaylistDetailSchedule />
 
-					<PlaylistDetailContentComponent control={methods.control} />
+					<PlaylistDetailContentComponent />
 				</div>
 
 				{methods.formState.isDirty && <Button type='submit'>Save</Button>}

@@ -4,7 +4,7 @@ import {
 	ScheduleOperatorForWeekdays,
 	ScheduleType,
 } from "@/types";
-import { Control, Controller, useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 type ScheduleOperatorSelectProps = {
 	index: number;

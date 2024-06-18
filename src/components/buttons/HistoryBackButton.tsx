@@ -7,7 +7,13 @@ type Props = NonNullable<unknown>;
 const HistoryBackButton = (_props: Props) => {
 	const navigate = useNavigate();
 	return (
-		<Button size={"sm"} onClick={() => navigate(-1)}>
+		<Button
+			size={"sm"}
+			onClick={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				navigate(-1);
+			}}>
 			<MdKeyboardArrowLeft className='w-5 h-6' />
 		</Button>
 	);

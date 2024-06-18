@@ -62,9 +62,6 @@ const PlaylistDetailSchedule = (_props: Props) => {
 							);
 						})}
 				</div>
-				<pre>
-					{JSON.stringify(watch("playlist.schedules", fields), null, 2)}
-				</pre>
 			</div>
 		</div>
 	);
