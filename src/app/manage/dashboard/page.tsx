@@ -6,15 +6,15 @@ type Props = NonNullable<unknown>;
 
 const DashboardPage = (_props: Props) => {
 	// write test data fetching to test cors
-	useEffect(() => {
-		fetch("http://localhost:5036/test", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*",
-			},
-		}).then((response) => response.json());
-	}, []);
+	// useEffect(() => {
+	// 	fetch("http://localhost:5036/test", {
+	// 		method: "GET",
+	// 		headers: {
+	// 			"Content-Type": "application/json",
+	// 			"Access-Control-Allow-Origin": "*",
+	// 		},
+	// 	}).then((response) => response.json());
+	// }, []);
 	return (
 		<div className='h-[3000px]'>
 			<Button variant={"default"} size={"icon"} onClick={() => {}}>

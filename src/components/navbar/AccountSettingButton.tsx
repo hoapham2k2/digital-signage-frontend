@@ -15,7 +15,11 @@ const AccountSettingButton = (_props: Props) => {
 				</Avatar>
 				<IoMdArrowDropdown />
 			</DropdownMenuTrigger>
-			<DropdownMenuContent side='bottom'>
+			<DropdownMenuContent
+				side='bottom'
+				sideOffset={5}
+				align='end'
+				alignOffset={20}>
 				<DropdownMenuItem>Settings</DropdownMenuItem>
 				<DropdownMenuItem>Log Out</DropdownMenuItem>
 			</DropdownMenuContent>

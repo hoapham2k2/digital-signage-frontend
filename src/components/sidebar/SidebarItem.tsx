@@ -18,7 +18,7 @@ const SidebarItem = (props: SidebarItemProps) => {
 						location.pathname === props.href
 							? "bg-gray-700 text-white"
 							: "text-gray-300",
-						"flex flex-row lg:px-4 lg:py-2 lg:text-lg lg:font-semibold"
+						"flex flex-row lg:px-4 lg:py-2 lg:text-lg lg:font-semibold rounded-md items-center cursor-pointer transition-colors duration-300 hover:bg-gray-700 hover:text-white"
 					)}>
 					{props.icon && <props.icon className='mr-2' />}
 					{props.name}

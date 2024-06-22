@@ -2,6 +2,7 @@ import SidebarItem, { SidebarItemProps } from "./SidebarItem";
 import { MdDashboard, MdOutlineScreenshotMonitor } from "react-icons/md";
 import { VscFileMedia, VscFiles } from "react-icons/vsc";
 import { FiSettings } from "react-icons/fi";
+import { cn } from "@/lib/utils";
 
 type Props = NonNullable<unknown>;
 
@@ -15,17 +16,19 @@ const Sidebar = (_props: Props) => {
 		},
 		{ name: "Playlists", icon: VscFileMedia, href: "/manage/playlists" },
 		{ name: "Content", icon: VscFiles, href: "/manage/assets" },
-		{ name: "Settings", icon: FiSettings, href: "/manage/account" },
+		{ name: "Settings", icon: FiSettings, href: "/manage/ac	count" },
 	];
 	return (
-		<div
-			className={`lg:flex lg:flex-col lg:justify-between lg:w-64 lg:py-4 lg:px-2 lg:bg-gray-800 lg:text-white`}>
-			<div className='lg:space-y-4'>
-				{SidebarItems.map((item, index) => (
-					<SidebarItem key={index} {...item} />
-				))}
+		<aside className={"w-64 bg-gray-800 text-white fixed h-full"}>
+			<div className='flex flex-col p-4'>
+				<div className={"py-8"}></div>
+				<div className='flex flex-col gap-2'>
+					{SidebarItems.map((item, index) => (
+						<SidebarItem key={index} {...item} />
+					))}
+				</div>
 			</div>
-		</div>
+		</aside>
 	);
 };
 

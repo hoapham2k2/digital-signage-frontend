@@ -36,7 +36,11 @@ const NewDropdownButton = (_props: Props) => {
 					New
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent>
+			<DropdownMenuContent
+				side='bottom'
+				sideOffset={5}
+				align='end'
+				alignOffset={0}>
 				{dropdownOptions.map((option) => (
 					<DropdownMenuItem key={option.name} onClick={option.onClick}>
 						{option.name}
