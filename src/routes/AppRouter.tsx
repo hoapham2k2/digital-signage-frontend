@@ -15,6 +15,7 @@ import PlaylistDetailPage from "@/app/manage/playlists/[id]/page";
 import EditScreenDetailPage from "@/app/manage/screens/[id]/edit/page";
 import AssetDetailPage from "@/app/manage/assets/[id]/page";
 import PlaylistDetailPreview from "@/app/manage/playlists/[id]/preview/page";
+import NewScreenPage from "@/app/manage/screens/create/page";
 type Props = NonNullable<unknown>;
 
 const routes = createBrowserRouter([
@@ -44,6 +45,10 @@ const routes = createBrowserRouter([
 			{
 				path: "manage/screens/:id/edit",
 				element: <EditScreenDetailPage />,
+			},
+			{
+				path: "manage/screens/new",
+				element: <NewScreenPage />,
 			},
 			{
 				path: "manage/playlists",
