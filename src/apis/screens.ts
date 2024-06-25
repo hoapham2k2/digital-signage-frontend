@@ -14,9 +14,6 @@ export const fetchScreenById = async (id: string): Promise<Screen> => {
 export const fetchScreensbyGroupIds = async (
 	ids: string[]
 ): Promise<Screen[]> => {
-	// players.groups is an array of group ids, for example ["1", "2"]
-	// we want to fetch all players that have group id 1 or 2
-
 	const { data: players } = await api.get(`/Players`);
 
 	const filteredScreens = players.filter(

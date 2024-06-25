@@ -1,7 +1,16 @@
-type Props = NonNullable<unknown>;
+import React from "react";
+import AccountSettingTabs from "./components/AccountSettingTabs";
 
-const AccountSettingManagementPage = (_props: Props) => {
-	return <div>AccountSettingManagementPage</div>;
+const AccountSettingManagementPage: React.FC = () => {
+	return (
+		<div>
+			{/* page Header */}
+			<div>
+				<h1 className='text-2xl '>Account Settings</h1>
+			</div>
+			<AccountSettingTabs />
+		</div>
+	);
 };
 
 export default AccountSettingManagementPage;
