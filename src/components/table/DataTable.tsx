@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ScreenType } from "@/types";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -76,8 +77,14 @@ export function DataTable(props: Props) {
 									<TableCell
 										key={cell.id}
 										onClick={() => {
+											if (props.type && props.type === "screen") {
+												if (cell.row.original.type === ScreenType.VIRTUAL) {
+													navigate(`/manage/screens/${cell.row.original.id}`);
+												}
+											}
 											//@ts-ignore
 											props.type &&
+												props.type !== "screen" &&
 												navigate(
 													`/manage/${
 														props.type === "content" ? "asset" : props.type

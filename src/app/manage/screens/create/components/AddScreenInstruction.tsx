@@ -8,8 +8,28 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useMutation, useQueryClient } from "react-query";
+import { createHardwareScreen } from "@/apis/screens";
+import { useNavigate } from "react-router-dom";
 
 export const AddScreenInstruction: React.FC = () => {
+	const [pinCode, setPinCode] = React.useState<string>("");
+	const [screenName, setScreenName] = React.useState<string>("");
+	const queryClient = useQueryClient();
+	const navigate = useNavigate();
+
+	const { mutate: createHardwareScreenMutation } = useMutation(
+		({ name, otpCode }: { name: string; otpCode: string }) => {
+			return createHardwareScreen(name, otpCode);
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("screens");
+				navigate("/manage/screens");
+			},
+		}
+	);
+
 	return (
 		<Card className='flex-1'>
 			<CardHeader>
@@ -34,13 +54,27 @@ export const AddScreenInstruction: React.FC = () => {
 				</p>
 			</CardContent>
 			<CardFooter className='flex flex-row gap-2 items-center'>
-				<Input placeholder='Enter PIN code' />
-				<Input placeholder='Enter Screen Name' />
+				<Input
+					placeholder='Enter PIN code'
+					value={pinCode}
+					onChange={(e) => setPinCode(e.target.value)}
+				/>
+				<Input
+					placeholder='Enter Screen Name'
+					value={screenName}
+					onChange={(e) => setScreenName(e.target.value)}
+				/>
 				<button
 					className='
                     bg-blue-500 px-4 py-2 text-white rounded-md
-                '>
-					Add{" "}
+                '
+					onClick={() => {
+						createHardwareScreenMutation({
+							name: screenName,
+							otpCode: pinCode,
+						});
+					}}>
+					Add
 				</button>
 			</CardFooter>
 		</Card>

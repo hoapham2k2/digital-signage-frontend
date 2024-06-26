@@ -1,25 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import { useEffect } from "react";
+import ScreenStatus from "./components/ScreenStatus";
+import StatusMapLeaf from "./components/StatusMapLeaf";
 
 type Props = NonNullable<unknown>;
 
 const DashboardPage = (_props: Props) => {
-	// write test data fetching to test cors
-	// useEffect(() => {
-	// 	fetch("http://localhost:5036/test", {
-	// 		method: "GET",
-	// 		headers: {
-	// 			"Content-Type": "application/json",
-	// 			"Access-Control-Allow-Origin": "*",
-	// 		},
-	// 	}).then((response) => response.json());
-	// }, []);
 	return (
-		<div className='h-[3000px]'>
-			<Button variant={"default"} size={"icon"} onClick={() => {}}>
-				<ChevronRight className='h-4 w-4' />
-			</Button>
+		<div>
+			{/* Page Header */}
+			<div>
+				<h3>Dashboard</h3>
+			</div>
+
+			{/* Page Content */}
+			<div className='flex flex-col gap-4'>
+				<ScreenStatus />
+				<StatusMapLeaf />
+			</div>
 		</div>
 	);
 };

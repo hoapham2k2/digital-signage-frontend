@@ -38,3 +38,18 @@ export const updateScreen = async (
 	const { data } = await api.put(`/Players/${id}`, updatedScreen);
 	return data;
 };
+
+
+export const createVirtualScreen = async (name: string) => {
+	const { data } = await api.post("/Players/virtual", {
+		name,
+	});
+	return data;
+};
+
+export const createHardwareScreen = async (name: string, otpCode: string) => {
+	const { data } = await api.post("/Players/hardware?otpCode=" + otpCode, {
+		name,
+	});
+	return data;
+};

@@ -11,19 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import AppBadge from "../buttons/AppBadge";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchGroupsByScreenId } from "@/apis/groups";
 import { FaCloud } from "react-icons/fa";
+import { deleteScreen } from "@/apis/screens";
+import { useState } from "react";
 
 export const ScreenColumns: ColumnDef<Screen>[] = [
 	{
 		id: "thumbnail",
 		cell: ({ row }) => {
 			const screen = row.original;
-			if (screen)
-				if (screen.type === ScreenType.VIRTUAL) {
-					return <FaCloud className='h-6 w-6' />;
-				}
+			if (screen.type === ScreenType.VIRTUAL) {
+				return <FaCloud className='h-6 w-6' />;
+			}
 			return <SlScreenDesktop className='h-6 w-6' />;
 		},
 	},
@@ -86,8 +87,21 @@ export const ScreenColumns: ColumnDef<Screen>[] = [
 		cell: ({ row }) => {
 			const payment = row.original;
 			const navigate = useNavigate();
+			const queryClient = useQueryClient();
+			const { mutate: deleteScreenMutation } = useMutation(
+				() => {
+					return deleteScreen(payment.id?.toString() ?? "");
+				},
+				{
+					onSuccess: () => {
+						setIsDropdownOpen(false);
+						queryClient.invalidateQueries("screens");
+					},
+				}
+			);
+			const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 			return (
-				<DropdownMenu>
+				<DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
 					<DropdownMenuTrigger asChild>
 						<Button variant='ghost' className='h-8 w-8 p-0'>
 							<span className='sr-only'>Open menu</span>
@@ -103,7 +117,15 @@ export const ScreenColumns: ColumnDef<Screen>[] = [
 							}}>
 							Edit
 						</DropdownMenuItem>
-						<DropdownMenuItem className='text-red-500'>Delete</DropdownMenuItem>
+						<DropdownMenuItem
+							className='text-red-500'
+							onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+								deleteScreenMutation();
+							}}>
+							Delete
+						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			);

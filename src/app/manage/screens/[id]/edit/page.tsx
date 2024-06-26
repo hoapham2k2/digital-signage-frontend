@@ -26,7 +26,7 @@ const EditScreenDetailPage = (_props: Props) => {
 							<HistoryBackButton />
 							<div className='text-2xl'>Edit {currentScreen.name}</div>
 						</div>
-						<DeleteScreenButton screenId={currentScreen.id} />
+						<DeleteScreenButton screenId={currentScreen.id?.toString() ?? ""} />
 					</div>
 					<EditScreenForm screen={currentScreen} />
 				</div>
