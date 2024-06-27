@@ -16,6 +16,7 @@ import EditScreenDetailPage from "@/app/manage/screens/[id]/edit/page";
 import AssetDetailPage from "@/app/manage/assets/[id]/page";
 import PlaylistDetailPreview from "@/app/manage/playlists/[id]/preview/page";
 import NewScreenPage from "@/app/manage/screens/create/page";
+import VirtualScreenDetailPreviewPage from "@/app/manage/screens/[id]/preview/VirtualScreenDetailPreviewPage";
 type Props = NonNullable<unknown>;
 
 const routes = createBrowserRouter([
@@ -82,11 +83,7 @@ const routes = createBrowserRouter([
 		children: [
 			{
 				path: "manage/screens/:id/preview",
-				element: (
-					<div>
-						<h1>Preview</h1>
-					</div>
-				),
+				element: <VirtualScreenDetailPreviewPage />,
 			},
 			{
 				path: "manage/playlists/:id/preview",

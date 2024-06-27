@@ -32,3 +32,9 @@ export const UploadContentAsync = async (file: File) => {
 export const updateContent = async (content: Content) => {
 	await api.put(`/ContentItems`, content);
 };
+
+
+export const getContentsByScreenAsync = async (screenId: string) => {
+	const { data } = await api.get(`/ContentItems/player/${screenId}`);
+	return data;
+};

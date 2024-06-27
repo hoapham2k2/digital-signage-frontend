@@ -1,17 +1,14 @@
 import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
-
-import { Content, Group, Playlist, Screen, ScreenType } from "@/types/index";
-import { useNavigate, useParams } from "react-router-dom";
+import {  Group, Screen, ScreenType } from "@/types/index";
+import { Link, useParams } from "react-router-dom";
 import PreviewScreenSection from "./components/PreviewScreenSection";
-import PlaylistForScreenTable from "./components/PlaylistForScreenTable";
 import AppBadge from "@/components/buttons/AppBadge";
-import { cn } from "@/lib/utils";
 import { QRCodeSVG } from "qrcode.react";
 import { useQuery } from "react-query";
-import { fetchGroupByIds, fetchGroupsByScreenId } from "@/apis/groups";
+import {  fetchGroupsByScreenId } from "@/apis/groups";
 import { fetchScreenById } from "@/apis/screens";
-import { fetchContentsByPlaylistIds } from "@/apis/contents";
+import { Card, CardHeader } from "@/components/ui/card";
 
 type Props = NonNullable<unknown>;
 
@@ -38,24 +35,6 @@ const ScreenDetailPage = (_props: Props) => {
 		enabled: !!id,
 	});
 
-	// const { data: playlistsForScreen } = useQuery<Playlist[]>({
-	// 	queryKey: ["playlists", groupsBelongToScreen],
-	// 	queryFn: () => {},
-	// 	enabled: !!groupsBelongToScreen,
-	// });
-
-	// const { data: contentsBelongToPlaylists } = useQuery<Content[]>({
-	// 	queryKey: ["contents", playlistsForScreen],
-	// 	queryFn: () => {
-	// 		return fetchContentsByPlaylistIds(
-	// 			playlistsForScreen?.map((playlist) => playlist.id || "") || []
-	// 		);
-	// 	},
-	// 	enabled: !!playlistsForScreen,
-	// });
-
-	// const navigate = useNavigate();
-
 	if (isFetchCurrenLoading) return <div>Loading...</div>;
 	if (isFetchCurrentScreenError) return <div>Error </div>;
 	if (isFetchCurrentScreenSuccess)
@@ -67,45 +46,19 @@ const ScreenDetailPage = (_props: Props) => {
 						<h1 className='text-2xl'>{screen?.name}</h1>
 					</div>
 					<div className='flex flex-row gap-4'>
-						{/* <Button onClick={() => navigate(`/manage/screens/${id}/edit`)}>
-							Edit
-						</Button> */}
+						<Link to={`/manage/screens/${id}/edit`}>
+							<Button>Edit</Button>
+						</Link>
 					</div>
 				</div>
-				<div className='w-full bg-white p-4 rounded-md border border-gray-300 mt-4'>
-					<div className='flex flex-row gap-4'>
+				<Card className='w-full mt-2'>
+					<CardHeader className='flex flex-row gap-4'>
 						<div className='w-1/2'>
 							<PreviewScreenSection />
-							{/* <h2 className='text-lg mt-4'>
-								Current playlist{" "}
-								{contentsBelongToPlaylists?.reduce(
-									(acc, content) => acc + content.duration,
-									0
-								) || 0}{" "}
-								sec
-							</h2> */}
-							{/* {screen && (
-								<PlaylistForScreenTable
-									playlists={playlistsForScreen || []}
-									screen={screen}
-								/>
-							)} */}
 						</div>
-						<div className='w-1/2'>
-							<div className='flex flex-row gap-4'>
-								<h3>Status</h3>
-								{/* {groupsBelongToScreen &&
-								groupsBelongToScreen.map((group) => (
-									<AppBadge
-										key={group.id}
-										name={group.name}
-										variant={"outline"}
-										className={cn({
-											"bg-gray-300": group.name.includes("Virtual"),
-										})}
-									/>
-								))} */}
-
+						<div className='w-1/2 flex flex-col gap-2'>
+							<div className='flex flex-row justify-between'>
+								<h6>Status</h6>
 								<AppBadge
 									name={
 										screen.type === ScreenType.VIRTUAL
@@ -114,50 +67,47 @@ const ScreenDetailPage = (_props: Props) => {
 									}
 								/>
 							</div>
-							<div>
-								<h3>Group Labels</h3>
-								<div className='flex flex-row gap-2'>
+							<div className='flex flex-row justify-between'>
+								<h6>Group Labels</h6>
+								<div className='flex flex-row justify-between'>
 									{groupsBelongToScreen &&
 										groupsBelongToScreen.map((group) => (
 											<AppBadge
 												key={group.id}
 												name={group.name}
 												variant={"outline"}
-												className={cn({
-													"bg-gray-300": group.name.includes("Virtual"),
-												})}
 											/>
 										))}
 								</div>
 							</div>
 
-							<div>
-								<h3>QR Code</h3>
-								<QRCodeSVG
-									className='w-32 h-auto'
-									value={`${window.location.href}/preview`}
-								/>
+							<div className='flex flex-row justify-between'>
+								<h6>QR Code</h6>
+								<div className='w-1/3 flex flex-col gap-2'>
+									<QRCodeSVG
+										className='w-full h-auto'
+										value={`${window.location.href}/preview`}
+									/>
 
-								<Button
-									onClick={(_e) => {
-										navigator.clipboard.writeText(
-											`${window.location.href}/preview`
-										);
-									}}>
-									Copy link to clipboard
-								</Button>
+									<Button
+										onClick={(_e) => {
+											navigator.clipboard.writeText(
+												`${window.location.href}/preview`
+											);
+										}}>
+										Copy link to clipboard
+									</Button>
+								</div>
 							</div>
 
-							<div>
-								<h3>
-									Tip: You can share the link to your virtual screen with your
-									collegues or preview it on a different device (such as your
-									phone or tablet).
-								</h3>
-							</div>
+							<p className='text-sm text-gray-400'>
+								Tip: You can share the link to your virtual screen with your
+								collegues or preview it on a different device (such as your
+								phone or tablet).
+							</p>
 						</div>
-					</div>
-				</div>
+					</CardHeader>
+				</Card>
 			</div>
 		);
 };
