@@ -7,9 +7,8 @@ const PreviewScreenSection = (_props: Props) => {
 	const { pathname } = useLocation();
 
 	return (
-		<div className='relative w-full lg:h-80 bg-slate-300 rounded-md'>
+		<div className=' w-full h-full  lg:h-80 bg-slate-300 rounded-md flex flex-row items-center justify-center'>
 			<Button
-				className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
 				onClick={() => {
 					// open new tab
 					window.open(`${pathname}/preview`);

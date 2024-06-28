@@ -59,13 +59,7 @@ const ScreenDetailPage = (_props: Props) => {
 						<div className='w-1/2 flex flex-col gap-2'>
 							<div className='flex flex-row justify-between'>
 								<h6>Status</h6>
-								<AppBadge
-									name={
-										screen.type === ScreenType.VIRTUAL
-											? "Virtual"
-											: (screen.status as string)
-									}
-								/>
+								<AppBadge name={"Virtual"} />
 							</div>
 							<div className='flex flex-row justify-between'>
 								<h6>Group Labels</h6>

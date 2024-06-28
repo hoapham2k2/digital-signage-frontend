@@ -4,9 +4,9 @@ export type Screen = {
 	id?: number;
 	name?: string;
 	type?: ScreenType;
-
+	lastPing?: string;
 	lastHeartbeat?: string;
-	status?: string;
+	status?: number;
 	playerLabels: {
 		labelId: number;
 	}[];
