@@ -20,6 +20,9 @@ export const fetchContentsByPlaylistIds = async (playlistId: number) => {
 };
 
 export const UploadContentAsync = async (file: File) => {
+	if (!file) {
+		throw new Error("No file provided");
+	}
 	const formData = new FormData();
 	formData.append("file", file);
 	await api.post("/ContentItems", formData, {
@@ -33,8 +36,11 @@ export const updateContent = async (content: Content) => {
 	await api.put(`/ContentItems`, content);
 };
 
-
 export const getContentsByScreenAsync = async (screenId: string) => {
 	const { data } = await api.get(`/ContentItems/player/${screenId}`);
 	return data;
+};
+
+export const deleteContentAsync = async (contentId: string) => {
+	await api.delete(`/ContentItems/${contentId}`);
 };

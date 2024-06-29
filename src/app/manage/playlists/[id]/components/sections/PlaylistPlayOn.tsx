@@ -105,11 +105,11 @@ const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 		return <div>Not found</div>;
 
 	return (
-		<div>
+		<div className='w-full'>
 			<h2 className='text-base'>Play Ons</h2>
 			<Popover open={isOpened} onOpenChange={setIsOpened}>
-				<PopoverTrigger>
-					<div className='w-full flex flex-row justify-start items-center'>
+				<PopoverTrigger className='w-full'>
+					<div className='w-full flex flex-row justify-start items-center border border-gray-300 rounded-md p-2'>
 						{fetchedPlaylist.playlistLabels.map((label) => (
 							<span
 								key={label.label.id}
@@ -123,9 +123,9 @@ const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 					</div>
 				</PopoverTrigger>
 				<PopoverContent side='bottom' align='start' sideOffset={15}>
-					<h1>Group labels</h1>
+					<h4>Group labels</h4>
 					<form onSubmit={handleFormSubmit}>
-						<div className='max-h-44 overflow-y-auto'>
+						<div className='mt-2 max-h-44 overflow-y-auto flex flex-col gap-1'>
 							{fetchedGroups.map((group) => (
 								<Controller
 									key={group.id}

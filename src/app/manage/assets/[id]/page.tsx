@@ -6,6 +6,7 @@ import { Content } from "@/types/index";
 import { useField, useForm } from "@tanstack/react-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import VideoThumbnailGenerator from "../components/VideoThumbnail";
 
 type Props = NonNullable<unknown>;
 
@@ -94,34 +95,48 @@ const AssetDetailPage = (_props: Props) => {
 									)}
 								/>
 							</div>
-							<div className='w-1/2 flex flex-col gap-4'>
-								{content.filePath ? (
-									<img
-										src={
+							<div className='w-1/2 flex flex-col gap-4 '>
+								{content.filePath && content.resourceType === "Image" ? (
+									<div className='w-full h-1/2  self-start overflow-hidden rounded-md'>
+										<img
+											src={
+												`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
+													content.filePath.includes("default") ? "" : "content"
+												}/${content.filePath}` ?? ""
+											}
+											alt={content.title}
+											className='object-cover rounded-md w-full h-full'
+										/>
+									</div>
+								) : (
+									<VideoThumbnailGenerator
+										videoUrl={
 											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
 												content.filePath.includes("default") ? "" : "content"
 											}/${content.filePath}` ?? ""
 										}
-										alt={content.title}
-										className='w-1/2 h-1/2 self-center object-cover'
+										classnames={[
+											"w-full",
+											"h-full",
+											"object-cover",
+											"rounded-md",
+										]}
 									/>
-								) : (
-									<p>No thumbnail</p>
 								)}
 
 								<div className='flex flex-row justify-between items-center mt-4'>
-									<h3>Default Duration</h3>
-									<h3>{content?.duration} sec</h3>
+									<h6>Default Duration</h6>
+									<p>{content?.duration} sec</p>
 								</div>
 
 								<div className='flex flex-row justify-between items-center mt-4'>
-									<h3>Dimension</h3>
-									<h3>1920 x 1080</h3>
+									<h6>Dimension</h6>
+									<p>1920 x 1080</p>
 								</div>
 
 								<div className='flex flex-row justify-between items-center mt-4'>
-									<h3>Resource type</h3>
-									<h3>{content?.resourceType}</h3>
+									<h6>Resource type</h6>
+									<p>{content?.resourceType}</p>
 								</div>
 							</div>
 						</div>

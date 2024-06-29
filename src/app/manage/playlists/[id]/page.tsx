@@ -21,24 +21,27 @@ type Props = unknown;
 
 export type PlaylistFormValueTypes = {
 	playlist: Playlist;
-	contentItems: Content[];
 };
 
 const PlaylistDetailPage = (_props: Props) => {
-	const { id } = useParams();
+	const { id: playlistId } = useParams();
 	const methods = useForm<PlaylistFormValueTypes>();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
+
 	const {
 		data: fetchedPlaylist,
 		isLoading: isFetchingPlaylist,
 		isError: fetchPlaylistError,
 		isSuccess: fetchPlaylistSuccess,
 	} = useQuery<Playlist>({
-		queryKey: ["playlist", id],
-		queryFn: () => fetchPlaylistById(id as string),
-		enabled: !!id,
+		queryKey: ["playlist", playlistId],
+		queryFn: () => fetchPlaylistById(playlistId ?? ""),
+		enabled: !!playlistId,
 		onSuccess: (data: Playlist) => {
+			console.log(
+				`fetchPlaylistById onSuccess: ${JSON.stringify(data, null, 2)}`
+			);
 			methods.reset({ playlist: data });
 		},
 	});
@@ -117,7 +120,7 @@ const PlaylistDetailPage = (_props: Props) => {
 						</div>
 					</div>
 
-					<PlaylistDetailSchedule />
+					{/* <PlaylistDetailSchedule /> */}
 
 					<PlaylistDetailContentComponent />
 				</div>

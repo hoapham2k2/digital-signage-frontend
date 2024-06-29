@@ -18,44 +18,33 @@ import {
 import { MdOndemandVideo } from "react-icons/md";
 import { Input } from "@/components/ui/input";
 import AddContentToPlaylistButton from "./AddContentToPlaylistButton";
+import VideoThumbnailGenerator from "@/app/manage/assets/components/VideoThumbnail";
 
 type PlaylistDetailContentProps = {};
 
 export const PlaylistDetailContentComponent: React.FC<
 	PlaylistDetailContentProps
 > = (_props: PlaylistDetailContentProps) => {
-	const { id } = useParams<{ id: string }>();
+	const { id: playlistId } = useParams<{ id: string }>();
 	const methods = useFormContext<PlaylistFormValueTypes>();
 
-	const {
-		data: fetchedContentsByPlaylist,
-		isLoading: isFetchingContentsByPlaylist,
-		isError: fetchContentsByPlaylistError,
-		isSuccess: fetchContentsByPlaylistSuccess,
-	} = useQuery({
-		queryKey: ["playlistContentItems", id],
-		queryFn: () => fetchContentsByPlaylistIds(parseInt(id as string)),
-		enabled: !!id,
-		onSuccess: (data: Content[]) => {
-			methods.reset({ contentItems: data });
-		},
-	});
+	// const {
+	// 	data: fetchedContentsByPlaylist,
+	// 	isLoading: isFetchingContentsByPlaylist,
+	// 	isError: fetchContentsByPlaylistError,
+	// 	isSuccess: fetchContentsByPlaylistSuccess,
+	// } = useQuery({
+	// 	queryKey: ["playlistContentItems", playlistId],
+	// 	queryFn: () => fetchContentsByPlaylistIds(parseInt(id as string)),
+	// 	enabled: !!playlistId,
+	// 	onSuccess: (data: Content[]) => {
+	// 		methods.reset({ contentItems: data });
+	// 	},
+	// });
 	const { fields, append, remove } = useFieldArray<PlaylistFormValueTypes>({
 		control: methods.control,
-		name: "contentItems",
+		name: "playlist.playlistContentItems",
 	});
-
-	if (isFetchingContentsByPlaylist) {
-		return <div>Loading...</div>;
-	}
-
-	if (fetchContentsByPlaylistError) {
-		return <div>Error...</div>;
-	}
-
-	if (!fetchContentsByPlaylistSuccess) {
-		return <div>Not found</div>;
-	}
 
 	return (
 		<div>
@@ -66,7 +55,7 @@ export const PlaylistDetailContentComponent: React.FC<
 			</div>
 
 			{/* Body */}
-			<div>
+			<div className='flex flex-col gap-2'>
 				{fields &&
 					fields.map((_item, index) => {
 						return (
@@ -115,7 +104,15 @@ export const PlaylistDetailContentItem: React.FC<any> = (_props: {
 									className='w-10 h-10'
 								/>
 							) : (
-								<MdOndemandVideo className='w-10 h-10' />
+								// <MdOndemandVideo className='w-10 h-10' />
+								<VideoThumbnailGenerator
+									videoUrl={
+										`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
+											field.value.filePath.includes("default") ? "" : "content"
+										}/${field.value.filePath}` ?? ""
+									}
+									classnames={["w-10", "h-10"]}
+								/>
 							)}
 
 							<div>{field.value.title}</div>

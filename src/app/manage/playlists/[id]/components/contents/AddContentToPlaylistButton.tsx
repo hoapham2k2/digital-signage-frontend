@@ -1,4 +1,5 @@
 import { fetchContents } from "@/apis/contents";
+import VideoThumbnailGenerator from "@/app/manage/assets/components/VideoThumbnail";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -9,6 +10,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Content } from "@/types";
+import RenderDuration from "@/utils/renderDuration";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { MdOndemandVideo } from "react-icons/md";
 import { useQuery } from "react-query";
@@ -52,8 +54,8 @@ export const AddContentToPlaylistButton: React.FC<
 				<Button onClick={(e) => {}}>Add Content</Button>
 			</DialogTrigger>
 			<DialogContent>
-				<DialogHeader>Add Content to Playlist</DialogHeader>
-				<div className='max-h-96 overflow-y-auto'>
+				<h4>Add Content to Playlist</h4>
+				<div className='max-h-96 overflow-y-auto flex flex-col gap-2'>
 					{fetchedContents &&
 						fetchedContents.map((_content, index) => {
 							return (
@@ -72,12 +74,24 @@ export const AddContentToPlaylistButton: React.FC<
 												className='w-10 h-10'
 											/>
 										) : (
-											<MdOndemandVideo className='w-10 h-10' />
+											// <MdOndemandVideo className='w-10 h-10' />
+											<VideoThumbnailGenerator
+												videoUrl={
+													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
+														_content.filePath.includes("default")
+															? ""
+															: "content"
+													}/${_content.filePath}` ?? ""
+												}
+												classnames={["w-10", "h-10"]}
+											/>
 										)}
 										{_content.title}
 									</div>
-									<div>
-										<span>{_content.duration}</span>
+									<div className='flex flex-row gap-8 items-center justify-center'>
+										<span className='text-md font-semibold'>
+											{RenderDuration(_content.duration)}
+										</span>
 										<Button
 											onClick={() => {
 												append({
@@ -87,7 +101,7 @@ export const AddContentToPlaylistButton: React.FC<
 													duration: _content.duration,
 												});
 												methods.setValue(
-													"contentItems",
+													"playlist.playlistContentItems",
 													methods.getValues("contentItems")
 												);
 											}}>

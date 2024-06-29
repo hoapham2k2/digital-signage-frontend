@@ -27,3 +27,9 @@ export const fetchGroupByIds = async (ids: string[]): Promise<Group[]> => {
 	);
 	return filteredGroups;
 };
+
+
+export const fetchGroupsByPlaylistAsync = async (playlistId: string) => {
+	const { data } = await api.get(`/Labels/playlist/${playlistId}`);
+	return data;
+};
