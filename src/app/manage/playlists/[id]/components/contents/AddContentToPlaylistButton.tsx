@@ -14,16 +14,18 @@ import RenderDuration from "@/utils/renderDuration";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { MdOndemandVideo } from "react-icons/md";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 
 type AddContentToPlaylistButtonProps = unknown;
 
 export const AddContentToPlaylistButton: React.FC<
 	AddContentToPlaylistButtonProps
 > = (_props: AddContentToPlaylistButtonProps) => {
+	const { id: playlistId } = useParams<{ id: string }>();
 	const methods = useFormContext();
 	const { append } = useFieldArray({
 		control: methods.control,
-		name: "contentItems",
+		name: "playlist.playlistContentItems",
 	});
 
 	const {
@@ -95,14 +97,19 @@ export const AddContentToPlaylistButton: React.FC<
 										<Button
 											onClick={() => {
 												append({
-													title: _content.title,
-													resourceType: _content.resourceType,
-													filePath: _content.filePath,
+													playlistId: playlistId ?? "",
+													contentItemId: _content.id,
 													duration: _content.duration,
+													contentItem: {
+														title: _content.title,
+														resourceType: _content.resourceType,
+														filePath: _content.filePath,
+														duration: _content.duration,
+													},
 												});
 												methods.setValue(
 													"playlist.playlistContentItems",
-													methods.getValues("contentItems")
+													methods.getValues("playlist.playlistContentItems")
 												);
 											}}>
 											Add

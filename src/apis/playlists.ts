@@ -15,11 +15,8 @@ export const deletePlaylist = async (id: string): Promise<void> => {
 	await api.delete(`/Playlists/${id}`);
 };
 export const updatePlaylist = async (
-	id: string,
-	playlist: Omit<
-		Playlist,
-		"id" | "playlistContentItems" | "playlistLabels" | "schedules"
-	>
+	id: number,
+	playlist: Playlist
 ): Promise<void> => {
 	await api.put(`/Playlists/${id}`, playlist);
 };

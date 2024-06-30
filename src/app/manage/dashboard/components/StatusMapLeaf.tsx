@@ -11,7 +11,8 @@ export const StatusMapLeaf: React.FC = () => {
 		<MapContainer
 			center={[51.505, -0.09]}
 			zoom={13}
-			style={{ height: "100vh" }}>
+			className='h-96 w-full rounded-md'
+			scrollWheelZoom={true}>
 			<TileLayer
 				url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">

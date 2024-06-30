@@ -46,52 +46,37 @@ const PlaylistDetailPage = (_props: Props) => {
 		},
 	});
 
-	const { mutate: updatePlaylistSchedulesMutation } = useMutation(
-		async ({
-			playlistId,
-			schedules,
-		}: {
-			playlistId: number;
-			schedules: Schedule[];
-		}) => {
-			return updatePlaylistSchedules(playlistId, schedules);
-		}
-	);
 
 	const { mutate: updatePlaylistMutation } = useMutation(
-		async (data: {
-			playlistId: string;
-			playlist: Omit<
-				Playlist,
-				"id" | "playlistContentItems" | "playlistLabels" | "schedules"
-			>;
-		}) => {
+		async (data: { playlistId: number; playlist: Playlist }) => {
 			return updatePlaylist(data.playlistId, data.playlist);
 		}
 	);
 
 	const onSubmit: SubmitHandler<PlaylistFormValueTypes> = async (
-		data: PlaylistFormValueTypes
+		formData: PlaylistFormValueTypes
 	) => {
 		try {
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 			await Promise.all([
-				updatePlaylistSchedulesMutation({
-					playlistId: Number(data.playlist.id),
-					schedules: data.playlist.schedules,
-				}),
 				updatePlaylistMutation({
-					playlistId: data.playlist.id,
+					playlistId: formData.playlist.id,
+					// remove unnecessary fields in playlist
 					playlist: {
-						title: data.playlist.title,
-						isEnabled: data.playlist.isEnabled,
-						duration: data.playlist.duration,
+						...formData.playlist,
+						//@ts-ignore
+						playlistContentItems: formData.playlist.playlistContentItems.map(
+							(item) => {
+								const { contentItem, ...rest } = item;
+								return rest; //remove
+							}
+						),
 					},
 				}),
 			]);
 
 			alert("Form updated playlist successfully");
-			await queryClient.invalidateQueries("playlists");
+			queryClient.invalidateQueries("playlists");
 			navigate("/manage/playlists");
 		} catch (error) {
 			alert(`Error while updating playlist: ${JSON.stringify(error, null, 2)}`);
@@ -105,6 +90,16 @@ const PlaylistDetailPage = (_props: Props) => {
 	return (
 		<FormProvider {...methods}>
 			<form onSubmit={methods.handleSubmit(onSubmit)}>
+				{methods.formState.isSubmitting ? (
+					<div className='absolute inset-0 bg-gray-100 bg-opacity-50 flex justify-center items-center'>
+						<div className='bg-white p-4 rounded-md border border-gray-300'>
+							<div className='flex flex-row gap-4'>
+								<h2>Submitting...</h2>
+							</div>
+						</div>
+					</div>
+				) : null}
+
 				{/* For Header */}
 				<PlaylistDetailHeader title={fetchedPlaylist.title} />
 				{/* For Body */}
@@ -125,7 +120,11 @@ const PlaylistDetailPage = (_props: Props) => {
 					<PlaylistDetailContentComponent />
 				</div>
 
-				{methods.formState.isDirty && <Button type='submit'>Save</Button>}
+				{methods.formState.isDirty && (
+					<Button type='submit' className='mt-2'>
+						Save
+					</Button>
+				)}
 				<DevTool control={methods.control} />
 			</form>
 		</FormProvider>

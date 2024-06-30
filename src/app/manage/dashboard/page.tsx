@@ -14,7 +14,7 @@ const DashboardPage = (_props: Props) => {
 			</div>
 
 			{/* Page Content */}
-			<div className='flex flex-col gap-4'>
+			<div className='flex flex-col gap-10'>
 				<ScreenStatus />
 				<StatusMapLeaf />
 			</div>

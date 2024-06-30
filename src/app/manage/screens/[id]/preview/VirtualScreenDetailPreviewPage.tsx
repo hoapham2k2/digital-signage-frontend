@@ -32,12 +32,22 @@ export const VirtualScreenDetailPreviewPage: React.FC = () => {
 	return (
 		<div className='w-screen h-screen'>
 			{contentItems.length > 0 &&
+			// src={
+			// 	`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
+			// 		content.filePath.includes("default") ? "" : "content"
+			// 	}/${content.filePath}` ?? ""
+			// }
 			contentItems[currentIndex].resourceType === "Image" ? (
-				// https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/default/default02.jfif
 				<img
-					src={`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${contentItems[currentIndex].filePath} `}
-					alt=''
-					className='w-full h-full object-none'
+					src={
+						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
+							contentItems[currentIndex].filePath.includes("default")
+								? ""
+								: "content"
+						}/${contentItems[currentIndex].filePath}` ?? ""
+					}
+					alt={contentItems[currentIndex].title}
+					className='w-full h-full object-cover'
 				/>
 			) : null}
 		</div>

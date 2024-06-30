@@ -1,21 +1,33 @@
 export type Playlist = {
-	id: string;
+	id: number;
 	title: string;
 	isEnabled: boolean;
 	duration: number;
 	playlistContentItems: {
-		playlistId: string;
-		contentItemId: string;
+		playlistId: number;
+		contentItemId: number;
+		duration: number;
+		contentItem: {
+			id: number;
+			title: string;
+			filePath: string;
+			duration: number;
+			resourceType: string;
+		};
 	}[];
-
 	playlistLabels: {
-		playlistId: string;
-		labelId: string;
+		playlistId: number;
+		labelId: number;
 		label: {
 			id: number;
 			name: string;
 		};
 	}[];
-
-	schedules: any[];
+	schedules: {
+		id: number;
+		type: string;
+		operator: string;
+		value: string;
+		playlistId: number;
+	}[];
 };

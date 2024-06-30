@@ -28,24 +28,10 @@ export const PlaylistDetailContentComponent: React.FC<
 	const { id: playlistId } = useParams<{ id: string }>();
 	const methods = useFormContext<PlaylistFormValueTypes>();
 
-	// const {
-	// 	data: fetchedContentsByPlaylist,
-	// 	isLoading: isFetchingContentsByPlaylist,
-	// 	isError: fetchContentsByPlaylistError,
-	// 	isSuccess: fetchContentsByPlaylistSuccess,
-	// } = useQuery({
-	// 	queryKey: ["playlistContentItems", playlistId],
-	// 	queryFn: () => fetchContentsByPlaylistIds(parseInt(id as string)),
-	// 	enabled: !!playlistId,
-	// 	onSuccess: (data: Content[]) => {
-	// 		methods.reset({ contentItems: data });
-	// 	},
-	// });
 	const { fields, append, remove } = useFieldArray<PlaylistFormValueTypes>({
 		control: methods.control,
 		name: "playlist.playlistContentItems",
 	});
-
 	return (
 		<div>
 			{/* Header */}
@@ -83,22 +69,24 @@ export const PlaylistDetailContentItem: React.FC<any> = (_props: {
 	const methods = useFormContext();
 	const { remove } = useFieldArray({
 		control: methods.control,
-		name: `contentItems`,
+		name: `playlist.playlistContentItems`,
 	});
 	return (
 		<Controller
 			control={methods.control}
-			name={`contentItems.${_props.index}`}
+			name={`playlist.playlistContentItems[${_props.index}]`}
 			render={({ field }) => {
 				return (
 					<div className='flex-1 flex flex-row justify-between items-center'>
 						<div className='flex flex-row items-center gap-2'>
-							{field.value.resourceType == "Image" ? (
+							{field.value.contentItem.resourceType == "Image" ? (
 								<img
 									src={
 										`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-											field.value.filePath.includes("default") ? "" : "content"
-										}/${field.value.filePath}` ?? ""
+											field.value.contentItem.filePath.includes("default")
+												? ""
+												: "content"
+										}/${field.value.contentItem.filePath}` ?? ""
 									}
 									alt={field.value.title}
 									className='w-10 h-10'
@@ -108,17 +96,19 @@ export const PlaylistDetailContentItem: React.FC<any> = (_props: {
 								<VideoThumbnailGenerator
 									videoUrl={
 										`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-											field.value.filePath.includes("default") ? "" : "content"
-										}/${field.value.filePath}` ?? ""
+											field.value.contentItem.filePath.includes("default")
+												? ""
+												: "content"
+										}/${field.value.contentItem.filePath}` ?? ""
 									}
 									classnames={["w-10", "h-10"]}
 								/>
 							)}
 
-							<div>{field.value.title}</div>
+							<div>{field.value.contentItem.title}</div>
 						</div>
 						<div>
-							{field.value.resourceType == "Image" ? (
+							{field.value.contentItem.resourceType == "Image" ? (
 								<Input
 									type='number'
 									value={field.value.duration}
