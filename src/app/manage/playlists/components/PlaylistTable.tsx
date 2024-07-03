@@ -3,12 +3,8 @@ import { PlaylistColumns } from "./PlaylistColumns";
 import { Playlist } from "@/types/index";
 import { fetchPlaylists } from "@/apis/playlists";
 import { useQuery } from "react-query";
-import { usePlaylistStore } from "@/lib/stores/playlist-store";
-import { useEffect } from "react";
 
-type Props = NonNullable<unknown>;
-
-const PlaylistTable = (_props: Props) => {
+const PlaylistTable = () => {
 	const {
 		data: playlists,
 		isLoading: isFetchPlaylistsLoading,

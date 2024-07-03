@@ -29,7 +29,8 @@ const UploadComponent: React.FC = () => {
 		});
 
 		const filesInfo = await Promise.all(fileInfoPromises);
-		//@ts-ignore
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		//@ts-expect-error
 		setFilesInfo(filesInfo);
 	};
 

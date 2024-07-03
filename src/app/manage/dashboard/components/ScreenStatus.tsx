@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { MdOutlineScreenshotMonitor } from "react-icons/md";
 import { CgPlayList } from "react-icons/cg";
 import { VscFileMedia } from "react-icons/vsc";
+import { Link } from "react-router-dom";
 const ScreenStatusItem = ({
 	title,
 	value,
@@ -13,26 +14,44 @@ const ScreenStatusItem = ({
 }) => {
 	return (
 		<Card className='flex-1 flex flex-col'>
-			<CardHeader className='flex flex-row justify-between items-center gap-1'>
+			<Link
+				to={
+					title === "number_of_screens"
+						? "/manage/screens"
+						: title === "number_of_playlists"
+						? "/manage/playlists"
+						: title === "number_of_content_items"
+						? "/manage/assets"
+						: ""
+				}>
 				{title === "number_of_screens" ? (
-					<MdOutlineScreenshotMonitor className='w-10 h-10' />
+					<CardHeader className='flex flex-row justify-between items-center gap-1'>
+						<MdOutlineScreenshotMonitor className='w-10 h-10' />
+						<h1 className=''>{value}</h1>
+					</CardHeader>
 				) : title === "number_of_playlists" ? (
-					<CgPlayList className='w-10 h-10' />
+					<CardHeader className='flex flex-row justify-between items-center gap-1'>
+						<CgPlayList className='w-10 h-10' />
+						<h1 className=''>{value}</h1>
+					</CardHeader>
 				) : title === "number_of_content_items" ? (
-					<VscFileMedia className='w-10 h-10' />
+					<CardHeader className='flex flex-row justify-between items-center gap-1'>
+						<VscFileMedia className='w-10 h-10' />
+						<h1 className=''>{value}</h1>
+					</CardHeader>
 				) : null}
-
-				<h1 className=''>{value}</h1>
-			</CardHeader>
-			<CardContent>
-				{title === "number_of_screens"
-					? "Number of Screens"
-					: title === "number_of_playlists"
-					? "Number of Playlists"
-					: title === "number_of_content_items"
-					? "Number of Content Items"
-					: ""}
-			</CardContent>
+				<CardContent>
+					<h2 className='text-sm font-normal'>
+						{title === "number_of_screens"
+							? "Screens"
+							: title === "number_of_playlists"
+							? "Playlists"
+							: title === "number_of_content_items"
+							? "Content Items"
+							: ""}
+					</h2>
+				</CardContent>
+			</Link>
 		</Card>
 	);
 };
@@ -45,10 +64,6 @@ export const ScreenStatus: React.FC = () => {
 	} = useQuery<Analytics>({
 		queryKey: "analytics",
 		queryFn: fetchAnalytics,
-
-		onSuccess: (data) => {
-			console.log(data);
-		},
 	});
 
 	if (isFetchingAnalytics) {

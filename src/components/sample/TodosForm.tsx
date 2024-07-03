@@ -18,7 +18,6 @@ const TodosForm: React.FC = () => {
 	const {
 		control,
 		handleSubmit,
-		reset,
 		register,
 		formState: { isDirty },
 	} = useForm({

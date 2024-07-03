@@ -1,18 +1,16 @@
 import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
-import {  Group, Screen, ScreenType } from "@/types/index";
+import { Group, Screen } from "@/types/index";
 import { Link, useParams } from "react-router-dom";
 import PreviewScreenSection from "./components/PreviewScreenSection";
 import AppBadge from "@/components/buttons/AppBadge";
 import { QRCodeSVG } from "qrcode.react";
 import { useQuery } from "react-query";
-import {  fetchGroupsByScreenId } from "@/apis/groups";
+import { fetchGroupsByScreenId } from "@/apis/groups";
 import { fetchScreenById } from "@/apis/screens";
 import { Card, CardHeader } from "@/components/ui/card";
 
-type Props = NonNullable<unknown>;
-
-const ScreenDetailPage = (_props: Props) => {
+const ScreenDetailPage = () => {
 	const { id } = useParams();
 
 	const {
@@ -84,7 +82,7 @@ const ScreenDetailPage = (_props: Props) => {
 									/>
 
 									<Button
-										onClick={(_e) => {
+										onClick={() => {
 											navigator.clipboard.writeText(
 												`${window.location.href}/preview`
 											);

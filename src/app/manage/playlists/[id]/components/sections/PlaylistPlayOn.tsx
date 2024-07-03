@@ -13,11 +13,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 
-type PlaylistPlayOnProps = unknown;
 
-const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
-	_props: PlaylistPlayOnProps
-) => {
+const PlaylistPlayOn = () => {
 	const { id } = useParams<{ id: string }>();
 	const [isOpened, setIsOpened] = useState(false);
 	const queryClient = useQueryClient();
@@ -66,7 +63,7 @@ const PlaylistPlayOn: React.FC<PlaylistPlayOnProps> = (
 	const { mutate: updatePlaylistLabelsAsync } = useMutation(
 		(data: Record<string, boolean>) => {
 			const labelIds = Object.entries(data)
-				.filter(([_key, value]) => value)
+				.filter(([, value]) => value)
 				.map(([key]) => key.replace("group-", ""));
 
 			return updatePlaylistLabels(

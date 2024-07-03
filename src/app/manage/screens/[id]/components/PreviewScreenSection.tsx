@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useLocation } from "react-router-dom";
 
-type Props = NonNullable<unknown>;
 
-const PreviewScreenSection = (_props: Props) => {
+const PreviewScreenSection = () => {
 	const { pathname } = useLocation();
 
 	return (

@@ -6,21 +6,14 @@ import {
 	DialogClose,
 	DialogContent,
 	DialogFooter,
-	DialogHeader,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Content } from "@/types";
 import RenderDuration from "@/utils/renderDuration";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { MdOndemandVideo } from "react-icons/md";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
-type AddContentToPlaylistButtonProps = unknown;
-
-export const AddContentToPlaylistButton: React.FC<
-	AddContentToPlaylistButtonProps
-> = (_props: AddContentToPlaylistButtonProps) => {
+export const AddContentToPlaylistButton = () => {
 	const { id: playlistId } = useParams<{ id: string }>();
 	const methods = useFormContext();
 	const { append } = useFieldArray({
@@ -53,7 +46,7 @@ export const AddContentToPlaylistButton: React.FC<
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button onClick={(e) => {}}>Add Content</Button>
+				<Button>Add Content</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<h4>Add Content to Playlist</h4>

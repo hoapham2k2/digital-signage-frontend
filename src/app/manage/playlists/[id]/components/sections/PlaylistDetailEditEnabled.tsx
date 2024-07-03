@@ -1,11 +1,8 @@
 import { Switch } from "@/components/ui/switch";
 import { Controller, useFormContext } from "react-hook-form";
 
-type PlaylistDetailEditEnabledProps = unknown;
 
-export const PlaylistDetailEditEnabled: React.FC<
-	PlaylistDetailEditEnabledProps
-> = (_props: PlaylistDetailEditEnabledProps) => {
+export const PlaylistDetailEditEnabled = () => {
 	const methods = useFormContext();
 	return (
 		<div className='flex flex-row items-center justify-between'>

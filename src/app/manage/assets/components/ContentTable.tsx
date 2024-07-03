@@ -4,9 +4,8 @@ import { useQuery } from "react-query";
 import { fetchContents } from "@/apis/contents";
 import { Content } from "@/types/index";
 
-type Props = NonNullable<unknown>;
 
-const ContentTable = (_props: Props) => {
+const ContentTable = () => {
 	const {
 		data: contentDatas,
 		isLoading,

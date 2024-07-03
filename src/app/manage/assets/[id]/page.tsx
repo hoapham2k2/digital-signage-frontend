@@ -7,10 +7,9 @@ import { useField, useForm } from "@tanstack/react-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import VideoThumbnailGenerator from "../components/VideoThumbnail";
+import React from "react";
 
-type Props = NonNullable<unknown>;
-
-const AssetDetailPage = (_props: Props) => {
+const AssetDetailPage: React.FC = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();

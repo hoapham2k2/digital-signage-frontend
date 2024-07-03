@@ -2,9 +2,8 @@ import { Button } from "../ui/button";
 import { IoIosNotifications } from "react-icons/io";
 import { Badge } from "../ui/badge";
 
-type Props = NonNullable<unknown>;
 
-const NotificationButton = (_props: Props) => {
+const NotificationButton = () => {
 	return (
 		<Button className='relative' variant={"ghost"}>
 			<IoIosNotifications className='w-6 h-6' />

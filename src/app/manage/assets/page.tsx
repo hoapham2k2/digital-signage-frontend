@@ -1,9 +1,8 @@
 import ContentTable from "./components/ContentTable";
 import NewContentButton from "./components/NewContentButton";
 
-type Props = NonNullable<unknown>;
 
-const ContentsManagementPage = (_props: Props) => {
+const ContentsManagementPage = () => {
 	return (
 		<div>
 			<div className='flex flex-row justify-between items-center'>

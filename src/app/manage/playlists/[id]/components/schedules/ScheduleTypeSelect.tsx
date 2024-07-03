@@ -1,17 +1,10 @@
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import {
 	ScheduleOperatorForDate,
 	ScheduleOperatorForTime,
 	ScheduleOperatorForWeekdays,
 	ScheduleType,
 } from "@/types";
-import { Control, Controller, useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { PlaylistFormValueTypes } from "../../page";
 const scheduleOptisonsMap: Record<ScheduleType, string[]> = {
 	[ScheduleType.TheDate]: Object.values(ScheduleOperatorForDate),
@@ -34,7 +27,7 @@ const ScheduleTypeSelect = (_props: ScheduleOperatorSelectProps) => {
 						<select
 							value={field.value?.type ?? ""}
 							onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-								let newSchedule = { ...field.value };
+								const newSchedule = { ...field.value };
 								const newType = e.target.value as ScheduleType;
 								newSchedule.type = newType;
 								newSchedule.operator = scheduleOptisonsMap[newType][0];

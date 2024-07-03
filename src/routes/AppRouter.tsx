@@ -17,7 +17,9 @@ import AssetDetailPage from "@/app/manage/assets/[id]/page";
 import PlaylistDetailPreview from "@/app/manage/playlists/[id]/preview/page";
 import NewScreenPage from "@/app/manage/screens/create/page";
 import VirtualScreenDetailPreviewPage from "@/app/manage/screens/[id]/preview/VirtualScreenDetailPreviewPage";
-type Props = NonNullable<unknown>;
+import LoginPage from "@/app/login/LoginPage";
+import ProtectedRoute from "./ProtectedRoutes";
+import { AuthProvider } from "@/context/AuthContext";
 
 const routes = createBrowserRouter([
 	{
@@ -27,54 +29,60 @@ const routes = createBrowserRouter([
 				path: "/",
 				element: <Navigate to='/manage/dashboard' replace />,
 			},
+
 			{
 				path: "/manage",
 				element: <Navigate to='/mange/dashboard' replace />,
 			},
 			{
-				path: "/manage/dashboard",
-				element: <DashboardPage />,
-			},
-			{
-				path: "manage/screens",
-				element: <ScreensManagementPage />,
-			},
-			{
-				path: "manage/screens/:id",
-				element: <ScreenDetailPage />,
-			},
-			{
-				path: "manage/screens/:id/edit",
-				element: <EditScreenDetailPage />,
-			},
-			{
-				path: "manage/screens/new",
-				element: <NewScreenPage />,
-			},
-			{
-				path: "manage/playlists",
-				element: <PlaylistsManagementPage />,
-			},
-			{
-				path: "manage/playlists/:id",
-				element: <PlaylistDetailPage />,
-			},
+				element: <ProtectedRoute />,
+				children: [
+					{
+						path: "/manage/dashboard",
+						element: <DashboardPage />,
+					},
+					{
+						path: "manage/screens",
+						element: <ScreensManagementPage />,
+					},
+					{
+						path: "manage/screens/:id",
+						element: <ScreenDetailPage />,
+					},
+					{
+						path: "manage/screens/:id/edit",
+						element: <EditScreenDetailPage />,
+					},
+					{
+						path: "manage/screens/new",
+						element: <NewScreenPage />,
+					},
+					{
+						path: "manage/playlists",
+						element: <PlaylistsManagementPage />,
+					},
+					{
+						path: "manage/playlists/:id",
+						element: <PlaylistDetailPage />,
+					},
 
-			{
-				path: "manage/assets",
-				element: <ContentsManagementPage />,
-			},
-			{
-				path: "manage/assets/:id",
-				element: <AssetDetailPage />,
-			},
-			{
-				path: "manage/account",
-				element: <AccountSettingManagementPage />,
-			},
-			{
-				path: "manage/playlists/:id",
-				element: <PlaylistDetailPage />,
+					{
+						path: "manage/assets",
+						element: <ContentsManagementPage />,
+					},
+					{
+						path: "manage/assets/:id",
+						element: <AssetDetailPage />,
+					},
+					{
+						path: "manage/account",
+						element: <AccountSettingManagementPage />,
+					},
+					{
+						path: "manage/playlists/:id",
+						element: <PlaylistDetailPage />,
+					},
+				],
 			},
 		],
 	},
@@ -89,12 +97,20 @@ const routes = createBrowserRouter([
 				path: "manage/playlists/:id/preview",
 				element: <PlaylistDetailPreview />,
 			},
+			{
+				path: "/login",
+				element: <LoginPage />,
+			},
 		],
 	},
 ]);
 
-const AppRouter = (_props: Props) => {
-	return <RouterProvider router={routes} />;
+const AppRouter = () => {
+	return (
+		<AuthProvider>
+			<RouterProvider router={routes} />
+		</AuthProvider>
+	);
 };
 
 export default AppRouter;

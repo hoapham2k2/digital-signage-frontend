@@ -7,8 +7,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Group, Screen } from "@/types/index";
-import { useState } from "react";
+import { Group } from "@/types/index";
 import GroupLabelTable from "./table/GroupLabelTable";
 import { useParams } from "react-router-dom";
 import { fetchGroupByIds } from "@/apis/groups";
@@ -20,7 +19,6 @@ type Props = {
 };
 
 const EditScreenGroupLabelInput = (props: Props) => {
-	const [isShowButton, _setIsShowButton] = useState(false);
 	const { id } = useParams<{ id: string }>();
 
 	const { data: currentGroups } = useQuery<Group[]>({
@@ -65,11 +63,10 @@ const EditScreenGroupLabelInput = (props: Props) => {
 					) : (
 						<p>No group labels</p>
 					)}
-					{isShowButton && (
-						<DropdownMenuItem asChild>
-							<Button className='w-full mt-2'>Save</Button>
-						</DropdownMenuItem>
-					)}
+
+					<DropdownMenuItem asChild>
+						<Button className='w-full mt-2'>Save</Button>
+					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>

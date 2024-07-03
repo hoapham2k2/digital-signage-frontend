@@ -1,20 +1,5 @@
 import { fetchGroups } from "@/apis/groups";
-import { fetchPlaylistById } from "@/apis/playlists";
-import { fetchScreenById } from "@/apis/screens";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
-import { Group, Playlist, Screen } from "@/types/index";
-import {
-	flexRender,
-	getCoreRowModel,
-	useReactTable,
-} from "@tanstack/react-table";
+import { Group } from "@/types/index";
 import React from "react";
 import { useQuery } from "react-query";
 import { GroupLabelTableColumns } from "./GroupLabelTableColumn";
@@ -34,21 +19,6 @@ const GroupLabelTable: React.FC<GroupLabelTableProps> = (
 			return fetchGroups();
 		},
 	});
-	const { data: screen } = useQuery<Screen>({
-		queryKey: ["screen", _props.id],
-		queryFn: () => {
-			return fetchScreenById(_props.id);
-		},
-	});
-
-	const { data: playlist } = useQuery<Playlist>({
-		queryKey: ["playlist", _props.id],
-		queryFn: () => {
-			return fetchPlaylistById(_props.id);
-		},
-		enabled: !!_props.id,
-	});
-
 	return (
 		<div>
 			<DataTable

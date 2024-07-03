@@ -1,5 +1,5 @@
 import { getContentsByScreenAsync } from "@/apis/contents";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
@@ -32,11 +32,6 @@ export const VirtualScreenDetailPreviewPage: React.FC = () => {
 	return (
 		<div className='w-screen h-screen'>
 			{contentItems.length > 0 &&
-			// src={
-			// 	`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-			// 		content.filePath.includes("default") ? "" : "content"
-			// 	}/${content.filePath}` ?? ""
-			// }
 			contentItems[currentIndex].resourceType === "Image" ? (
 				<img
 					src={

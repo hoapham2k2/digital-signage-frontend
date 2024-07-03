@@ -2,11 +2,8 @@ import SidebarItem, { SidebarItemProps } from "./SidebarItem";
 import { MdDashboard, MdOutlineScreenshotMonitor } from "react-icons/md";
 import { VscFileMedia, VscFiles } from "react-icons/vsc";
 import { FiSettings } from "react-icons/fi";
-import { cn } from "@/lib/utils";
 
-type Props = NonNullable<unknown>;
-
-const Sidebar = (_props: Props) => {
+const Sidebar = () => {
 	const SidebarItems: SidebarItemProps[] = [
 		{ name: "Dashboard", icon: MdDashboard, href: "/manage/dashboard" },
 		{

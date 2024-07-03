@@ -1,11 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { Controller, useFormContext } from "react-hook-form";
 
-type ScheduleDetailEditNameProps = unknown;
 
-export const ScheduleDetailEditName: React.FC<ScheduleDetailEditNameProps> = (
-	_props: ScheduleDetailEditNameProps
-) => {
+export const ScheduleDetailEditName = () => {
 	const methods = useFormContext();
 	return (
 		<div className=''>

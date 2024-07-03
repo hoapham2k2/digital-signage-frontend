@@ -1,9 +1,8 @@
 import ScreenTable from "@/components/table/ScreenTable";
 import { NewScreenButton } from "./components/NewScreenButton";
 
-type Props = NonNullable<unknown>;
 
-const ScreensManagementPage = (_props: Props) => {
+const ScreensManagementPage = () => {
 	return (
 		<div className=''>
 			<div className='flex flex-row justify-between items-center'>

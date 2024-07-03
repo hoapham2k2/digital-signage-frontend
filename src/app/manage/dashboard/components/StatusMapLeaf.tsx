@@ -1,6 +1,6 @@
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LatLng, LatLngExpression } from "leaflet";
+import { LatLngExpression } from "leaflet";
 export const StatusMapLeaf: React.FC = () => {
 	const positons: LatLngExpression[] = [
 		[51.505, -0.09],

@@ -16,7 +16,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Screen } from "@/types";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
@@ -61,7 +60,8 @@ export const NewScreenButton: React.FC = () => {
 
 				<DialogContent
 					onCloseAutoFocus={(event) => {
-						//@ts-ignore
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						//@ts-expect-error
 						dropdownTriggerRef.current?.focus();
 						event.preventDefault();
 					}}>

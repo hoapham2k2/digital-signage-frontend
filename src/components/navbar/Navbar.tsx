@@ -4,9 +4,8 @@ import AccountSettingButton from "./AccountSettingButton";
 import AppMenu from "./AppMenu";
 import { NavLink } from "react-router-dom";
 
-type Props = NonNullable<unknown>;
 
-const Navbar = (_props: Props) => {
+const Navbar = () => {
 	return (
 		<nav
 			className={

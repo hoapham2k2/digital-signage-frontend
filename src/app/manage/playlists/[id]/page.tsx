@@ -1,13 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
-import { Content, Playlist, Schedule } from "@/types/index";
-import {
-	fetchPlaylistById,
-	updatePlaylist,
-	updatePlaylistSchedules,
-} from "@/apis/playlists";
+import { Playlist } from "@/types/index";
+import { fetchPlaylistById, updatePlaylist } from "@/apis/playlists";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import PlaylistDetailSchedule from "./components/schedules/PlaylistDetailSchedule";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PlaylistPlayOn from "./components/sections/PlaylistPlayOn";
 import { DevTool } from "@hookform/devtools";
@@ -17,13 +12,11 @@ import PlaylistDetailEditEnabled from "./components/sections/PlaylistDetailEditE
 import PlaylistDetailContent from "./components/sections/PlaylistDetailContent";
 import PlaylistDetailContentComponent from "./components/contents/PlaylistDetailContentManage";
 
-type Props = unknown;
-
 export type PlaylistFormValueTypes = {
 	playlist: Playlist;
 };
 
-const PlaylistDetailPage = (_props: Props) => {
+const PlaylistDetailPage = () => {
 	const { id: playlistId } = useParams();
 	const methods = useForm<PlaylistFormValueTypes>();
 	const queryClient = useQueryClient();
@@ -46,7 +39,6 @@ const PlaylistDetailPage = (_props: Props) => {
 		},
 	});
 
-
 	const { mutate: updatePlaylistMutation } = useMutation(
 		async (data: { playlistId: number; playlist: Playlist }) => {
 			return updatePlaylist(data.playlistId, data.playlist);
@@ -64,11 +56,13 @@ const PlaylistDetailPage = (_props: Props) => {
 					// remove unnecessary fields in playlist
 					playlist: {
 						...formData.playlist,
-						//@ts-ignore
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						//@ts-expect-error
 						playlistContentItems: formData.playlist.playlistContentItems.map(
 							(item) => {
-								const { contentItem, ...rest } = item;
-								return rest; //remove
+								return Object.fromEntries(
+									Object.entries(item).filter(([key]) => key !== "contentItem")
+								);
 							}
 						),
 					},

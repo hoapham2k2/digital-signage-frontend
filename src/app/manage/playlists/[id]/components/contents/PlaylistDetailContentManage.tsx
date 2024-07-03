@@ -1,34 +1,15 @@
-import { fetchContentsByPlaylistIds } from "@/apis/contents";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { PlaylistFormValueTypes } from "../../page";
-import { useParams } from "react-router-dom";
-import { Content } from "@/types";
-import { useQuery } from "react-query";
 import { IoMdClose } from "react-icons/io";
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { MdOndemandVideo } from "react-icons/md";
-import { Input } from "@/components/ui/input";
 import AddContentToPlaylistButton from "./AddContentToPlaylistButton";
 import VideoThumbnailGenerator from "@/app/manage/assets/components/VideoThumbnail";
+import { Input } from "@/components/ui/input";
 
-type PlaylistDetailContentProps = {};
-
-export const PlaylistDetailContentComponent: React.FC<
-	PlaylistDetailContentProps
-> = (_props: PlaylistDetailContentProps) => {
-	const { id: playlistId } = useParams<{ id: string }>();
+export const PlaylistDetailContentComponent = () => {
 	const methods = useFormContext<PlaylistFormValueTypes>();
 
-	const { fields, append, remove } = useFieldArray<PlaylistFormValueTypes>({
+	const { fields, remove } = useFieldArray<PlaylistFormValueTypes>({
 		control: methods.control,
 		name: "playlist.playlistContentItems",
 	});
@@ -51,7 +32,7 @@ export const PlaylistDetailContentComponent: React.FC<
 								<PlaylistDetailContentItem index={index} />
 								<IoMdClose
 									className='h-6 w-6'
-									onClick={(_e) => {
+									onClick={() => {
 										remove(index);
 									}}
 								/>
@@ -63,14 +44,11 @@ export const PlaylistDetailContentComponent: React.FC<
 	);
 };
 
-export const PlaylistDetailContentItem: React.FC<any> = (_props: {
+export const PlaylistDetailContentItem: React.FC<{
 	index: number;
-}) => {
+}> = (_props: { index: number }) => {
 	const methods = useFormContext();
-	const { remove } = useFieldArray({
-		control: methods.control,
-		name: `playlist.playlistContentItems`,
-	});
+
 	return (
 		<Controller
 			control={methods.control}
@@ -114,7 +92,7 @@ export const PlaylistDetailContentItem: React.FC<any> = (_props: {
 									value={field.value.duration}
 									onChange={(e) => {
 										const newDuration = e.target.value;
-										let newContentItem = { ...field.value };
+										const newContentItem = { ...field.value };
 										newContentItem.duration = newDuration;
 										field.onChange(newContentItem);
 									}}

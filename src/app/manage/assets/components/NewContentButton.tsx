@@ -15,11 +15,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
-type NewContentButtonProps = unknown;
 
-export const NewContentButton: React.FC<NewContentButtonProps> = (
-	_props: NewContentButtonProps
-) => {
+export const NewContentButton: React.FC = () => {
 	const { toast } = useToast();
 	const [isOpen, setIsOpen] = React.useState(false);
 	const queryClient = useQueryClient();

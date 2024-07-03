@@ -1,8 +1,4 @@
-type PlaylistDetailPreviewProps = unknown;
-
-export const PlaylistDetailPreview: React.FC<PlaylistDetailPreviewProps> = (
-	_props: PlaylistDetailPreviewProps
-) => {
+export const PlaylistDetailPreview = () => {
 	return (
 		<div>
 			<h1>PlaylistDetailPreview</h1>

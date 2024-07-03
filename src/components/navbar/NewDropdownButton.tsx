@@ -7,9 +7,8 @@ import {
 import { Button } from "../ui/button";
 import { IoIosAdd } from "react-icons/io";
 
-type Props = NonNullable<unknown>;
 
-const NewDropdownButton = (_props: Props) => {
+const NewDropdownButton = () => {
 	const dropdownOptions = [
 		{
 			name: "Hardware Screen",

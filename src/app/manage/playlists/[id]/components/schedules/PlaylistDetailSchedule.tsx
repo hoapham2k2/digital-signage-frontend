@@ -1,18 +1,14 @@
-import { Schedule, ScheduleType } from "@/types/index";
+import { ScheduleType } from "@/types/index";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import ScheduleValueSection from "./ScheduleValueSection";
-import { Control, useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import ScheduleTypeSelect from "./ScheduleTypeSelect";
 import ScheduleOperatorSelect from "./ScheduleOperatorSelect";
-import { useParams } from "react-router-dom";
 import { PlaylistFormValueTypes } from "../../page";
 
-type Props = {};
-
-const PlaylistDetailSchedule = (_props: Props) => {
-	const { id: playlistId } = useParams<{ id: string }>();
-	const { control, watch } = useFormContext<PlaylistFormValueTypes>();
+const PlaylistDetailSchedule = () => {
+	const { control } = useFormContext<PlaylistFormValueTypes>();
 
 	const { fields, append, remove } = useFieldArray<PlaylistFormValueTypes>({
 		control: control,
@@ -47,10 +43,10 @@ const PlaylistDetailSchedule = (_props: Props) => {
 												e.preventDefault();
 												e.stopPropagation();
 												append({
-													playListId: playlistId,
 													type: ScheduleType.TheDate,
 													operator: "IsOn",
 													value: new Date().toISOString(),
+													..._item,
 												});
 											}}>
 											Add

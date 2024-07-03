@@ -4,9 +4,8 @@ import { ScreenColumns } from "./ScreenColumn";
 import { Screen } from "@/types/index";
 import { fetchScreens } from "@/apis/screens";
 
-type Props = unknown;
 
-const ScreenTable = (_props: Props) => {
+const ScreenTable = () => {
 	const {
 		data: screens,
 		isLoading,

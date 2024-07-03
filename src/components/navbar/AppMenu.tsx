@@ -2,7 +2,7 @@ import { FiSettings } from "react-icons/fi";
 import { MdDashboard, MdOutlineScreenshotMonitor } from "react-icons/md";
 import { VscFileMedia, VscFiles } from "react-icons/vsc";
 
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
 	NavigationMenu,
 	NavigationMenuItem,

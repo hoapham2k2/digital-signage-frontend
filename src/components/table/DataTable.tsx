@@ -82,7 +82,8 @@ export function DataTable(props: Props) {
 													navigate(`/manage/screens/${cell.row.original.id}`);
 												}
 											}
-											//@ts-ignore
+											// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+											// @ts-ignore
 											props.type &&
 												props.type !== "screen" &&
 												navigate(

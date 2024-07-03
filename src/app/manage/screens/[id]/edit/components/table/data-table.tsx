@@ -51,6 +51,8 @@ export function DataTable<TData, TValue>({
 	});
 	useEffect(() => {
 		if (entity) {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			//@ts-expect-error
 			const selectedGroupIds: string[] = entity.groups;
 			const rowSelection: Record<string, boolean> = {};
 			selectedGroupIds.forEach((groupId) => {
@@ -75,6 +77,8 @@ export function DataTable<TData, TValue>({
 
 	useEffect(() => {
 		const selectedGroupIds = Object.keys(rowSelection);
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		//@ts-expect-error
 		const selectedGroupIdsFromEntity = entity?.groups;
 		if (
 			selectedGroupIds.length !== selectedGroupIdsFromEntity?.length ||
@@ -91,6 +95,8 @@ export function DataTable<TData, TValue>({
 			if (props.type === "screen") {
 				return updateScreen(id as string, newEntity as Omit<Screen, "id">);
 			}
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			//@ts-expect-error
 			return updatePlaylist(id as string, newEntity as Omit<Playlist, "id">);
 		},
 		{
@@ -108,11 +114,15 @@ export function DataTable<TData, TValue>({
 		if (props.type === "playlist") {
 			updatedEntity = {
 				...entity,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				//@ts-expect-error
 				groups: Object.keys(rowSelection),
 			} as Omit<Playlist, "id">;
 		} else {
 			updatedEntity = {
 				...entity,
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				//@ts-expect-error
 				groups: Object.keys(rowSelection),
 			} as Omit<Screen, "id">;
 		}

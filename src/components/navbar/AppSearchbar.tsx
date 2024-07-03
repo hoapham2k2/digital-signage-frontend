@@ -1,8 +1,7 @@
 import { Input } from "../ui/input";
 
-type Props = NonNullable<unknown>;
 
-const AppSearchbar = (_props: Props) => {
+const AppSearchbar = () => {
 	return <Input type='text' placeholder='Search...' className='w-64' />;
 };
 

@@ -1,12 +1,5 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useScheduleStore } from "@/lib/stores/schedule-store";
-import { Schedule } from "@/types/index";
-import {
-	Control,
-	Controller,
-	FieldValues,
-	useFormContext,
-} from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 type ComponentProps = {
 	index: number;

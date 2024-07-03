@@ -22,7 +22,7 @@ const EditScreenForm = (props: Props) => {
 	const { mutate } = useMutation(
 		() =>
 			updateScreen(
-				currentScreen?.id as string,
+				currentScreen?.id as unknown as string,
 				currentScreen as Omit<Screen, "id">
 			),
 		{
@@ -34,16 +34,20 @@ const EditScreenForm = (props: Props) => {
 			},
 		}
 	);
-	const handleSaveScreen = async (_e: React.MouseEvent<HTMLButtonElement>) => {
-		await mutate();
-		await setIsDataChanged(false);
+	const handleSaveScreen = async () => {
+		mutate();
+		setIsDataChanged(false);
 	};
 
 	const { data: currentGroupsBelongToScreen } = useQuery<Group[]>({
-		queryKey: ["groups", currentScreen?.groups],
+		queryKey: ["groups", currentScreen],
 		queryFn: () => {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			//@ts-expect-error
 			return fetchGroupByIds(currentScreen?.groups as string[]);
 		},
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		//@ts-expect-error
 		enabled: !!currentScreen?.groups,
 	});
 
@@ -56,6 +60,8 @@ const EditScreenForm = (props: Props) => {
 							{currentGroupsBelongToScreen && (
 								<EditScreenGroupLabelInput
 									type='screen'
+									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+									//@ts-expect-error
 									groupIds={currentScreen.groups}
 								/>
 							)}

@@ -20,7 +20,6 @@ export const deleteSchedule = async (id: string): Promise<void> => {
 };
 
 export const updateSchedulesBelongToPlaylist = async (
-	playlistId: string,
 	schedules: Schedule[]
 ): Promise<void> => {
 	schedules.forEach(async (schedule) => {

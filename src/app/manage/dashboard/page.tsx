@@ -1,11 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import ScreenStatus from "./components/ScreenStatus";
 import StatusMapLeaf from "./components/StatusMapLeaf";
 
-type Props = NonNullable<unknown>;
-
-const DashboardPage = (_props: Props) => {
+const DashboardPage = () => {
 	return (
 		<div>
 			{/* Page Header */}

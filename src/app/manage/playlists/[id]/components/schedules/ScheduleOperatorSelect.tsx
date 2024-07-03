@@ -42,7 +42,7 @@ const ScheduleOperatorSelect = (_props: ScheduleOperatorSelectProps) => {
 						<select
 							value={field.value?.operator ?? ""}
 							onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-								let newSchedule = { ...field.value };
+								const newSchedule = { ...field.value };
 								newSchedule.operator = e.target.value;
 								if (
 									newSchedule.operator === ScheduleOperatorForTime.IsBetween
