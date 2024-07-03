@@ -4,7 +4,7 @@ export const api = axios.create({
 	baseURL: `${
 		process.env.NODE_ENV === "development"
 			? "http://localhost:5036"
-			: "https://ds-cms-backend.onrender.com" // Change this to your backend URL
+			: "http://103.72.98.70"
 	}/api/v1`,
 	headers: {
 		"Content-Type": "application/json",
