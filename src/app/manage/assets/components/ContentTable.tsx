@@ -3,9 +3,10 @@ import { ContentsColumns } from "./ContentColumns";
 import { useQuery } from "react-query";
 import { fetchContents } from "@/apis/contents";
 import { Content } from "@/types/index";
-
+import { useAuth } from "@/context/AuthContext";
 
 const ContentTable = () => {
+	const { user } = useAuth();
 	const {
 		data: contentDatas,
 		isLoading,
@@ -14,7 +15,7 @@ const ContentTable = () => {
 	} = useQuery<Content[]>({
 		queryKey: "contents",
 		queryFn: () => {
-			return fetchContents();
+			return fetchContents(user?.id);
 		},
 		onSuccess: () => {},
 	});

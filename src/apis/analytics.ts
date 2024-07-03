@@ -7,7 +7,7 @@ export type Analytics = {
 	number_of_content_items: number;
 };
 
-export const fetchAnalytics = async (): Promise<Analytics> => {
-	const { data } = await api.get("/Statistics");
+export const fetchAnalytics = async (userid: string): Promise<Analytics> => {
+	const { data } = await api.get(`/Statistics?userID=${userid}`);
 	return data;
 };

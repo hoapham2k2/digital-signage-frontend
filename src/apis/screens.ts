@@ -1,8 +1,8 @@
 import { api } from "@/configs/axiosConfig";
 import { Screen } from "@/types/index";
 
-export const fetchScreens = async () => {
-	const { data } = await api.get("/Players");
+export const fetchScreens = async (userId: string) => {
+	const { data } = await api.get(`Players?userID=${userId}`);
 	return data;
 };
 

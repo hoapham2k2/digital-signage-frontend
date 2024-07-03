@@ -5,6 +5,7 @@ import { MdOutlineScreenshotMonitor } from "react-icons/md";
 import { CgPlayList } from "react-icons/cg";
 import { VscFileMedia } from "react-icons/vsc";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 const ScreenStatusItem = ({
 	title,
 	value,
@@ -57,13 +58,16 @@ const ScreenStatusItem = ({
 };
 
 export const ScreenStatus: React.FC = () => {
+	const { user } = useAuth();
 	const {
 		data: analytics,
 		isLoading: isFetchingAnalytics,
 		isError: fetchAnalyticsError,
 	} = useQuery<Analytics>({
 		queryKey: "analytics",
-		queryFn: fetchAnalytics,
+		queryFn: () => {
+			return fetchAnalytics(user?.id);
+		},
 	});
 
 	if (isFetchingAnalytics) {

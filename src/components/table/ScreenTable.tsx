@@ -3,9 +3,10 @@ import { DataTable } from "./DataTable";
 import { ScreenColumns } from "./ScreenColumn";
 import { Screen } from "@/types/index";
 import { fetchScreens } from "@/apis/screens";
-
+import { useAuth } from "@/context/AuthContext";
 
 const ScreenTable = () => {
+	const { user } = useAuth();
 	const {
 		data: screens,
 		isLoading,
@@ -13,7 +14,9 @@ const ScreenTable = () => {
 		isSuccess,
 	} = useQuery<Screen[]>({
 		queryKey: "screens",
-		queryFn: fetchScreens,
+		queryFn: () => {
+			return fetchScreens(user?.id);
+		},
 	});
 
 	if (isLoading) return <div>Loading...</div>;

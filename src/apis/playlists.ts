@@ -6,8 +6,8 @@ export const fetchPlaylistById = async (id: string): Promise<Playlist> => {
 	return data;
 };
 
-export const fetchPlaylists = async (): Promise<Playlist[]> => {
-	const { data } = await api.get("/Playlists");
+export const fetchPlaylists = async (userID: string): Promise<Playlist[]> => {
+	const { data } = await api.get(`/Playlists?userID=${userID}`);
 	return data;
 };
 
