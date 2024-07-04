@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ScreenType } from "@/types";
+import { ScreenType } from "@/types/screen";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];

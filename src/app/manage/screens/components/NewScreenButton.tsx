@@ -16,21 +16,29 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/context/AuthContext";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 
 export const NewScreenButton: React.FC = () => {
+	const { user } = useAuth();
+	const { toast } = useToast();
 	const dropdownTriggerRef = React.useRef(null);
 	const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 	const queryClient = useQueryClient();
 	const { mutate: createVirtualScreenMutation } = useMutation(
 		(virtualScreenName: string) => {
 			// API call to create a new virtual screen
-			return createVirtualScreen(virtualScreenName);
+			return createVirtualScreen(virtualScreenName, user?.id as string);
 		},
 		{
 			onSuccess: () => {
+				toast({
+					title: "Added Virtual Screen",
+					description: "Virtual Screen added successfully",
+				});
 				setVirtualScreenName("");
 				queryClient.invalidateQueries("screens");
 				setIsDialogOpen(false);

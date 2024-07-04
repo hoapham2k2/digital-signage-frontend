@@ -9,19 +9,29 @@ import { Input } from "@/components/ui/input";
 import { useMutation, useQueryClient } from "react-query";
 import { createHardwareScreen } from "@/apis/screens";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 export const AddScreenInstruction: React.FC = () => {
+	const { user } = useAuth();
 	const [pinCode, setPinCode] = React.useState<string>("");
 	const [screenName, setScreenName] = React.useState<string>("");
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
+	const { toast } = useToast();
 
 	const { mutate: createHardwareScreenMutation } = useMutation(
 		({ name, otpCode }: { name: string; otpCode: string }) => {
-			return createHardwareScreen(name, otpCode);
+			return createHardwareScreen(name, otpCode, user?.id as string);
 		},
 		{
 			onSuccess: () => {
+				toast({
+					title: "Added Screen status",
+					description: "Screen added successfully",
+				});
+				setPinCode("");
+				setScreenName("");
 				queryClient.invalidateQueries("screens");
 				navigate("/manage/screens");
 			},

@@ -21,13 +21,13 @@ export const fetchContentsByPlaylistIds = async (playlistId: number) => {
 	return data;
 };
 
-export const UploadContentAsync = async (file: File) => {
+export const UploadContentAsync = async (file: File, userID: string) => {
 	if (!file) {
 		throw new Error("No file provided");
 	}
 	const formData = new FormData();
 	formData.append("file", file);
-	await api.post("/ContentItems", formData, {
+	await api.post(`/ContentItems?userID=${userID}`, formData, {
 		headers: {
 			"Content-Type": "multipart/form-data",
 		},
