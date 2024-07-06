@@ -1,6 +1,6 @@
 import { api } from "@/configs/axiosConfig";
 import { Content } from "@/types/index";
-
+import supabase from "@/configs/supabaseConfig";
 
 export const fetchContents = async (userID: string): Promise<Content[]> => {
 	const { data } = await api.get(`/ContentItems?userID=${userID}`);
@@ -12,12 +12,31 @@ export const fetchContentById = async ({
 }: {
 	contentId: string;
 }) => {
-	const { data } = await api.get(`/ContentItems/${contentId}`);
+	// const { data } = await api.get(`/ContentItems/${contentId}`);
+	// return data;
+	const { data } = await supabase
+		.from("contents")
+		.select("*")
+		.eq("id", contentId);
 	return data;
 };
 
 export const fetchContentsByPlaylistIds = async (playlistId: number) => {
-	const { data } = await api.get(`/ContentItems/playlist/${playlistId}`);
+	// const { data } = await api.get(`/ContentItems/playlist/${playlistId}`);
+	// return data;
+
+	const { data, error } = await supabase
+		.from("contents")
+		.select(
+			`
+			*,
+			playlist_contents (
+				playlist_id
+			)
+		`
+		)
+		.eq("playlist_id", playlistId);
+
 	return data;
 };
 

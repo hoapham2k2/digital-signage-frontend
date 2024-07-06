@@ -17,10 +17,12 @@ import AssetDetailPage from "@/app/manage/assets/[id]/page";
 import PlaylistDetailPreview from "@/app/manage/playlists/[id]/preview/page";
 import NewScreenPage from "@/app/manage/screens/create/page";
 import VirtualScreenDetailPreviewPage from "@/app/manage/screens/[id]/preview/VirtualScreenDetailPreviewPage";
-import LoginPage from "@/app/login/LoginPage";
 import ProtectedRoute from "./ProtectedRoutes";
 import { AuthProvider } from "@/context/AuthContext";
 import CreatePlaylistPage from "@/app/manage/playlists/create/CreatePlaylistPage";
+import RegisterPage from "@/app/auth/register/RegisterPage";
+import AuthLayout from "@/app/auth/AuthLayout";
+import LoginPage from "@/app/auth/login/LoginPage";
 
 const routes = createBrowserRouter([
 	{
@@ -102,9 +104,18 @@ const routes = createBrowserRouter([
 				path: "manage/playlists/:id/preview",
 				element: <PlaylistDetailPreview />,
 			},
+		],
+	},
+	{
+		element: <AuthLayout />,
+		children: [
 			{
 				path: "/login",
 				element: <LoginPage />,
+			},
+			{
+				path: "/register",
+				element: <RegisterPage />,
 			},
 		],
 	},
