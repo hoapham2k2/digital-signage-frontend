@@ -20,6 +20,7 @@ import VirtualScreenDetailPreviewPage from "@/app/manage/screens/[id]/preview/Vi
 import LoginPage from "@/app/login/LoginPage";
 import ProtectedRoute from "./ProtectedRoutes";
 import { AuthProvider } from "@/context/AuthContext";
+import CreatePlaylistPage from "@/app/manage/playlists/create/CreatePlaylistPage";
 
 const routes = createBrowserRouter([
 	{
@@ -64,6 +65,10 @@ const routes = createBrowserRouter([
 					{
 						path: "manage/playlists/:id",
 						element: <PlaylistDetailPage />,
+					},
+					{
+						path: "manage/playlists/create",
+						element: <CreatePlaylistPage />,
 					},
 
 					{

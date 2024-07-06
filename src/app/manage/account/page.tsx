@@ -8,7 +8,7 @@ const AccountSettingManagementPage: React.FC = () => {
 			<div>
 				<h1 className='text-2xl '>Account Settings</h1>
 			</div>
-			<AccountSettingTabs />
+			{/* <AccountSettingTabs /> */}
 		</div>
 	);
 };

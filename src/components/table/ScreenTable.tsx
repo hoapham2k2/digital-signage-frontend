@@ -23,11 +23,7 @@ const ScreenTable = () => {
 	if (isError) return <div>Error {isError}</div>;
 
 	if (isSuccess)
-		return (
-			<div className='py-10'>
-				<DataTable columns={ScreenColumns} data={screens} type='screen' />
-			</div>
-		);
+		return <DataTable columns={ScreenColumns} data={screens} type='screen' />;
 };
 
 export default ScreenTable;

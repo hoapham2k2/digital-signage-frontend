@@ -3,7 +3,7 @@ import StatusMapLeaf from "./components/StatusMapLeaf";
 
 const DashboardPage = () => {
 	return (
-		<div>
+		<div className='flex flex-col gap-2'>
 			{/* Page Header */}
 			<div>
 				<h3>Dashboard</h3>

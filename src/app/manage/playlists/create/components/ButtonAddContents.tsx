@@ -1,28 +1,23 @@
 import { fetchContents } from "@/apis/contents";
 import VideoThumbnailGenerator from "@/app/manage/assets/components/VideoThumbnail";
 import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogFooter,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/context/AuthContext";
+import { Playlist } from "@/types";
 import RenderDuration from "@/utils/renderDuration";
+import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
-export const AddContentToPlaylistButton = () => {
+export const AddContentToPlaylistButton: React.FC = () => {
 	const { user } = useAuth();
 	const { id: playlistId } = useParams<{ id: string }>();
-	const methods = useFormContext();
+	const methods = useFormContext<{ playlist: Playlist }>();
 	const { append } = useFieldArray({
 		control: methods.control,
 		name: "playlist.playlistContentItems",
 	});
-
 	const {
 		data: fetchedContents,
 		isLoading: isFetchingContents,
@@ -44,11 +39,10 @@ export const AddContentToPlaylistButton = () => {
 	if (!fetchContentsSuccess) {
 		return <div>Not found</div>;
 	}
-
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button>Add Content</Button>
+				<Button>Add Contents</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<h4>Add Content to Playlist</h4>
@@ -92,15 +86,15 @@ export const AddContentToPlaylistButton = () => {
 										<Button
 											onClick={() => {
 												append({
-													playlistId: playlistId ?? "",
-													contentItemId: _content.id,
+													playlistId: Number.parseInt(playlistId ?? "0"),
+													contentItemId: _content.id as number,
 													duration: _content.duration,
 													contentItem: {
 														title: _content.title,
 														resourceType: _content.resourceType,
 														filePath: _content.filePath,
 														duration: _content.duration,
-													},
+													} as any,
 												});
 												methods.setValue(
 													"playlist.playlistContentItems",
@@ -114,11 +108,6 @@ export const AddContentToPlaylistButton = () => {
 							);
 						})}
 				</div>
-				<DialogFooter>
-					<DialogClose asChild>
-						<Button onClick={() => {}}>Done</Button>
-					</DialogClose>
-				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);
