@@ -23,11 +23,4 @@ export type Playlist = {
 			name: string;
 		};
 	}[];
-	schedules: {
-		id: number;
-		type: string;
-		operator: string;
-		value: string;
-		playlistId: number;
-	}[];
 };

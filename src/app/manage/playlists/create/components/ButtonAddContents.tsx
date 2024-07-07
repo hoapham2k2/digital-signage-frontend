@@ -52,14 +52,11 @@ export const AddContentToPlaylistButton: React.FC = () => {
 							return (
 								<div key={index} className='flex flex-row justify-between'>
 									<div className='flex flex-row gap-2 items-center'>
-										{_content.resourceType === "Image" ? (
+										{_content.resource_type === "Image" ? (
 											<img
 												src={
-													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-														_content.filePath.includes("default")
-															? ""
-															: "content"
-													}/${_content.filePath}` ?? ""
+													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content.file_path}` ??
+													""
 												}
 												alt={_content.title}
 												className='w-10 h-10'
@@ -68,11 +65,8 @@ export const AddContentToPlaylistButton: React.FC = () => {
 											// <MdOndemandVideo className='w-10 h-10' />
 											<VideoThumbnailGenerator
 												videoUrl={
-													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-														_content.filePath.includes("default")
-															? ""
-															: "content"
-													}/${_content.filePath}` ?? ""
+													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content.file_path}` ??
+													""
 												}
 												classnames={["w-10", "h-10"]}
 											/>
@@ -85,17 +79,17 @@ export const AddContentToPlaylistButton: React.FC = () => {
 										</span>
 										<Button
 											onClick={() => {
-												append({
-													playlistId: Number.parseInt(playlistId ?? "0"),
-													contentItemId: _content.id as number,
-													duration: _content.duration,
-													contentItem: {
-														title: _content.title,
-														resourceType: _content.resourceType,
-														filePath: _content.filePath,
-														duration: _content.duration,
-													} as any,
-												});
+												// append({
+												// 	playlistId: Number.parseInt(playlistId ?? "0"),
+												// 	contentItemId: _content.id as number,
+												// 	duration: _content.duration,
+												// 	contentItem: {
+												// 		title: _content.title,
+												// 		resource_type: _content.resource_type,
+												// 		.file_path: _content.file_path,
+												// 		duration: _content.duration,
+												// 	} as any,
+												// });
 												methods.setValue(
 													"playlist.playlistContentItems",
 													methods.getValues("playlist.playlistContentItems")

@@ -5,16 +5,15 @@ import { ActionsRow } from "./ActionsRow";
 
 export const ContentsColumns: ColumnDef<Content>[] = [
 	{
-		accessorKey: "filePath",
+		accessorKey: "file_path",
 		cell: ({ row }) => {
 			const content = row.original;
 
-			return content.resourceType === "Image" ? (
+			return content.resource_type === "Image" ? (
 				<img
 					src={
-						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-							content.filePath.includes("default") ? "" : "content"
-						}/${content.filePath}` ?? ""
+						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${content.file_path}` ??
+						""
 					}
 					alt={content.title}
 					className='w-10 h-10'
@@ -24,9 +23,8 @@ export const ContentsColumns: ColumnDef<Content>[] = [
 				// <MdOndemandVideo className='w-10 h-10' />
 				<VideoThumbnailGenerator
 					videoUrl={
-						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-							content.filePath.includes("default") ? "" : "content"
-						}/${content.filePath}` ?? ""
+						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${content.file_path}` ??
+						""
 					}
 					classnames={["w-10", "h-10"]}
 				/>
@@ -44,7 +42,7 @@ export const ContentsColumns: ColumnDef<Content>[] = [
 		id: "type",
 		header: "Type",
 		cell: ({ row }) => {
-			return row.original.resourceType;
+			return row.original.resource_type;
 		},
 	},
 	{
