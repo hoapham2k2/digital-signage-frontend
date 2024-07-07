@@ -75,32 +75,19 @@ const AssetDetailPage: React.FC = () => {
 						<div className='flex flex-row gap-4'>
 							<div className='w-1/2'>
 								<h3>Title</h3>
-								{/* <form.Field
-					name='title'
-					children={(field) => (
-						<Input
-							name={field.name}
-							value={field.state.value}
-							onBlur={field.handleBlur}
-							onChange={(e) => field.handleChange(e.target.value)}
-						/>
-					)}
-				/> */}
 								<Input {...methods.register("title")} />
 							</div>
-							<div className='w-1/2 flex flex-col gap-4 '>
+							<div className='flex-1  flex flex-col gap-4 '>
 								{currentContent.file_path &&
 								currentContent.resource_type === "Image" ? (
-									<div className='w-full h-1/2  self-start overflow-hidden rounded-md'>
-										<img
-											src={
-												`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${currentContent.file_path}` ??
-												""
-											}
-											alt={currentContent.title}
-											className='object-cover rounded-md w-full h-full'
-										/>
-									</div>
+									<img
+										src={
+											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${currentContent.file_path}` ??
+											""
+										}
+										alt={currentContent.title}
+										className='object-cover w-full h-full rounded-md '
+									/>
 								) : (
 									<VideoThumbnailGenerator
 										videoUrl={

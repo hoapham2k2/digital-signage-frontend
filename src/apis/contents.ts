@@ -113,7 +113,13 @@ export const UploadContentAsync = async (
 };
 
 export const updateContent = async (content: Content) => {
-	await api.put(`/ContentItems`, content);
+	// await api.put(`/ContentItems`, content);
+
+	const { data, error } = await supabase
+		.from("content_items")
+		.upsert([content]);
+	if (error) throw error;
+	return data;
 };
 
 export const getContentsByScreenAsync = async (screenId: string) => {
