@@ -19,8 +19,6 @@ export const ContentsColumns: ColumnDef<Content>[] = [
 					className='w-10 h-10'
 				/>
 			) : (
-				// handle preview for video
-				// <MdOndemandVideo className='w-10 h-10' />
 				<VideoThumbnailGenerator
 					videoUrl={
 						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${content.file_path}` ??

@@ -38,6 +38,10 @@ const AssetDetailPage: React.FC = () => {
 		(data: Content) => updateContent(data),
 		{
 			onSuccess: () => {
+				toast({
+					title: "Content Updated",
+					description: "Content has been updated successfully",
+				});
 				queryClient.invalidateQueries("contents");
 				navigate("/manage/assets");
 			},
@@ -45,10 +49,6 @@ const AssetDetailPage: React.FC = () => {
 	);
 
 	const onSubmit: SubmitHandler<Content> = async (data) => {
-		toast({
-			title: "Updating content...",
-			description: JSON.stringify(data, null, 2),
-		});
 		updateContentMutation(data);
 	};
 

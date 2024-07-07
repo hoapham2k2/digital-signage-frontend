@@ -118,6 +118,7 @@ export const updateContent = async (content: Content) => {
 	const { data, error } = await supabase
 		.from("content_items")
 		.upsert([content]);
+
 	if (error) throw error;
 	return data;
 };

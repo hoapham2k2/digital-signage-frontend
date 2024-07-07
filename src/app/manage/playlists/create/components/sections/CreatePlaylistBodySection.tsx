@@ -7,7 +7,7 @@ export const CreatePlaylistBodySection = () => {
 		<div className='py-4 bg-white rounded-lg '>
 			<div className='flex flex-row gap-10  '>
 				<CreatePlaylistFields />
-				<div className='w-2/5 min-h-60 flex flex-row items-center justify-center bg-black rounded-md'>
+				<div className='w-2/5 h-96 flex flex-row items-center justify-center bg-black rounded-md'>
 					<p className='text-white text-2xl'>Preview not availabled</p>
 				</div>
 			</div>
