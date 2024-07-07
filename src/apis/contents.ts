@@ -3,7 +3,9 @@ import { Content } from "@/types/index";
 import supabase from "@/configs/supabaseConfig";
 
 export const fetchContents = async (userID: string): Promise<Content[]> => {
-	const { data } = await api.get(`/ContentItems?userID=${userID}`);
+	const { data } = await supabase.rpc("select_content_items_by_user", {
+		userid: userID,
+	});
 	return data;
 };
 
@@ -14,10 +16,14 @@ export const fetchContentById = async ({
 }) => {
 	// const { data } = await api.get(`/ContentItems/${contentId}`);
 	// return data;
-	const { data } = await supabase
-		.from("contents")
-		.select("*")
+
+	const { data, error } = await supabase
+		.from("content_items")
+		.select()
 		.eq("id", contentId);
+	if (error) {
+		throw error;
+	}
 	return data;
 };
 

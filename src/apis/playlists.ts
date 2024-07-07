@@ -1,4 +1,5 @@
 import { api } from "@/configs/axiosConfig";
+import supabase from "@/configs/supabaseConfig";
 import { Playlist, Schedule } from "@/types/index";
 
 export const fetchPlaylistById = async (id: string): Promise<Playlist> => {
@@ -6,8 +7,13 @@ export const fetchPlaylistById = async (id: string): Promise<Playlist> => {
 	return data;
 };
 
-export const fetchPlaylists = async (userID: string): Promise<Playlist[]> => {
-	const { data } = await api.get(`/Playlists?userID=${userID}`);
+export const fetchPlaylists = async (userID: string) => {
+	// const { data } = await api.get(`/Playlists?userID=${userID}`);
+	// return data;
+	const { data } = await supabase.rpc("select_playlists_by_user", {
+		userid: userID,
+	});
+
 	return data;
 };
 

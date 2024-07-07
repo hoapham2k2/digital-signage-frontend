@@ -25,6 +25,8 @@ import { Link } from "react-router-dom";
 export const NewScreenButton: React.FC = () => {
 	const { user } = useAuth();
 	const { toast } = useToast();
+	
+	const [virtualScreenName, setVirtualScreenName] = React.useState<string>("");
 	const dropdownTriggerRef = React.useRef(null);
 	const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 	const queryClient = useQueryClient();
@@ -43,10 +45,15 @@ export const NewScreenButton: React.FC = () => {
 				queryClient.invalidateQueries("screens");
 				setIsDialogOpen(false);
 			},
+			onError(error: Error) {
+				toast({
+					title: "Error while adding Virtual Screen",
+					description: error.message,
+				});
+			},
 		}
 	);
 
-	const [virtualScreenName, setVirtualScreenName] = React.useState<string>("");
 
 	return (
 		<>

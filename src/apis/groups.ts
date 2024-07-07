@@ -1,5 +1,6 @@
 import { api } from "@/configs/axiosConfig";
 import { Group } from "@/types/index";
+import supabase from "@/configs/supabaseConfig";
 
 export const fetchGroups = async () => {
 	const { data } = await api.get("/Labels");
@@ -15,8 +16,22 @@ export const fetchGroupsByScreenId = async ({
 	screenId,
 }: {
 	screenId: string;
-}): Promise<Group[]> => {
-	const { data } = await api.get(`/Labels/player/${screenId}`);
+}) => {
+	// const { data } = await api.get(`/Labels/player/${screenId}`);
+	// return data;
+
+	// const { data: groups, error: groupsError } = await supabase
+	// 	.from("labels")
+	// 	.select(`*, players(*)`)
+	// 	.eq("players.id", screenId);
+
+	// if (groupsError) throw groupsError;
+
+	// return groups;
+	const { data, error } = await supabase.rpc("select_labels_by_player_01", {
+		playerid: Number.parseInt(screenId),
+	});
+	if (error) throw error;
 	return data;
 };
 

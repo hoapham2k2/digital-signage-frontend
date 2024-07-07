@@ -6,7 +6,7 @@ const PlaylistsManagementPage = () => {
 	return (
 		<div className='flex flex-col gap-2'>
 			<div className='flex flex-row justify-between items-center'>
-				<h1 className='text-2xl'>Screens</h1>
+				<h1 className='text-2xl'>Playlists</h1>
 				<div className='flex flex-row gap-4'>
 					<Link to='/manage/playlists/create'>
 						<Button>Create Playlist</Button>
