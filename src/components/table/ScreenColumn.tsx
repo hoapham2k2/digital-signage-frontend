@@ -1,16 +1,15 @@
-import { Screen, ScreenType } from "@/types/index";
 import { ColumnDef } from "@tanstack/react-table";
 import { SlScreenDesktop } from "react-icons/sl";
 import { FaCloud } from "react-icons/fa";
 import ScreenActionRow from "./ScreenActionRow";
 import ScreenGroupLabelRow from "./ScreenGroupLabelRow";
+import { Player } from "@/types";
 
-export const ScreenColumns: ColumnDef<Screen>[] = [
+export const ScreenColumns: ColumnDef<Player>[] = [
 	{
 		id: "thumbnail",
 		cell: ({ row }) => {
-			const screen = row.original;
-			if (screen.type === ScreenType.VIRTUAL) {
+			if (row.original.type === "VIRTUAL") {
 				return <FaCloud className='h-6 w-6' />;
 			}
 			return <SlScreenDesktop className='h-6 w-6' />;
@@ -30,23 +29,25 @@ export const ScreenColumns: ColumnDef<Screen>[] = [
 		header: "Last Heartbeat",
 		accessorKey: "lastHeartbeat",
 		cell: ({ row }) => {
-			const screen = row.original;
-			return screen.lastPing ? new Date(screen.lastPing).toLocaleString() : "_";
+			const player = row.original;
+			return player.last_ping
+				? new Date(player.last_ping).toLocaleString()
+				: "_";
 		},
 	},
 	{
 		header: "Status",
 		accessorKey: "status",
 		cell: ({ row }) => {
-			const screen = row.original;
-			switch (screen.status) {
-				case 0:
+			const player = row.original;
+			switch (player.status) {
+				case "ONLINE":
 					return <p className='text-green-500'>ONLINE</p>;
-				case 1:
+				case "OUT_OF_SYNC":
 					return <p className='text-yellow-500'>OUT OF SYNC</p>;
-				case 2:
+				case "OFFLINE":
 					return <p className='text-red-500'>OFFLINE</p>;
-				case 3:
+				case "DISABLED":
 					return <p className='text-gray-500'>DISABLED</p>;
 				default:
 					return <p className='text-green-500'>ONLINE</p>;

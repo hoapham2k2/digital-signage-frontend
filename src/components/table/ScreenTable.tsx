@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { DataTable } from "./DataTable";
 import { ScreenColumns } from "./ScreenColumn";
-import { Screen } from "@/types/index";
+import { Player } from "@/types/index";
 import { fetchScreens } from "@/apis/screens";
 import { useAuth } from "@/context/AuthContext";
 
@@ -12,7 +12,7 @@ const ScreenTable = () => {
 		isLoading,
 		isError,
 		isSuccess,
-	} = useQuery<Screen[]>({
+	} = useQuery<Player[]>({
 		queryKey: "screens",
 		queryFn: () => {
 			return fetchScreens(user?.id);

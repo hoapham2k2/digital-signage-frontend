@@ -6,7 +6,7 @@ const PreviewScreenSection = () => {
 	const { pathname } = useLocation();
 
 	return (
-		<div className=' w-full h-full  lg:h-80 bg-slate-300 rounded-md flex flex-row items-center justify-center'>
+		<div className=' w-full h-full  bg-slate-300 rounded-md flex flex-row items-center justify-center'>
 			<Button
 				onClick={() => {
 					// open new tab

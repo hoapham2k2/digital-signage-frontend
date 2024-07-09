@@ -1,6 +1,5 @@
 import HistoryBackButton from "@/components/buttons/HistoryBackButton";
 import { Button } from "@/components/ui/button";
-import { Group, Screen } from "@/types/index";
 import { Link, useParams } from "react-router-dom";
 import PreviewScreenSection from "./components/PreviewScreenSection";
 import AppBadge from "@/components/buttons/AppBadge";
@@ -9,6 +8,7 @@ import { useQuery } from "react-query";
 import { fetchGroupsByScreenId } from "@/apis/groups";
 import { fetchScreenById } from "@/apis/screens";
 import { Card, CardHeader } from "@/components/ui/card";
+import { Label, Player } from "@/types";
 
 const ScreenDetailPage = () => {
 	const { id } = useParams();
@@ -18,15 +18,15 @@ const ScreenDetailPage = () => {
 		isLoading: isFetchCurrenLoading,
 		isError: isFetchCurrentScreenError,
 		isSuccess: isFetchCurrentScreenSuccess,
-	} = useQuery<Screen>({
+	} = useQuery<Player>({
 		queryKey: ["screens", id],
 		queryFn: () => {
 			return fetchScreenById(id || "");
 		},
 		enabled: !!id,
 	});
-	const { data: groupsBelongToScreen } = useQuery<Group[]>({
-		queryKey: ["groups", screen?.playerLabels],
+	const { data: groupsBelongToScreen } = useQuery<Label[]>({
+		queryKey: ["groups", { screenId: id }],
 		queryFn: () => {
 			return fetchGroupsByScreenId({ screenId: id ?? "" });
 		},
@@ -49,7 +49,7 @@ const ScreenDetailPage = () => {
 						</Link>
 					</div>
 				</div>
-				<Card className='w-full mt-2'>
+				<Card className='w-full mt-2 shadow-md'>
 					<CardHeader className='flex flex-row gap-4'>
 						<div className='w-1/2'>
 							<PreviewScreenSection />
@@ -93,7 +93,7 @@ const ScreenDetailPage = () => {
 							</div>
 
 							<p className='text-sm text-gray-400'>
-								Tip: You can share the link to your virtual screen with your
+								Tip: You can share the link to your virtual Player with your
 								collegues or preview it on a different device (such as your
 								phone or tablet).
 							</p>

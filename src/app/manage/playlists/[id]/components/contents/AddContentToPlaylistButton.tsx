@@ -58,14 +58,11 @@ export const AddContentToPlaylistButton = () => {
 							return (
 								<div key={index} className='flex flex-row justify-between'>
 									<div className='flex flex-row gap-2 items-center'>
-										{_content.resourceType === "Image" ? (
+										{_content.resource_type === "Image" ? (
 											<img
 												src={
-													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-														_content.filePath.includes("default")
-															? ""
-															: "content"
-													}/${_content.filePath}` ?? ""
+													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public//${_content.file_path}` ??
+													""
 												}
 												alt={_content.title}
 												className='w-10 h-10'
@@ -74,11 +71,8 @@ export const AddContentToPlaylistButton = () => {
 											// <MdOndemandVideo className='w-10 h-10' />
 											<VideoThumbnailGenerator
 												videoUrl={
-													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-														_content.filePath.includes("default")
-															? ""
-															: "content"
-													}/${_content.filePath}` ?? ""
+													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content.file_path}` ??
+													""
 												}
 												classnames={["w-10", "h-10"]}
 											/>
@@ -97,8 +91,8 @@ export const AddContentToPlaylistButton = () => {
 													duration: _content.duration,
 													contentItem: {
 														title: _content.title,
-														resourceType: _content.resourceType,
-														filePath: _content.filePath,
+														resource_type: _content.resource_type,
+														file_path: _content.file_path,
 														duration: _content.duration,
 													},
 												});

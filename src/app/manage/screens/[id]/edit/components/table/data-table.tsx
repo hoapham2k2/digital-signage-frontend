@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Playlist, Screen } from "@/types/index";
+import { Playlist } from "@/types/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchScreenById, updateScreen } from "@/apis/screens";
 import { fetchPlaylistById, updatePlaylist } from "@/apis/playlists";

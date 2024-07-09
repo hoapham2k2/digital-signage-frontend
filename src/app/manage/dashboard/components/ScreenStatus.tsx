@@ -14,7 +14,7 @@ const ScreenStatusItem = ({
 	value: string;
 }) => {
 	return (
-		<Card className='flex-1 flex flex-col'>
+		<Card className='flex-1 flex flex-col shadow-md'>
 			<Link
 				to={
 					title === "number_of_screens"
@@ -63,7 +63,7 @@ export const ScreenStatus: React.FC = () => {
 		data: analytics,
 		isLoading: isFetchingAnalytics,
 		isError: fetchAnalyticsError,
-	} = useQuery<Analytics>({
+	} = useQuery({
 		queryKey: "analytics",
 		queryFn: () => {
 			return fetchAnalytics(user?.id);

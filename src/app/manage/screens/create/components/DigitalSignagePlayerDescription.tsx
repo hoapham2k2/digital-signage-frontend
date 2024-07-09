@@ -17,7 +17,7 @@ export const DigitalSignagePlayerDescription: React.FC = () => {
 			id: 1,
 			question: "What is a Digital Signage Player?",
 			answer:
-				"A digital signage player is a device that is connected to a screen and displays content. It can be a dedicated device or a computer.",
+				"A digital signage player is a device that is connected to a Player and displays content. It can be a dedicated device or a computer.",
 		},
 		{
 			id: 2,

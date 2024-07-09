@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import DeleteScreenButton from "./components/DeleteScreenButton";
 import { useQuery } from "react-query";
 import { fetchScreenById } from "@/apis/screens";
-import { Screen } from "@/types/index";
+import { Player } from "@/types";
 
 const EditScreenDetailPage = () => {
 	const { id } = useParams();
-	const { data: currentScreen } = useQuery<Screen>({
+	const { data: currentScreen } = useQuery<Player>({
 		queryKey: ["screen", id],
 		queryFn: () => {
 			return fetchScreenById(id as string);

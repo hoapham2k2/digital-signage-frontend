@@ -1,26 +1,26 @@
+import { Content } from "./content";
+
 export type Playlist = {
 	id: number;
 	title: string;
-	isEnabled: boolean;
+	is_enabled: boolean;
 	duration: number;
-	playlistContentItems: {
-		playlistId: number;
-		contentItemId: number;
-		duration: number;
-		contentItem: {
-			id: number;
-			title: string;
-			filePath: string;
-			duration: number;
-			resourceType: string;
-		};
-	}[];
-	playlistLabels: {
-		playlistId: number;
-		labelId: number;
-		label: {
-			id: number;
-			name: string;
-		};
-	}[];
+};
+
+export type PlaylistUser = {
+	player_id: number;
+	user_id: string;
+};
+
+export type PlaylistLabels = {
+	label_id: number;
+	playlist_id: number;
+};
+
+export type PlaylistContentItems = {
+	playlist_id: number;
+	content_item_id: number;
+	duration: number;
+	contentItem?: Content;
+	playlist?: Playlist;
 };

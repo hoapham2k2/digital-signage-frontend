@@ -1,49 +1,34 @@
 import { api } from "@/configs/axiosConfig";
 import supabase from "@/configs/supabaseConfig";
-import { Screen } from "@/types/index";
+import { Player } from "@/types/index";
 
 export const fetchScreens = async (userId: string) => {
-	// const { data } = await api.get(`Players?userID=${userId}`);
-	// return data;
-
-	// using supabase to join query, which players table and player_users table to get the player details
 	const { data, error } = await supabase.rpc("select_players_by_userid", {
 		userid: userId,
 	});
 	if (error) {
 		throw error;
 	}
-
 	return data;
 };
 
-export const fetchScreenById = async (id: string): Promise<Screen> => {
-	const { data } = await api.get(`/Players/${id}`);
-	return data;
+export const fetchScreenById = async (screenId: string) => {
+	const { data: screen, error: screenError } = await supabase
+		.from("players")
+		.select()
+		.eq("id", screenId);
+	if (screenError) throw screenError;
+	return screen[0];
 };
 
 export const fetchScreensbyGroupIds = async (
 	ids: string[]
-): Promise<Screen[]> => {
-	const { data: players } = await api.get(`/Players`);
-
-	const filteredScreens = players.filter(
-		(screen: Screen) =>
-			screen.playerLabels &&
-			screen.playerLabels.some((label) =>
-				ids.includes(label.labelId.toString())
-			)
-	);
-	return filteredScreens;
+): Promise<Player[]> => {
+	return [] as Player[];
 };
 
 export const deleteScreen = async (screenId: string) => {
-	// const { data } = await api.delete(`/Players/${id}`);
-	// return data;
-
 	try {
-		//using supabase to delete player, player_user, player_label
-
 		//step 1: delete player_user
 		const { error: playerUserError } = await supabase
 			.from("player_users")
@@ -80,12 +65,6 @@ export const updateScreen = async (
 };
 
 export const createVirtualScreen = async (name: string, userID: string) => {
-	// const { data } = await api.post("/Players/virtual", {
-	// 	name,
-	// 	userId: userID,
-	// });
-	// return data;
-
 	try {
 		//step 1: create label
 		const { data: label, error: labelError } = await supabase
@@ -102,6 +81,17 @@ export const createVirtualScreen = async (name: string, userID: string) => {
 				.select();
 		if (allScreenLabelsError) throw allScreenLabelsError;
 		const allScreenLabelId = allScreenLabels[0].id;
+
+		// step 1.1: Add label to user
+
+		const { error: userLabelError } = await supabase
+			.from("label_users")
+			.insert([
+				{ label_id: labelId, user_id: userID },
+				{ label_id: allScreenLabelId, user_id: userID },
+			])
+			.select();
+		if (userLabelError) throw userLabelError;
 
 		//step 2: create player
 		const { data: player, error: playerError } = await supabase
@@ -143,12 +133,6 @@ export const createHardwareScreen = async (
 	otpCode: string,
 	userID: string
 ) => {
-	// const { data } = await api.post("/Players/hardware?otpCode=" + otpCode, {
-	// 	name,
-	// 	userId: userID,
-	// });
-	// return data;
-	// check "devices" table if column "otp_code" = otpCode;
 	try {
 		const { data: device, error: deviceError } = await supabase
 			.from("devices")
@@ -174,6 +158,16 @@ export const createHardwareScreen = async (
 				.select();
 		if (allScreenLabelsError) throw allScreenLabelsError;
 		const allScreenLabelId = allScreenLabels[0].id;
+
+		// step 1.1: Add label to user
+		const { error: userLabelError } = await supabase
+			.from("label_users")
+			.insert([
+				{ label_id: labelId, user_id: userID },
+				{ label_id: allScreenLabelId, user_id: userID },
+			])
+			.select();
+		if (userLabelError) throw userLabelError;
 
 		// step 2: create player
 		const { data: player, error: playerError } = await supabase
@@ -205,13 +199,6 @@ export const createHardwareScreen = async (
 			.insert([{ player_id: playerId, label_id: allScreenLabelId }])
 			.select();
 		if (allScreenPlayerLabelError) throw allScreenPlayerLabelError;
-
-		// // step 6: update device status to "REGISTERED"
-		// const { error: deviceUpdateError } = await supabase
-		// 	.from("devices")
-		// 	.update({ status: "REGISTERED" })
-		// 	.eq("otp_code", otpCode);
-		// if (deviceUpdateError) throw deviceUpdateError;
 
 		return player[0];
 	} catch (error: any) {

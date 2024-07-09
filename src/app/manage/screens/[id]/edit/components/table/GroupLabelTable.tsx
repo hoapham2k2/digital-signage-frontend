@@ -1,9 +1,10 @@
 import { fetchGroups } from "@/apis/groups";
-import { Group } from "@/types/index";
+import { Label } from "@/types/index";
 import React from "react";
 import { useQuery } from "react-query";
 import { GroupLabelTableColumns } from "./GroupLabelTableColumn";
 import { DataTable } from "./data-table";
+import { useAuth } from "@/context/AuthContext";
 
 type GroupLabelTableProps = {
 	type: "screen" | "playlist";
@@ -13,10 +14,11 @@ type GroupLabelTableProps = {
 const GroupLabelTable: React.FC<GroupLabelTableProps> = (
 	_props: GroupLabelTableProps
 ) => {
-	const { data: groups } = useQuery<Group[]>({
+	const { user } = useAuth();
+	const { data: groups } = useQuery<Label[]>({
 		queryKey: ["groups"],
 		queryFn: () => {
-			return fetchGroups();
+			return fetchGroups(user?.id);
 		},
 	});
 	return (

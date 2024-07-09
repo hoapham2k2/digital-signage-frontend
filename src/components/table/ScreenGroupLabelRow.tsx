@@ -1,5 +1,5 @@
 import { fetchGroupsByScreenId } from "@/apis/groups";
-import { Group } from "@/types";
+import { Label } from "@/types";
 import { useQuery } from "react-query";
 import AppBadge from "../buttons/AppBadge";
 
@@ -9,7 +9,7 @@ export default function ScreenGroupLabelRow({ row }: { row: any }) {
 		data: groups,
 		isLoading,
 		isError,
-	} = useQuery<Group[]>({
+	} = useQuery<Label[]>({
 		queryKey: ["groups", { screenId: currentScreen.id }],
 		queryFn: async () => {
 			return fetchGroupsByScreenId({

@@ -1,22 +1,20 @@
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LatLng, LatLngExpression } from "leaflet";
+import { LatLngExpression } from "leaflet";
 import { useQuery } from "react-query";
-import { Screen } from "@/types";
+import { Player } from "@/types";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchScreens } from "@/apis/screens";
-import { useToast } from "@/components/ui/use-toast";
 
 export const StatusMapLeaf: React.FC = () => {
 	const [positions, setPositions] = useState<[number, number][]>([]);
 	const { user } = useAuth();
-	const { toast } = useToast();
 	const {
 		data: screens,
 		isError,
 		isLoading,
-	} = useQuery<Screen[]>({
+	} = useQuery<Player[]>({
 		queryKey: ["screen"],
 		queryFn: () => fetchScreens(user?.id as string),
 		enabled: !!user,
@@ -35,15 +33,16 @@ export const StatusMapLeaf: React.FC = () => {
 			try {
 				const responses = await Promise.all(
 					screens
-						.filter((screen) => screen.ipAddress !== null)
+						.filter(
+							(screen) =>
+								screen.ip_address !== null &&
+								screen.ip_address !== "" &&
+								screen.ip_address !== undefined
+						)
 						.map((screen) =>
-							fetch(`https://api.ipbase.com/v1/json/${screen.ipAddress}`)
+							fetch(`https://api.ipbase.com/v1/json/${screen.ip_address}`)
 						)
 				);
-				toast({
-					title: "Fetch positions",
-					description: `${JSON.stringify(responses)}`,
-				});
 			} catch (error) {
 				console.error("Error fetching positions:", error);
 			}
@@ -56,12 +55,12 @@ export const StatusMapLeaf: React.FC = () => {
 	if (isError) return <div>Error loading screens</div>;
 
 	return (
-		<div>
+		<div className='shadow-lg'>
 			<MapContainer
-				center={[51.505, -0.09] as LatLngExpression}
-				zoom={13}
+				center={[10.797810960226563, 106.71887700397427] as LatLngExpression}
+				zoom={14}
 				className='h-96 w-full rounded-md'
-				scrollWheelZoom={true}>
+				scrollWheelZoom={false}>
 				<TileLayer
 					url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -1,5 +1,3 @@
-"use client";
-
 import {
 	ColumnDef,
 	RowSelectionState,
@@ -18,7 +16,6 @@ import {
 } from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ScreenType } from "@/types/screen";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -47,7 +44,7 @@ export function DataTable(props: Props) {
 	const navigate = useNavigate();
 
 	return (
-		<div className='rounded-md border'>
+		<div className='rounded-md border shadow-md'>
 			<Table>
 				<TableHeader>
 					{table.getHeaderGroups().map((headerGroup) => (
@@ -78,7 +75,7 @@ export function DataTable(props: Props) {
 										key={cell.id}
 										onClick={() => {
 											if (props.type && props.type === "screen") {
-												if (cell.row.original.type === ScreenType.VIRTUAL) {
+												if (cell.row.original.type === "VIRTUAL") {
 													navigate(`/manage/screens/${cell.row.original.id}`);
 												}
 											}

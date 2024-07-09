@@ -19,23 +19,23 @@ export const PlaylistColumns: ColumnDef<Playlist>[] = [
 			return <div>{row.original.title}</div>;
 		},
 	},
-	{
-		id: "playOn",
-		header: "Play On",
-		cell: ({ row }) => {
-			const groups = row.original.playlistLabels.map(
-				(label) => label.label.name
-			);
+	// {
+	// 	id: "playOn",
+	// 	header: "Play On",
+	// 	cell: ({ row }) => {
+	// 		const groups = row.original.playlistLabels.map(
+	// 			(label) => label.label.name
+	// 		);
 
-			return (
-				<div>
-					{groups.map((group) => (
-						<AppBadge key={group} name={group} />
-					))}
-				</div>
-			);
-		},
-	},
+	// 		return (
+	// 			<div>
+	// 				{groups.map((group) => (
+	// 					<AppBadge key={group} name={group} />
+	// 				))}
+	// 			</div>
+	// 		);
+	// 	},
+	// },
 	{
 		id: "duration",
 		header: "Duration",
@@ -51,9 +51,9 @@ export const PlaylistColumns: ColumnDef<Playlist>[] = [
 			return (
 				<div
 					className={`${cn("text-sm", "font-medium")} ${
-						row.original.isEnabled === true ? "text-green-500" : "text-red-500"
+						row.original.is_enabled === true ? "text-green-500" : "text-red-500"
 					}`}>
-					{row.original.isEnabled === true ? "Enabled" : "Disabled"}
+					{row.original.is_enabled === true ? "Enabled" : "Disabled"}
 				</div>
 			);
 		},

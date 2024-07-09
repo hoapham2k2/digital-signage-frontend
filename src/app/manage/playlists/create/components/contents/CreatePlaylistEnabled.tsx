@@ -1,13 +1,13 @@
 import { Switch } from "@/components/ui/switch";
-import { Playlist } from "@/types";
 import { useFormContext } from "react-hook-form";
+import { CreatePlaylistFormFields } from "../../CreatePlaylistPage";
 
 export const CreatePlaylistEnabled = () => {
-	const methods = useFormContext<{ playlist: Playlist }>();
+	const methods = useFormContext<CreatePlaylistFormFields>();
 	return (
 		<div className='flex flex-row justify-between items-center'>
 			<p>Enabled</p>
-			<Switch {...methods.register("playlist.isEnabled")} />
+			<Switch {...methods.register("playlist.is_enabled")} />
 		</div>
 	);
 };

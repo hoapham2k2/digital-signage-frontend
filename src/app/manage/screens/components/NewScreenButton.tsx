@@ -39,7 +39,7 @@ export const NewScreenButton: React.FC = () => {
 			onSuccess: () => {
 				toast({
 					title: "Added Virtual Screen",
-					description: "Virtual Screen added successfully",
+					description: "Virtual Player added successfully",
 				});
 				setVirtualScreenName("");
 				queryClient.invalidateQueries("screens");

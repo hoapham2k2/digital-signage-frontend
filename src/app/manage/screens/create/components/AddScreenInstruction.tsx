@@ -27,7 +27,7 @@ export const AddScreenInstruction: React.FC = () => {
 		{
 			onSuccess: () => {
 				toast({
-					title: "Added Screen status",
+					title: "Added Player status",
 					description: "Screen added successfully",
 				});
 				setPinCode("");
@@ -47,7 +47,7 @@ export const AddScreenInstruction: React.FC = () => {
 			</CardHeader>
 			<CardContent className='flex flex-col gap-2'>
 				<p>
-					Turn on your Digital Signage Player and connect it to your screen with
+					Turn on your Digital Signage Player and connect it to your Player with
 					an HDMI cable. Next, connect your Digital Signage Player to the
 					internet via ethernet cable or Wi-Fi. To connect via Wi-Fi, click the
 					“Wi-Fi Configuration” button above
@@ -68,7 +68,7 @@ export const AddScreenInstruction: React.FC = () => {
 					onChange={(e) => setPinCode(e.target.value)}
 				/>
 				<Input
-					placeholder='Enter Screen Name'
+					placeholder='Enter Player Name'
 					value={screenName}
 					onChange={(e) => setScreenName(e.target.value)}
 				/>

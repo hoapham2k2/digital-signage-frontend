@@ -1,4 +1,3 @@
-import { api } from "@/configs/axiosConfig";
 import supabase from "@/configs/supabaseConfig";
 
 export type Analytics = {
@@ -30,5 +29,3 @@ export const fetchAnalytics = async (userid: string) => {
 		number_of_content_items: contentItems?.length,
 	};
 };
-
-

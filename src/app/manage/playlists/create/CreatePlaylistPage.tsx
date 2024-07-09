@@ -1,19 +1,30 @@
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import CreatePlaylistBodySection from "./components/sections/CreatePlaylistBodySection";
 import CreatePlaylistHeaderSection from "./components/sections/CreatePlaylistHeaderSection";
-import { Playlist } from "@/types";
+import {
+	Playlist,
+	PlaylistContentItems,
+	PlaylistLabels,
+	PlaylistUser,
+} from "@/types";
 import { FormEvent } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { DevTool } from "@hookform/devtools";
 
+export type CreatePlaylistFormFields = {
+	playlist: Playlist;
+	playlistUser: PlaylistUser;
+	playlistLabels: PlaylistLabels[];
+	playlistContentItems: PlaylistContentItems[];
+};
 export const CreatePlaylistPage = () => {
-	const methods = useForm<{ playlist: Playlist }>();
+	const methods = useForm<CreatePlaylistFormFields>();
 	const { toast } = useToast();
 
-	const onSubmit: SubmitHandler<{ playlist: Playlist }> = async (data: {
-		playlist: Playlist;
-	}) => {
+	const onSubmit: SubmitHandler<CreatePlaylistFormFields> = async (
+		data: CreatePlaylistFormFields
+	) => {
 		toast({
 			title: "Submit create playlist form",
 			description: JSON.stringify(data),

@@ -1,14 +1,24 @@
 import { api } from "@/configs/axiosConfig";
-import { Group } from "@/types/index";
+import { Label } from "@/types/index";
 import supabase from "@/configs/supabaseConfig";
 
-export const fetchGroups = async () => {
-	const { data } = await api.get("/Labels");
+export const fetchGroups = async (userId: string): Promise<Label[]> => {
+	const { data } = await supabase.rpc("select_labels_by_user", {
+		userid: userId,
+	});
 	return data;
 };
 
-export const fetchGroupById = async (id: string) => {
-	const { data } = await api.get(`/Labels/${id}`);
+export const fetchGroupById = async (id: string): Promise<Label> => {
+	// const { data } = await api.get(`/Labels/${id}`);
+	// return data;
+	const { data, error } = await supabase
+		.from("labels")
+		.select("*")
+		.eq("id", id)
+		.single();
+
+	if (error) throw error;
 	return data;
 };
 
@@ -16,31 +26,12 @@ export const fetchGroupsByScreenId = async ({
 	screenId,
 }: {
 	screenId: string;
-}) => {
-	// const { data } = await api.get(`/Labels/player/${screenId}`);
-	// return data;
-
-	// const { data: groups, error: groupsError } = await supabase
-	// 	.from("labels")
-	// 	.select(`*, players(*)`)
-	// 	.eq("players.id", screenId);
-
-	// if (groupsError) throw groupsError;
-
-	// return groups;
+}): Promise<Label[]> => {
 	const { data, error } = await supabase.rpc("select_labels_by_player_01", {
 		playerid: Number.parseInt(screenId),
 	});
 	if (error) throw error;
 	return data;
-};
-
-export const fetchGroupByIds = async (ids: string[]): Promise<Group[]> => {
-	const { data: groups } = await api.get(`/Labels`);
-	const filteredGroups = groups.filter((group: Group) =>
-		ids.includes(group.id.toString())
-	);
-	return filteredGroups;
 };
 
 

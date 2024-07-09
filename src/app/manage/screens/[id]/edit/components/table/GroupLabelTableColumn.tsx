@@ -1,8 +1,8 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Group } from "@/types/index";
+import { Label } from "@/types/index";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const GroupLabelTableColumns: ColumnDef<Group>[] = [
+export const GroupLabelTableColumns: ColumnDef<Label>[] = [
 	{
 		accessorKey: "isSelected",
 		cell: ({ row }) => (

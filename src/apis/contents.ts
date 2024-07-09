@@ -1,4 +1,3 @@
-import { api } from "@/configs/axiosConfig";
 import { Content } from "@/types/index";
 import supabase from "@/configs/supabaseConfig";
 import { v7 as uuidv7 } from "uuid";
@@ -15,9 +14,6 @@ export const fetchContentById = async ({
 }: {
 	contentId: string;
 }) => {
-	// const { data } = await api.get(`/ContentItems/${contentId}`);
-	// return data;
-
 	const { data, error } = await supabase
 		.from("content_items")
 		.select()
@@ -29,10 +25,7 @@ export const fetchContentById = async ({
 };
 
 export const fetchContentsByPlaylistIds = async (playlistId: number) => {
-	// const { data } = await api.get(`/ContentItems/playlist/${playlistId}`);
-	// return data;
-
-	const { data, error } = await supabase
+	const { data } = await supabase
 		.from("contents")
 		.select(
 			`
@@ -60,15 +53,6 @@ export const UploadContentAsync = async (
 	if (!file) {
 		throw new Error("No file provided");
 	}
-
-	// const formData = new FormData();
-	// formData.append("file", file);
-	// await api.post(`/ContentItems?userID=${userID}`, formData, {
-	// 	headers: {
-	// 		"Content-Type": "multipart/form-data",
-	// 	},
-	// });
-
 	const uniqueFileName = `${uuidv7()}-${file.name}`;
 
 	const { data: uploadData, error } = await supabase.storage
@@ -113,23 +97,28 @@ export const UploadContentAsync = async (
 };
 
 export const updateContent = async (content: Content) => {
-	// await api.put(`/ContentItems`, content);
-
 	const { data, error } = await supabase
 		.from("content_items")
-		.upsert([content]);
+		.upsert([content])
+		.select();
 
 	if (error) throw error;
 	return data;
 };
 
 export const getContentsByScreenAsync = async (screenId: string) => {
-	const { data } = await api.get(`/ContentItems/player/${screenId}`);
-	return data;
+	const { data: contentItems, error: errorContentItems } = await supabase.rpc(
+		"select_content_items_by_player",
+		{
+			playerid: Number(screenId),
+		}
+	);
+
+	if (errorContentItems) throw errorContentItems;
+	return contentItems;
 };
 
 export const deleteContentAsync = async (contentId: string) => {
-	// await api.delete(`/ContentItems/${contentId}`);
 	await supabase
 		.from("content_item_users")
 		.delete()

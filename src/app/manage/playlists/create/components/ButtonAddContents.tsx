@@ -3,20 +3,20 @@ import VideoThumbnailGenerator from "@/app/manage/assets/components/VideoThumbna
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/context/AuthContext";
-import { Playlist } from "@/types";
 import RenderDuration from "@/utils/renderDuration";
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { CreatePlaylistFormFields } from "../CreatePlaylistPage";
+import { PlaylistContentItems } from "@/types";
 
 export const AddContentToPlaylistButton: React.FC = () => {
 	const { user } = useAuth();
-	const { id: playlistId } = useParams<{ id: string }>();
-	const methods = useFormContext<{ playlist: Playlist }>();
+	const methods = useFormContext<CreatePlaylistFormFields>();
+
 	const { append } = useFieldArray({
 		control: methods.control,
-		name: "playlist.playlistContentItems",
+		name: "playlistContentItems",
 	});
 	const {
 		data: fetchedContents,
@@ -79,20 +79,15 @@ export const AddContentToPlaylistButton: React.FC = () => {
 										</span>
 										<Button
 											onClick={() => {
-												// append({
-												// 	playlistId: Number.parseInt(playlistId ?? "0"),
-												// 	contentItemId: _content.id as number,
-												// 	duration: _content.duration,
-												// 	contentItem: {
-												// 		title: _content.title,
-												// 		resource_type: _content.resource_type,
-												// 		.file_path: _content.file_path,
-												// 		duration: _content.duration,
-												// 	} as any,
-												// });
+												append({
+													playlist_id: 0,
+													content_item_id: _content.id,
+													duration: _content.duration,
+													contentItem: _content,
+												} as PlaylistContentItems);
 												methods.setValue(
-													"playlist.playlistContentItems",
-													methods.getValues("playlist.playlistContentItems")
+													"playlistContentItems",
+													methods.getValues("playlistContentItems")
 												);
 											}}>
 											Add
