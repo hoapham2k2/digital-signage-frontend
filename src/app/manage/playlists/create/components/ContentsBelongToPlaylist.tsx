@@ -3,26 +3,27 @@ import { Button } from "@/components/ui/button";
 import RenderDuration from "@/utils/renderDuration";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { CreatePlaylistFormFields } from "../CreatePlaylistPage";
-import { PlaylistContentItems } from "@/types";
+import { Input } from "@/components/ui/input";
 
 export const ContentsBelongToPlaylist = () => {
 	const methods = useFormContext<CreatePlaylistFormFields>();
-	const { fields, remove } = useFieldArray({
+	const { fields, remove, update } = useFieldArray({
 		control: methods.control,
 		name: "playlistContentItems",
 	});
-	
+
 	return (
 		<div className='flex flex-col gap-2'>
 			{fields &&
-				fields.map((_content: PlaylistContentItems, index:number) => {
+				fields.map((_content, index) => {
 					return (
-						<div key={index} className='flex flex-row justify-between'>
+						<div key={_content.id} className='flex flex-row justify-between'>
 							<div className='flex flex-row gap-2 items-center'>
 								{_content?.contentItem?.resource_type === "Image" ? (
 									<img
 										src={
-											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content?.contentItem?.file_path}` ?? ""
+											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content?.contentItem?.file_path}` ??
+											""
 										}
 										alt={_content?.contentItem?.title}
 										className='w-10 h-10'
@@ -31,11 +32,8 @@ export const ContentsBelongToPlaylist = () => {
 									// <MdOndemandVideo className='w-10 h-10' />
 									<VideoThumbnailGenerator
 										videoUrl={
-											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-												_content?.contentItem?.file_path?.includes("default")
-													? ""
-													: "content"
-											}/${_content?.contentItem?.file_path}` ?? ""
+											`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content?.contentItem?.file_path}` ??
+											""
 										}
 										classnames={["w-10", "h-10"]}
 									/>
@@ -44,7 +42,20 @@ export const ContentsBelongToPlaylist = () => {
 							</div>
 							<div className='flex flex-row gap-8 items-center justify-center'>
 								<span className='text-md font-semibold'>
-									{RenderDuration(_content?.contentItem.duration)}
+									{_content.contentItem?.resource_type === "Image" ? (
+										<Input
+											type='number'
+											value={_content?.duration}
+											onChange={(e) => {
+												update(index, {
+													..._content,
+													duration: Number(e.target.value),
+												});
+											}}
+										/>
+									) : (
+										RenderDuration(_content?.duration)
+									)}
 								</span>
 								<Button
 									onClick={(e: any) => {
@@ -60,8 +71,7 @@ export const ContentsBelongToPlaylist = () => {
 							</div>
 						</div>
 					);
-				}
-				)}
+				})}
 		</div>
 	);
 };

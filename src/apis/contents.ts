@@ -24,19 +24,16 @@ export const fetchContentById = async ({
 	return data[0];
 };
 
-export const fetchContentsByPlaylistIds = async (playlistId: number) => {
-	const { data } = await supabase
-		.from("contents")
-		.select(
-			`
-			*,
-			playlist_contents (
-				playlist_id
-			)
-		`
-		)
-		.eq("playlist_id", playlistId);
-
+export const getContentsByPlaylistAsync = async (playlistId: string) => {
+	const { data, error } = await supabase.rpc(
+		"select_content_items_by_playlist",
+		{
+			playlistid: playlistId,
+		}
+	);
+	if (error) {
+		throw error;
+	}
 	return data;
 };
 

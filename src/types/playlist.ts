@@ -8,7 +8,7 @@ export type Playlist = {
 };
 
 export type PlaylistUser = {
-	player_id: number;
+	playlist_id: number;
 	user_id: string;
 };
 

@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { fetchScreens } from "@/apis/screens";
 
 export const StatusMapLeaf: React.FC = () => {
-	const [positions, setPositions] = useState<[number, number][]>([]);
+	const [positions] = useState<[number, number][]>([]);
 	const { user } = useAuth();
 	const {
 		data: screens,
@@ -31,7 +31,7 @@ export const StatusMapLeaf: React.FC = () => {
 
 		const fetchPositions = async () => {
 			try {
-				const responses = await Promise.all(
+				await Promise.all(
 					screens
 						.filter(
 							(screen) =>
@@ -58,7 +58,7 @@ export const StatusMapLeaf: React.FC = () => {
 		<div className='shadow-lg'>
 			<MapContainer
 				center={[10.797810960226563, 106.71887700397427] as LatLngExpression}
-				zoom={14}
+				zoom={11}
 				className='h-96 w-full rounded-md'
 				scrollWheelZoom={false}>
 				<TileLayer
@@ -72,6 +72,12 @@ export const StatusMapLeaf: React.FC = () => {
 						</Popup>
 					</Marker>
 				))}
+
+				<Marker position={[10.873275056924152, 106.80231783774153]}>
+					<Popup>
+						A pretty CSS3 popup. <br /> Easily customizable.
+					</Popup>
+				</Marker>
 			</MapContainer>
 		</div>
 	);

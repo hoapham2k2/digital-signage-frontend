@@ -56,52 +56,50 @@ export const NewScreenButton: React.FC = () => {
 
 
 	return (
-		<>
-			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild ref={dropdownTriggerRef}>
-						<Button>New Screen</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<DropdownMenuItem>
-							<Link to='/manage/screens/new'>Hardware</Link>
-						</DropdownMenuItem>
+		<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild ref={dropdownTriggerRef}>
+					<Button>New Screen</Button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent>
+					<DropdownMenuItem>
+						<Link to='/manage/screens/new'>Hardware</Link>
+					</DropdownMenuItem>
 
-						<DialogTrigger asChild>
-							<DropdownMenuItem>Virtual </DropdownMenuItem>
-						</DialogTrigger>
-					</DropdownMenuContent>
-				</DropdownMenu>
+					<DialogTrigger asChild>
+						<DropdownMenuItem>Virtual</DropdownMenuItem>
+					</DialogTrigger>
+				</DropdownMenuContent>
+			</DropdownMenu>
 
-				<DialogContent
-					onCloseAutoFocus={(event) => {
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						//@ts-expect-error
-						dropdownTriggerRef.current?.focus();
-						event.preventDefault();
-					}}>
-					<DialogHeader>
-						<DialogTitle>New Virtual Screen</DialogTitle>
-					</DialogHeader>
-					<Input
-						type='text'
-						placeholder='Screen Name'
-						value={virtualScreenName}
-						onChange={(e) => setVirtualScreenName(e.target.value)}
-					/>
-					<DialogFooter>
-						<Button
-							onClick={() => {
-								createVirtualScreenMutation(virtualScreenName);
-							}}>
-							Save
-						</Button>
-						<DialogClose asChild>
-							<Button>Cancel</Button>
-						</DialogClose>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-		</>
+			<DialogContent
+				onCloseAutoFocus={(event) => {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					//@ts-expect-error
+					dropdownTriggerRef.current?.focus();
+					event.preventDefault();
+				}}>
+				<DialogHeader>
+					<DialogTitle>New Virtual Screen</DialogTitle>
+				</DialogHeader>
+				<Input
+					type='text'
+					placeholder='Screen Name'
+					value={virtualScreenName}
+					onChange={(e) => setVirtualScreenName(e.target.value)}
+				/>
+				<DialogFooter>
+					<Button
+						onClick={() => {
+							createVirtualScreenMutation(virtualScreenName);
+						}}>
+						Save
+					</Button>
+					<DialogClose asChild>
+						<Button>Cancel</Button>
+					</DialogClose>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
 	);
 };

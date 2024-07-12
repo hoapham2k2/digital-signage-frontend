@@ -1,18 +1,65 @@
 import { cn } from "@/lib/utils";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { PlaylistFormValueTypes } from "../../page";
-import { IoMdClose } from "react-icons/io";
 import AddContentToPlaylistButton from "./AddContentToPlaylistButton";
 import VideoThumbnailGenerator from "@/app/manage/assets/components/VideoThumbnail";
 import { Input } from "@/components/ui/input";
+import RenderDuration from "@/utils/renderDuration";
+import { Button } from "@/components/ui/button";
+import { useQuery } from "react-query";
+import { fetchContents } from "@/apis/contents";
+import { useAuth } from "@/context/AuthContext";
 
 export const PlaylistDetailContentComponent = () => {
+	const { user } = useAuth();
 	const methods = useFormContext<PlaylistFormValueTypes>();
 
-	const { fields, remove } = useFieldArray<PlaylistFormValueTypes>({
+	const { fields, remove, update } = useFieldArray({
 		control: methods.control,
-		name: "playlist.playlistContentItems",
+		name: "playlistContentItems",
 	});
+
+	const {
+		data: fetchedContents,
+		isLoading: isFetchingContents,
+		isError: fetchContentsError,
+	} = useQuery({
+		queryKey: "contents",
+		queryFn: () => fetchContents(user?.id ?? ""),
+		// onSuccess: (data) => {
+		// 	// const formPlaylistContentItems = methods.getValues(
+		// 	// 	"playlistContentItems"
+		// 	// );
+
+		// 	// const newPlaylistContentItems = data.map((content: any) => {
+		// 	// 	const found = formPlaylistContentItems.find(
+		// 	// 		(item: any) => item.contentItem.id === content.id
+		// 	// 	);
+
+		// 	// 	if (found) {
+		// 	// 		return found;
+		// 	// 	}
+
+		// 	// 	return {
+		// 	// 		contentItem: content,
+		// 	// 		duration: 0,
+		// 	// 	};
+		// 	// });
+		// },
+	});
+
+	if (isFetchingContents) {
+		return <div>Loading...</div>;
+	}
+
+	if (fetchContentsError) {
+		return <div>Error...</div>;
+	}
+
+	if (!fetchedContents) {
+		return <div>Not found</div>;
+	}
+
 	return (
 		<div>
 			{/* Header */}
@@ -24,18 +71,59 @@ export const PlaylistDetailContentComponent = () => {
 			{/* Body */}
 			<div className='flex flex-col gap-2'>
 				{fields &&
-					fields.map((_item, index) => {
+					fields.map((_content, index) => {
 						return (
-							<div
-								key={_item.id}
-								className='flex flex-row justify-between items-center'>
-								<PlaylistDetailContentItem index={index} />
-								<IoMdClose
-									className='h-6 w-6'
-									onClick={() => {
-										remove(index);
-									}}
-								/>
+							<div key={_content.id} className='flex flex-row justify-between'>
+								<div className='flex flex-row gap-2 items-center'>
+									{_content?.contentItem?.resource_type === "Image" ? (
+										<img
+											src={
+												`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content?.contentItem?.file_path}` ??
+												""
+											}
+											alt={_content?.contentItem?.title}
+											className='w-10 h-10'
+										/>
+									) : (
+										<VideoThumbnailGenerator
+											videoUrl={
+												`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content?.contentItem?.file_path}` ??
+												""
+											}
+											classnames={["w-10", "h-10"]}
+										/>
+									)}
+									{_content?.contentItem?.title}
+								</div>
+								<div className='flex flex-row gap-8 items-center justify-center'>
+									<span className='text-md font-semibold'>
+										{_content.contentItem?.resource_type === "Image" ? (
+											<Input
+												type='number'
+												value={_content?.duration}
+												onChange={(e) => {
+													update(index, {
+														..._content,
+														duration: Number(e.target.value),
+													});
+												}}
+											/>
+										) : (
+											RenderDuration(_content?.duration)
+										)}
+									</span>
+									<Button
+										onClick={(e: any) => {
+											e.preventDefault();
+											remove(index);
+											methods.setValue(
+												"playlistContentItems",
+												methods.getValues("playlistContentItems")
+											);
+										}}>
+										Remove
+									</Button>
+								</div>
 							</div>
 						);
 					})}
@@ -44,69 +132,5 @@ export const PlaylistDetailContentComponent = () => {
 	);
 };
 
-export const PlaylistDetailContentItem: React.FC<{
-	index: number;
-}> = (_props: { index: number }) => {
-	const methods = useFormContext();
-
-	return (
-		<Controller
-			control={methods.control}
-			name={`playlist.playlistContentItems[${_props.index}]`}
-			render={({ field }) => {
-				return (
-					<div className='flex-1 flex flex-row justify-between items-center'>
-						<div className='flex flex-row items-center gap-2'>
-							{field.value.contentItem.resourceType == "Image" ? (
-								<img
-									src={
-										`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-											field.value.contentItem.filePath.includes("default")
-												? ""
-												: "content"
-										}/${field.value.contentItem.filePath}` ?? ""
-									}
-									alt={field.value.title}
-									className='w-10 h-10'
-								/>
-							) : (
-								// <MdOndemandVideo className='w-10 h-10' />
-								<VideoThumbnailGenerator
-									videoUrl={
-										`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${
-											field.value.contentItem.filePath.includes("default")
-												? ""
-												: "content"
-										}/${field.value.contentItem.filePath}` ?? ""
-									}
-									classnames={["w-10", "h-10"]}
-								/>
-							)}
-
-							<div>{field.value.contentItem.title}</div>
-						</div>
-						<div>
-							{field.value.contentItem.resourceType == "Image" ? (
-								<Input
-									type='number'
-									value={field.value.duration}
-									onChange={(e) => {
-										const newDuration = e.target.value;
-										const newContentItem = { ...field.value };
-										newContentItem.duration = newDuration;
-										field.onChange(newContentItem);
-									}}
-									min={1}
-								/>
-							) : (
-								<span>{field.value.duration}</span>
-							)}
-						</div>
-					</div>
-				);
-			}}
-		/>
-	);
-};
 
 export default PlaylistDetailContentComponent;

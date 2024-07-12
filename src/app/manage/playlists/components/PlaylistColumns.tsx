@@ -2,7 +2,6 @@ import { Playlist } from "@/types/index";
 import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { BiSolidPlaylist } from "react-icons/bi";
-import AppBadge from "@/components/buttons/AppBadge";
 import PlaylistActionsRow from "./ActionRows";
 
 export const PlaylistColumns: ColumnDef<Playlist>[] = [

@@ -17,7 +17,7 @@ type Props = {
 	groupIds: string[];
 };
 
-const EditScreenGroupLabelInput = (props: Props) => {
+const EditScreenGroupLabelInput = (_props: Props) => {
 	// const { id } = useParams<{ id: string }>();
 
 	// const { data: currentGroups } = useQuery<Group[]>({

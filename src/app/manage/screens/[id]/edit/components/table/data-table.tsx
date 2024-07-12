@@ -20,7 +20,7 @@ import { useParams } from "react-router-dom";
 import { Playlist } from "@/types/index";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchScreenById, updateScreen } from "@/apis/screens";
-import { fetchPlaylistById, updatePlaylist } from "@/apis/playlists";
+import { fetchPlaylistById } from "@/apis/playlists";
 import { Button } from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {

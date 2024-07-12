@@ -35,6 +35,7 @@ export const NewContentButton: React.FC = () => {
 		resource_type: "",
 	});
 
+
 	const {
 		mutate: uploadContent,
 		isLoading: isUploadingContentLoading,
@@ -106,6 +107,21 @@ export const NewContentButton: React.FC = () => {
 						duration: videoEl.duration,
 						resource_type: "Video",
 					});
+
+					// handle video preview
+					const canvas = document.createElement("canvas");
+					const context = canvas.getContext("2d");
+					if (context) {
+						canvas.width = videoEl.videoWidth;
+						canvas.height = videoEl.videoHeight;
+						videoEl.currentTime = 1;
+						videoEl.onseeked = function () {
+							context.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+							if (previewRef.current) {
+								previewRef.current.src = canvas.toDataURL("image/jpeg");
+							}
+						};
+					}
 				};
 				videoEl.src = URL.createObjectURL(input);
 			}
@@ -163,9 +179,8 @@ export const NewContentButton: React.FC = () => {
 											readURL(e.target.files[0]);
 										}}
 									/>
-									{field.value &&
-										// only image type is supported
-										field.value.type.includes("image") && (
+									{field.value && (
+										<div>
 											<div className='mt-2 flex justify-center items-center'>
 												<img
 													ref={previewRef}
@@ -175,7 +190,8 @@ export const NewContentButton: React.FC = () => {
 													className='w-1/2 h-1/2 rounded-md object-cover max-h-96'
 												/>
 											</div>
-										)}
+										</div>
+									)}
 								</div>
 							)}
 						/>

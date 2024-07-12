@@ -1,4 +1,4 @@
-import { Analytics, fetchAnalytics } from "@/apis/analytics";
+import { fetchAnalytics } from "@/apis/analytics";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useQuery } from "react-query";
 import { MdOutlineScreenshotMonitor } from "react-icons/md";

@@ -13,14 +13,16 @@ import RenderDuration from "@/utils/renderDuration";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import { PlaylistFormValueTypes } from "../../page";
+import { PlaylistContentItems } from "@/types";
 
 export const AddContentToPlaylistButton = () => {
 	const { user } = useAuth();
 	const { id: playlistId } = useParams<{ id: string }>();
-	const methods = useFormContext();
+	const methods = useFormContext<PlaylistFormValueTypes>();
 	const { append } = useFieldArray({
 		control: methods.control,
-		name: "playlist.playlistContentItems",
+		name: "playlistContentItems",
 	});
 
 	const {
@@ -68,7 +70,6 @@ export const AddContentToPlaylistButton = () => {
 												className='w-10 h-10'
 											/>
 										) : (
-											// <MdOndemandVideo className='w-10 h-10' />
 											<VideoThumbnailGenerator
 												videoUrl={
 													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content.file_path}` ??
@@ -86,19 +87,14 @@ export const AddContentToPlaylistButton = () => {
 										<Button
 											onClick={() => {
 												append({
-													playlistId: playlistId ?? "",
-													contentItemId: _content.id,
+													playlist_id: Number(playlistId),
+													content_item_id: _content.id,
 													duration: _content.duration,
-													contentItem: {
-														title: _content.title,
-														resource_type: _content.resource_type,
-														file_path: _content.file_path,
-														duration: _content.duration,
-													},
-												});
+													contentItem: _content,
+												} as PlaylistContentItems);
 												methods.setValue(
-													"playlist.playlistContentItems",
-													methods.getValues("playlist.playlistContentItems")
+													"playlistContentItems",
+													methods.getValues("playlistContentItems")
 												);
 											}}>
 											Add

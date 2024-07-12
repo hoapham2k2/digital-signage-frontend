@@ -1,5 +1,5 @@
 import NewDropdownButton from "./NewDropdownButton";
-import NotificationButton from "./NotificationButton";
+// import NotificationButton from "./NotificationButton";
 import AccountSettingButton from "./AccountSettingButton";
 import AppMenu from "./AppMenu";
 import { NavLink } from "react-router-dom";
@@ -20,7 +20,7 @@ const Navbar = () => {
 				</div>
 				<div className='flex flex-row gap-2'>
 					<NewDropdownButton />
-					<NotificationButton />
+					{/* <NotificationButton /> */}
 					<AccountSettingButton />
 				</div>
 			</div>

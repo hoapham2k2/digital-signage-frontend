@@ -62,7 +62,6 @@ export const AddContentToPlaylistButton: React.FC = () => {
 												className='w-10 h-10'
 											/>
 										) : (
-											// <MdOndemandVideo className='w-10 h-10' />
 											<VideoThumbnailGenerator
 												videoUrl={
 													`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${_content.file_path}` ??

@@ -1,6 +1,5 @@
 import { api } from "@/configs/axiosConfig";
 import supabase from "@/configs/supabaseConfig";
-import { Player } from "@/types/index";
 
 export const fetchScreens = async (userId: string) => {
 	const { data, error } = await supabase.rpc("select_players_by_userid", {
@@ -21,11 +20,6 @@ export const fetchScreenById = async (screenId: string) => {
 	return screen[0];
 };
 
-export const fetchScreensbyGroupIds = async (
-	ids: string[]
-): Promise<Player[]> => {
-	return [] as Player[];
-};
 
 export const deleteScreen = async (screenId: string) => {
 	try {

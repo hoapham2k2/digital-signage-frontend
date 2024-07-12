@@ -32,6 +32,15 @@ const CreatePlaylistPlayOn = () => {
 		<div className='flex flex-col gap-2'>
 			<label>Play On</label>
 			<Select
+				theme={(theme) => ({
+					...theme,
+					borderRadius: 0,
+					colors: {
+						...theme.colors,
+						primary25: "lightgray",
+						primary: "black",
+					},
+				})}
 				isMulti
 				options={options}
 				onChange={(selectedOptions) => {

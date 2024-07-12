@@ -1,7 +1,13 @@
-import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
-import { Playlist } from "@/types/index";
-import { fetchPlaylistById, updatePlaylist } from "@/apis/playlists";
+import { Playlist, PlaylistContentItems, PlaylistLabels } from "@/types/index";
+import {
+	fetchPlaylistById,
+	fetchPlaylistContentItemsByPlaylistAsync,
+	fetchPlaylistLabelsByPlaylistAsync,
+	updatePlaylistAsync,
+	updatePlaylistContentItemsAsync,
+	updatePlaylistLabelsAsync,
+} from "@/apis/playlists";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PlaylistPlayOn from "./components/sections/PlaylistPlayOn";
@@ -11,75 +17,145 @@ import ScheduleDetailEditName from "./components/sections/ScheduleDetailEditName
 import PlaylistDetailEditEnabled from "./components/sections/PlaylistDetailEditEnabled";
 import PlaylistDetailContent from "./components/sections/PlaylistDetailContent";
 import PlaylistDetailContentComponent from "./components/contents/PlaylistDetailContentManage";
+import { useToast } from "@/components/ui/use-toast";
 
 export type PlaylistFormValueTypes = {
 	playlist: Playlist;
+	playlistLabels: PlaylistLabels[];
+	playlistContentItems: PlaylistContentItems[];
 };
 
 const PlaylistDetailPage = () => {
 	const { id: playlistId } = useParams();
-	const methods = useForm<PlaylistFormValueTypes>();
+
 	const queryClient = useQueryClient();
+	const { toast } = useToast();
 	const navigate = useNavigate();
 
 	const {
 		data: fetchedPlaylist,
 		isLoading: isFetchingPlaylist,
 		isError: fetchPlaylistError,
-		isSuccess: fetchPlaylistSuccess,
 	} = useQuery<Playlist>({
 		queryKey: ["playlist", playlistId],
 		queryFn: () => fetchPlaylistById(playlistId ?? ""),
 		enabled: !!playlistId,
-		onSuccess: (data: Playlist) => {
-			console.log(
-				`fetchPlaylistById onSuccess: ${JSON.stringify(data, null, 2)}`
-			);
-			methods.reset({ playlist: data });
+	});
+
+	const {
+		data: fetchedPlaylistLabels,
+		isLoading: isFetchingPlaylistLabels,
+		isError: fetchPlaylistLabelsError,
+	} = useQuery<PlaylistLabels[]>({
+		queryKey: ["playlist_labels", playlistId],
+		queryFn: () => fetchPlaylistLabelsByPlaylistAsync(playlistId ?? ""),
+		enabled: !!playlistId,
+	});
+
+	const {
+		data: fetchedPlaylistContentItems,
+		isLoading: isFetchingPlaylistContentItems,
+		isError: fetchPlaylistContentItemsError,
+	} = useQuery<PlaylistContentItems[]>({
+		queryKey: ["playlist_content_items", playlistId],
+		queryFn: () => fetchPlaylistContentItemsByPlaylistAsync(playlistId ?? ""),
+		enabled: !!playlistId,
+	});
+
+	const methods = useForm<PlaylistFormValueTypes>({
+		defaultValues: {
+			playlist: fetchedPlaylist,
+			playlistLabels: fetchedPlaylistLabels,
+			playlistContentItems: fetchedPlaylistContentItems,
 		},
 	});
 
 	const { mutate: updatePlaylistMutation } = useMutation(
-		async (data: { playlistId: number; playlist: Playlist }) => {
-			return updatePlaylist(data.playlistId, data.playlist);
+		() => updatePlaylistAsync(methods.watch().playlist),
+		{
+			onError: (error: any) => {
+				toast({
+					title: "Error while updating playlist",
+					description: error.message,
+				});
+			},
+			onSuccess: () => {
+				queryClient.invalidateQueries(["playlist", playlistId]);
+				updatePlaylistLabelsMutation();
+			},
 		}
 	);
 
-	const onSubmit: SubmitHandler<PlaylistFormValueTypes> = async (
-		formData: PlaylistFormValueTypes
-	) => {
-		try {
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			await Promise.all([
-				updatePlaylistMutation({
-					playlistId: formData.playlist.id,
-					// remove unnecessary fields in playlist
-					playlist: {
-						...formData.playlist,
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						//@ts-expect-error
-						playlistContentItems: formData.playlist.playlistContentItems.map(
-							(item) => {
-								return Object.fromEntries(
-									Object.entries(item).filter(([key]) => key !== "contentItem")
-								);
-							}
-						),
-					},
-				}),
-			]);
+	const { mutate: updatePlaylistContentItemsMutation } = useMutation(
+		() => updatePlaylistContentItemsAsync(methods.watch().playlistContentItems),
+		{
+			onError: (error: any) => {
+				toast({
+					title: "Error while updating playlist content items",
+					description: error.message,
+				});
+			},
+			onSuccess: () => {
+				toast({
+					title: "Success",
+					description: "Playlist updated successfully",
+				});
+				queryClient.invalidateQueries("playlists");
+				navigate("/manage/playlists");
+			},
+		}
+	);
 
-			alert("Form updated playlist successfully");
-			queryClient.invalidateQueries("playlists");
-			navigate("/manage/playlists");
-		} catch (error) {
-			alert(`Error while updating playlist: ${JSON.stringify(error, null, 2)}`);
+	const { mutate: updatePlaylistLabelsMutation } = useMutation(
+		() => updatePlaylistLabelsAsync(methods.watch().playlistLabels),
+		{
+			onError: (error: any) => {
+				toast({
+					title: "Error while updating playlist labels",
+					description: error.message,
+				});
+			},
+			onSuccess: () => {
+				queryClient.invalidateQueries(["playlist", playlistId]);
+				updatePlaylistContentItemsMutation();
+			},
+		}
+	);
+
+	const onSubmit: SubmitHandler<PlaylistFormValueTypes> = async () => {
+		try {
+			updatePlaylistMutation();
+		} catch (error: any) {
+			toast({
+				title: "Error while updating playlist",
+				description: error.message,
+			});
 		}
 	};
-	if (isFetchingPlaylist) return <div>Loading...</div>;
-	if (fetchPlaylistError) return <div>Error...</div>;
-	if (!fetchPlaylistSuccess) return <div>Not found</div>;
-	if (methods.formState.isSubmitting) return <div>Is submitting...</div>;
+
+	if (
+		isFetchingPlaylist ||
+		isFetchingPlaylistLabels ||
+		isFetchingPlaylistContentItems
+	) {
+		return <div className='text-center'>Loading...</div>;
+	}
+
+	if (
+		fetchPlaylistError ||
+		fetchPlaylistLabelsError ||
+		fetchPlaylistContentItemsError
+	) {
+		return <div className='text-center'>Error...</div>;
+	}
+
+	if (
+		!fetchedPlaylist ||
+		!fetchedPlaylistLabels ||
+		!fetchedPlaylistContentItems
+	) {
+		return <div className='text-center'>Not found</div>;
+	}
 
 	return (
 		<FormProvider {...methods}>
@@ -109,16 +185,8 @@ const PlaylistDetailPage = () => {
 						</div>
 					</div>
 
-					{/* <PlaylistDetailSchedule /> */}
-
 					<PlaylistDetailContentComponent />
 				</div>
-
-				{methods.formState.isDirty && (
-					<Button type='submit' className='mt-2'>
-						Save
-					</Button>
-				)}
 				<DevTool control={methods.control} />
 			</form>
 		</FormProvider>
