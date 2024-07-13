@@ -18,10 +18,11 @@ import { Link } from "react-router-dom";
 const AccountSettingButton: React.FC = () => {
 	const { user } = useAuth();
 	const { data: fetchedUser } = useQuery({
-		queryKey: ["user", user.id],
+		queryKey: ["user", user?.id],
 		queryFn: async () => {
-			return fetchUserWithId(user.id);
+			return fetchUserWithId(user?.id);
 		},
+		enabled: !!user?.id,
 	});
 
 	return (
