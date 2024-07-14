@@ -8,7 +8,7 @@ import {
 	updatePlaylistContentItemsAsync,
 	updatePlaylistLabelsAsync,
 } from "@/apis/playlists";
-import { useMutation, useQuery, useQueryClient, useQueries } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PlaylistPlayOn from "./components/sections/PlaylistPlayOn";
 import PlaylistDetailHeader from "./components/sections/PlaylistDetailHeader";
@@ -17,7 +17,7 @@ import PlaylistDetailEditEnabled from "./components/sections/PlaylistDetailEditE
 import PlaylistDetailContent from "./components/sections/PlaylistDetailContent";
 import PlaylistDetailContentComponent from "./components/contents/PlaylistDetailContentManage";
 import { useToast } from "@/components/ui/use-toast";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export type PlaylistFormValueTypes = {
 	playlist: Playlist;
