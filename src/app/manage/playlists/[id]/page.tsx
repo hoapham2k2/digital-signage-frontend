@@ -8,16 +8,16 @@ import {
 	updatePlaylistContentItemsAsync,
 	updatePlaylistLabelsAsync,
 } from "@/apis/playlists";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient, useQueries } from "react-query";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PlaylistPlayOn from "./components/sections/PlaylistPlayOn";
-import { DevTool } from "@hookform/devtools";
 import PlaylistDetailHeader from "./components/sections/PlaylistDetailHeader";
 import ScheduleDetailEditName from "./components/sections/ScheduleDetailEditName";
 import PlaylistDetailEditEnabled from "./components/sections/PlaylistDetailEditEnabled";
 import PlaylistDetailContent from "./components/sections/PlaylistDetailContent";
 import PlaylistDetailContentComponent from "./components/contents/PlaylistDetailContentManage";
 import { useToast } from "@/components/ui/use-toast";
+import { useEffect, useState } from "react";
 
 export type PlaylistFormValueTypes = {
 	playlist: Playlist;
@@ -64,11 +64,29 @@ const PlaylistDetailPage = () => {
 
 	const methods = useForm<PlaylistFormValueTypes>({
 		defaultValues: {
-			playlist: fetchedPlaylist,
-			playlistLabels: fetchedPlaylistLabels,
-			playlistContentItems: fetchedPlaylistContentItems,
+			playlist: {},
+			playlistLabels: [],
+			playlistContentItems: [],
 		},
 	});
+
+	useEffect(() => {
+		if (fetchedPlaylist) {
+			methods.setValue("playlist", fetchedPlaylist);
+		}
+	}, [fetchedPlaylist]);
+
+	useEffect(() => {
+		if (fetchedPlaylistLabels) {
+			methods.setValue("playlistLabels", fetchedPlaylistLabels);
+		}
+	}, [fetchedPlaylistLabels]);
+
+	useEffect(() => {
+		if (fetchedPlaylistContentItems) {
+			methods.setValue("playlistContentItems", fetchedPlaylistContentItems);
+		}
+	}, [fetchedPlaylistContentItems]);
 
 	const { mutate: updatePlaylistMutation } = useMutation(
 		() => updatePlaylistAsync(methods.watch().playlist),
@@ -138,7 +156,7 @@ const PlaylistDetailPage = () => {
 		isFetchingPlaylistLabels ||
 		isFetchingPlaylistContentItems
 	) {
-		return <div className='text-center'>Loading...</div>;
+		return <div>Loading...</div>;
 	}
 
 	if (
@@ -146,15 +164,7 @@ const PlaylistDetailPage = () => {
 		fetchPlaylistLabelsError ||
 		fetchPlaylistContentItemsError
 	) {
-		return <div className='text-center'>Error...</div>;
-	}
-
-	if (
-		!fetchedPlaylist ||
-		!fetchedPlaylistLabels ||
-		!fetchedPlaylistContentItems
-	) {
-		return <div className='text-center'>Not found</div>;
+		return <div>Error while fetching playlist</div>;
 	}
 
 	return (
@@ -171,7 +181,7 @@ const PlaylistDetailPage = () => {
 				) : null}
 
 				{/* For Header */}
-				<PlaylistDetailHeader title={fetchedPlaylist.title} />
+				<PlaylistDetailHeader />
 				{/* For Body */}
 				<div className='w-full bg-white p-4 rounded-md border border-gray-300 mt-4'>
 					<div className='flex flex-row gap-4'>
@@ -187,7 +197,6 @@ const PlaylistDetailPage = () => {
 
 					<PlaylistDetailContentComponent />
 				</div>
-				<DevTool control={methods.control} />
 			</form>
 		</FormProvider>
 	);

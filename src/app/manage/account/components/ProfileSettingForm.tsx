@@ -60,7 +60,7 @@ const ProfileSettingForm = () => {
 	);
 
 	const onSubmit: SubmitHandler<ProfileSettingFormProps> = async () => {
-		await updateUserAccountMutation();
+		updateUserAccountMutation();
 	};
 
 	const mySubmit = async (e: FormEvent) => {

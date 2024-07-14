@@ -21,10 +21,10 @@ const PlaylistPlayOn = () => {
 		},
 	});
 	const options = groups
-		?.filter((group: Label, index: number, self: Label[]) => {
-			return self.findIndex((g: Label) => g.name === group.name) === index;
-		})
-		.map((group: Label) => ({
+		// ?.filter((group: Label, index: number, self: Label[]) => {
+		// 	return self.findIndex((g: Label) => g.name === group.name) === index;
+		// })
+		?.map((group: Label) => ({
 			value: group.id,
 			label: group.name,
 		}));

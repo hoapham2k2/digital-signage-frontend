@@ -35,6 +35,12 @@ export const AddScreenInstruction: React.FC = () => {
 				queryClient.invalidateQueries("screens");
 				navigate("/manage/screens");
 			},
+			onError: (error: any) => {
+				toast({
+					title: "Error while adding hardware screen",
+					description: error.message,
+				});
+			},
 		}
 	);
 

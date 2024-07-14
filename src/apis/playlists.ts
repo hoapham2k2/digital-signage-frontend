@@ -23,7 +23,7 @@ export const fetchPlaylistById = async (id: string): Promise<Playlist> => {
 
 export const fetchPlaylistLabelsByPlaylistAsync = async (
 	playlistId: string
-) => {
+): Promise<PlaylistLabels[]> => {
 	const { data, error } = await supabase
 		.from("playlist_labels")
 		.select()
@@ -247,5 +247,28 @@ export const createPlaylistContentItemsAsync = async (
 
 	if (error) throw error;
 	return data;
+};
+
+export const fetchPlaylistDurationAsync = async (playlistId: string) => {
+	const { data: playlistContentItems, error } = await supabase
+		.from("playlist_content_items")
+		.select()
+		.eq("playlist_id", playlistId);
+	if (error) throw error;
+
+	const contentItemIds = playlistContentItems.map(
+		(item: PlaylistContentItems) => item.content_item_id
+	);
+	if (contentItemIds.length === 0) {
+		return 0;
+	}
+	const totalDuration = playlistContentItems.reduce(
+		(acc: number, item: any) => {
+			return acc + item.duration;
+		},
+		0
+	);
+
+	return totalDuration;
 };
 

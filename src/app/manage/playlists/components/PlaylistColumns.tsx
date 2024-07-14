@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { BiSolidPlaylist } from "react-icons/bi";
 import PlaylistActionsRow from "./ActionRows";
+import PlaylistDurationRows from "./PlaylistDurationRows";
 
 export const PlaylistColumns: ColumnDef<Playlist>[] = [
 	{
@@ -40,7 +41,7 @@ export const PlaylistColumns: ColumnDef<Playlist>[] = [
 		header: "Duration",
 
 		cell: ({ row }) => {
-			return <div>{row.original.duration} sec</div>;
+			return <PlaylistDurationRows row={row} />;
 		},
 	},
 	{

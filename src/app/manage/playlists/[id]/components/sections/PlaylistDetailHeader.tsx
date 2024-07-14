@@ -12,13 +12,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PlaylistFormValueTypes } from "../../page";
 import { useToast } from "@/components/ui/use-toast";
 
-type PlaylistDetailHeaderProps = {
-	title: string;
-};
 
-export const PlaylistDetailHeader: React.FC<PlaylistDetailHeaderProps> = (
-	_props: PlaylistDetailHeaderProps
-) => {
+export const PlaylistDetailHeader = () => {
 	const { id } = useParams<{ id: string }>();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
@@ -63,7 +58,7 @@ export const PlaylistDetailHeader: React.FC<PlaylistDetailHeaderProps> = (
 		<div className='flex flex-row justify-between items-center'>
 			<div className='flex flex-row gap-4 items-center'>
 				<HistoryBackButton />
-				<h1 className='text-2xl'>{_props.title}</h1>
+				<h1 className='text-2xl'>{methods.watch().playlist?.title}</h1>
 			</div>
 			<div className='flex flex-row gap-2 items-center'>
 				{isFormDirty && <Button type='submit'>Update</Button>}

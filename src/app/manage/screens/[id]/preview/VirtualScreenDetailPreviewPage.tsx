@@ -54,7 +54,7 @@ export const VirtualScreenDetailPreviewPage: React.FC = () => {
 			contentItems[currentIndex].resource_type === "Image" ? (
 				<img
 					src={
-						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public//${contentItems[currentIndex].file_path}` ??
+						`https://jxwvadromebqlpcgmgrs.supabase.co/storage/v1/object/public/${contentItems[currentIndex].file_path}` ??
 						""
 					}
 					alt={contentItems[currentIndex].title}

@@ -60,10 +60,10 @@ export const updateScreen = async (
 
 export const createVirtualScreen = async (name: string, userID: string) => {
 	try {
-		//step 1: create label
+		//step 1: create label by finding by name before creating
 		const { data: label, error: labelError } = await supabase
 			.from("labels")
-			.upsert([{ name: "Virtual" }])
+			.upsert({ id: 2, name: "Virtual" })
 			.select();
 		if (labelError) throw labelError;
 		const labelId = label[0].id;
@@ -71,7 +71,7 @@ export const createVirtualScreen = async (name: string, userID: string) => {
 		const { data: allScreenLabels, error: allScreenLabelsError } =
 			await supabase
 				.from("labels")
-				.upsert([{ name: "All Screens" }])
+				.upsert({ id: 1, name: "All Screens" })
 				.select();
 		if (allScreenLabelsError) throw allScreenLabelsError;
 		const allScreenLabelId = allScreenLabels[0].id;
@@ -80,7 +80,7 @@ export const createVirtualScreen = async (name: string, userID: string) => {
 
 		const { error: userLabelError } = await supabase
 			.from("label_users")
-			.insert([
+			.upsert([
 				{ label_id: labelId, user_id: userID },
 				{ label_id: allScreenLabelId, user_id: userID },
 			])
@@ -90,7 +90,7 @@ export const createVirtualScreen = async (name: string, userID: string) => {
 		//step 2: create player
 		const { data: player, error: playerError } = await supabase
 			.from("players")
-			.insert([{ name, type: "VIRTUAL", status: "ONLINE" }])
+			.upsert([{ name, type: "VIRTUAL", status: "ONLINE" }])
 			.select();
 		if (playerError) throw playerError;
 		const playerId = player[0].id;
@@ -98,21 +98,24 @@ export const createVirtualScreen = async (name: string, userID: string) => {
 		//step 3: create player_user
 		const { error: playerUserError } = await supabase
 			.from("player_users")
-			.insert([{ player_id: playerId, user_id: userID }])
+			.upsert([{ player_id: playerId, user_id: userID }])
 			.select();
 		if (playerUserError) throw playerUserError;
 
 		//step 4: create player_label
 		const { error: playerLabelError } = await supabase
 			.from("player_labels")
-			.insert([{ player_id: playerId, label_id: labelId }])
+			.upsert([
+				{ player_id: playerId, label_id: labelId },
+				{ player_id: playerId, label_id: allScreenLabelId },
+			])
 			.select();
 		if (playerLabelError) throw playerLabelError;
 
 		//step 5: create player_label for all screens
 		const { error: allScreenPlayerLabelError } = await supabase
 			.from("player_labels")
-			.insert([{ player_id: playerId, label_id: allScreenLabelId }])
+			.upsert([{ player_id: playerId, label_id: allScreenLabelId }])
 			.select();
 		if (allScreenPlayerLabelError) throw allScreenPlayerLabelError;
 
@@ -140,7 +143,7 @@ export const createHardwareScreen = async (
 		// step 1: create label
 		const { data: label, error: labelError } = await supabase
 			.from("labels")
-			.upsert([{ name: "Hardware" }])
+			.upsert({ id: 3, name: "Hardware" })
 			.select();
 		if (labelError) throw labelError;
 		const labelId = label[0].id;
@@ -148,7 +151,7 @@ export const createHardwareScreen = async (
 		const { data: allScreenLabels, error: allScreenLabelsError } =
 			await supabase
 				.from("labels")
-				.upsert([{ name: "All Screens" }])
+				.upsert({ id: 1, name: "All Screens" })
 				.select();
 		if (allScreenLabelsError) throw allScreenLabelsError;
 		const allScreenLabelId = allScreenLabels[0].id;
@@ -156,7 +159,7 @@ export const createHardwareScreen = async (
 		// step 1.1: Add label to user
 		const { error: userLabelError } = await supabase
 			.from("label_users")
-			.insert([
+			.upsert([
 				{ label_id: labelId, user_id: userID },
 				{ label_id: allScreenLabelId, user_id: userID },
 			])
@@ -166,7 +169,7 @@ export const createHardwareScreen = async (
 		// step 2: create player
 		const { data: player, error: playerError } = await supabase
 			.from("players")
-			.insert([
+			.upsert([
 				{ name, type: "HARDWARE", status: "ONLINE", device_id: device[0].id },
 			])
 			.select();
@@ -176,21 +179,24 @@ export const createHardwareScreen = async (
 		// step 3: create player_user
 		const { error: playerUserError } = await supabase
 			.from("player_users")
-			.insert([{ player_id: playerId, user_id: userID }])
+			.upsert([{ player_id: playerId, user_id: userID }])
 			.select();
 		if (playerUserError) throw playerUserError;
 
 		// step 4: create player_label
 		const { error: playerLabelError } = await supabase
 			.from("player_labels")
-			.insert([{ player_id: playerId, label_id: labelId }])
+			.upsert([
+				{ player_id: playerId, label_id: labelId },
+				{ player_id: playerId, label_id: allScreenLabelId },
+			])
 			.select();
 		if (playerLabelError) throw playerLabelError;
 
 		// step 5: create player_label for all screens
 		const { error: allScreenPlayerLabelError } = await supabase
 			.from("player_labels")
-			.insert([{ player_id: playerId, label_id: allScreenLabelId }])
+			.upsert([{ player_id: playerId, label_id: allScreenLabelId }])
 			.select();
 		if (allScreenPlayerLabelError) throw allScreenPlayerLabelError;
 
