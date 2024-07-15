@@ -181,7 +181,7 @@ const PlaylistDetailPage = () => {
 				) : null}
 
 				{/* For Header */}
-				<PlaylistDetailHeader />
+				<PlaylistDetailHeader title={fetchedPlaylist?.title ?? ""} />
 				{/* For Body */}
 				<div className='w-full bg-white p-4 rounded-md border border-gray-300 mt-4'>
 					<div className='flex flex-row gap-4'>

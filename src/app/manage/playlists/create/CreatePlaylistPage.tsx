@@ -57,6 +57,16 @@ export const CreatePlaylistPage = () => {
 					description: error.message,
 				});
 			},
+
+			onSuccess: () => {
+				toast({
+					title: "Success",
+					description: "Playlist created successfully",
+				});
+
+				queryClient.invalidateQueries("playlists");
+				navigate("/manage/playlists");
+			},
 		}
 	);
 
@@ -68,6 +78,15 @@ export const CreatePlaylistPage = () => {
 					title: "Error",
 					description: error.message,
 				});
+			},
+
+			onSuccess: (data) => {
+				const playlistId = data[0].playlist_id;
+				const playlistContentItems = methods.watch().playlistContentItems;
+				playlistContentItems.forEach((contentItem) => {
+					contentItem.playlist_id = playlistId;
+				});
+				createPlaylistContentItemsMutation();
 			},
 		}
 	);
@@ -81,6 +100,15 @@ export const CreatePlaylistPage = () => {
 					description: error.message,
 				});
 			},
+
+			onSuccess: (data) => {
+				const playlistid = data[0].playlist_id;
+				const playlistLabels = methods.watch().playlistLabels;
+				playlistLabels.forEach((label) => {
+					label.playlist_id = playlistid;
+				});
+				createPlaylistLabelMutation();
+			},
 		}
 	);
 
@@ -93,20 +121,17 @@ export const CreatePlaylistPage = () => {
 				playlistUser.playlist_id = playlistId;
 				createPlaylistUserMutation();
 
-				const playlistLabels = methods.watch().playlistLabels;
-				playlistLabels.forEach((label) => {
-					label.playlist_id = playlistId;
-				});
-				createPlaylistLabelMutation();
+				// const playlistLabels = methods.watch().playlistLabels;
+				// playlistLabels.forEach((label) => {
+				// 	label.playlist_id = playlistId;
+				// });
+				// createPlaylistLabelMutation();
 
-				const playlistContentItems = methods.watch().playlistContentItems;
-				playlistContentItems.forEach((contentItem) => {
-					contentItem.playlist_id = playlistId;
-				});
-				createPlaylistContentItemsMutation();
-
-				queryClient.invalidateQueries("playlists");
-				navigate("/manage/playlists");
+				// const playlistContentItems = methods.watch().playlistContentItems;
+				// playlistContentItems.forEach((contentItem) => {
+				// 	contentItem.playlist_id = playlistId;
+				// });
+				// createPlaylistContentItemsMutation();
 			},
 			onError: (error: any) => {
 				toast({
